@@ -28,7 +28,7 @@ header { position: fixed; top: 0; left: 0; right: 0; height: 39px; background: r
 .grecaptcha-badge { position: fixed; right: 0; bottom: 14px; width: 256px; height: 60px; }
 #panelTestu { position: relative; z-index: 20; background: #0f172a; color: #e2e8f0; padding: 10px 14px; }
 </style>
-<link rel="stylesheet" href="../limanowa-czytnik.css">
+<link rel="stylesheet" href="../strony/limanowa/limanowa-czytnik.css">
 
 <body style="overflow: hidden;">
 <div id="panelTestu">
@@ -111,7 +111,7 @@ header { position: fixed; top: 0; left: 0; right: 0; height: 39px; background: r
 <div class="fc-consent-root" id="zgoda"><div class="fc-dialog-container">limanowa.in asks for your consent</div></div>
 <div class="grecaptcha-badge" id="recaptcha"></div>
 
-<script src="../limanowa-czytnik.js"></script>
+<script src="../strony/limanowa/limanowa-czytnik.js"></script>
 <script>
 const AUTO = location.search.includes('auto');
 const $ = (id) => document.getElementById(id);
@@ -205,16 +205,16 @@ async function testuj() {
   sprawdz('ponowne włączenie: jeden przycisk, komentarze schowane', document.querySelectorAll('.ls-komentarze').length === 1 && !widoczny('komentarze'));
 
   // --- reguły sieciowe i manifest -----------------------------------------------------------
-  const reguly = await fetch('../limanowa-reguly.json').then((r) => r.json());
+  const reguly = await fetch('../strony/limanowa/limanowa-reguly.json').then((r) => r.json());
   sprawdz('reguły: unikalne id, same blokady', new Set(reguly.map((r) => r.id)).size === reguly.length && reguly.every((r) => r.action.type === 'block'));
   sprawdz('reguły: tylko żądania wychodzące z limanowa.in, nigdy main_frame', reguly.every((r) => JSON.stringify(r.condition.initiatorDomains) === '["limanowa.in"]' && !(r.condition.resourceTypes || []).includes('main_frame')));
   const domeny = reguly.flatMap((r) => r.condition.requestDomains || []);
   sprawdz('reguły: optad360, statsforads, Ad Manager, AdSense, Funding Choices', ['optad360.io', 'optad360-video.com', 'statsforads.com', 'doubleclick.net', 'googlesyndication.com', 'fundingchoicesmessages.google.com'].every((d) => domeny.includes(d)));
   sprawdz('reguły: nie ruszają portalu, zdjęć, reCAPTCHA ani fontów', !domeny.some((d) => /(^|\.)(limanowa\.in|google\.com|gstatic\.com|googleapis\.com)$/.test(d) && d !== 'fundingchoicesmessages.google.com'), domeny.join(', '));
   const manifest = await fetch('../manifest.json').then((r) => r.json());
-  const wpis = manifest.content_scripts.find((c) => c.js.includes('limanowa-czytnik.js'));
-  sprawdz('manifest: content script z CSS na document_start', !!wpis && wpis.css.includes('limanowa-czytnik.css') && wpis.run_at === 'document_start' && wpis.matches.includes('https://limanowa.in/*'));
-  sprawdz('manifest: zestaw reguł „limanowa" i uprawnienie declarativeNetRequest', manifest.permissions.includes('declarativeNetRequest') && manifest.declarative_net_request.rule_resources.some((r) => r.id === 'limanowa' && r.path === 'limanowa-reguly.json'));
+  const wpis = manifest.content_scripts.find((c) => c.js.includes('strony/limanowa/limanowa-czytnik.js'));
+  sprawdz('manifest: content script z CSS na document_start', !!wpis && wpis.css.includes('strony/limanowa/limanowa-czytnik.css') && wpis.run_at === 'document_start' && wpis.matches.includes('https://limanowa.in/*'));
+  sprawdz('manifest: zestaw reguł „limanowa" i uprawnienie declarativeNetRequest', manifest.permissions.includes('declarativeNetRequest') && manifest.declarative_net_request.rule_resources.some((r) => r.id === 'limanowa' && r.path === 'strony/limanowa/limanowa-reguly.json'));
 
   log.textContent += `\nWYNIK: ${ok}/${n}${ok === n ? ' — wszystko OK' : ' — SĄ BŁĘDY'}\n`;
 }

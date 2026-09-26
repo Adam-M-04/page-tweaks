@@ -20,7 +20,7 @@ body { margin: 0; font: 16px/1.6 Arial, sans-serif; color: rgb(2, 54, 75); backg
 .heading { font: 700 14px Poppins, Arial, sans-serif; text-transform: uppercase; }
 #panelTestu { background: #0f172a; color: #e2e8f0; padding: 10px 14px; }
 </style>
-<link rel="stylesheet" href="../limanowa-daty.css">
+<link rel="stylesheet" href="../strony/limanowa/limanowa-daty.css">
 
 <div id="panelTestu">
   <h3 style="margin:0 0 6px">Atrapa limanowa.in — testy dat wpisów (zero kontaktu z limanowa.in)</h3>
@@ -73,7 +73,7 @@ body { margin: 0; font: 16px/1.6 Arial, sans-serif; color: rgb(2, 54, 75); backg
   <a href="/galeria/basen/1933" class="item" id="kGaleria"><span class="photoWrap"><span class="photo"></span><span class="title">Basen ma 15 lat</span></span></a>
 </div></div></section>
 
-<script src="../limanowa-daty.js"></script>
+<script src="../strony/limanowa/limanowa-daty.js"></script>
 <script>
 const AUTO = location.search.includes('auto');
 const $ = (id) => document.getElementById(id);
@@ -249,10 +249,10 @@ async function testuj() {
 
   // --- manifest i ustawienia -------------------------------------------------------------------
   const manifest = await prawdziwyFetch('../manifest.json').then((r) => r.json());
-  const wpis = manifest.content_scripts.find((c) => c.js.includes('limanowa-daty.js'));
-  sprawdz('manifest: skrypt i CSS dat obok czytnika, document_start', !!wpis && wpis.css.includes('limanowa-daty.css') && wpis.js.includes('limanowa-czytnik.js') && wpis.run_at === 'document_start' && wpis.matches.includes('https://limanowa.in/*'));
-  const opcje = await prawdziwyFetch('../options.html').then((r) => r.text());
-  const ustawienia = await prawdziwyFetch('../ustawienia.js').then((r) => r.text());
+  const wpis = manifest.content_scripts.find((c) => c.js.includes('strony/limanowa/limanowa-daty.js'));
+  sprawdz('manifest: skrypt i CSS dat obok czytnika, document_start', !!wpis && wpis.css.includes('strony/limanowa/limanowa-daty.css') && wpis.js.includes('strony/limanowa/limanowa-czytnik.js') && wpis.run_at === 'document_start' && wpis.matches.includes('https://limanowa.in/*'));
+  const opcje = await prawdziwyFetch('../wspolne/options.html').then((r) => r.text());
+  const ustawienia = await prawdziwyFetch('../wspolne/ustawienia.js').then((r) => r.text());
   sprawdz('ustawienia: przełącznik limanowa.daty, domyślnie włączony', /data-klucz="limanowa" data-pole="daty"/.test(opcje) && /limanowa:\s*{[^}]*daty:\s*true/.test(ustawienia));
 
   log.textContent += `\nWYNIK: ${ok}/${n}${ok === n ? ' — wszystko OK' : ' — SĄ BŁĘDY'}\n`;

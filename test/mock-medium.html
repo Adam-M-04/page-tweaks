@@ -25,7 +25,7 @@ body { color: var(--color-fg-neutral-primary); background-color: var(--color-bg-
 <!-- Arkusz gista (na żywo cross-origin z github.githubassets.com) — tu lokalnie, jasny. -->
 <style id="gist-css">.gist .gist-data { background-color: #fff } .gist .blob-code { color: #24292f } .gist .pl-k { color: #cf222e }</style>
 <!-- Statyczna część motywu, jak z manifestu (css: medium-dark.css). -->
-<link rel="stylesheet" href="../medium-dark.css">
+<link rel="stylesheet" href="../strony/medium/medium-dark.css">
 
 <body>
 <h3>Atrapa Medium — testy ciemnego motywu (zero kontaktu z medium.com)</h3>
@@ -53,8 +53,8 @@ gist z jasnym arkuszem, obrazek w <code>article</code>. Test włącza motyw prze
 </div>
 <pre id="log" style="white-space:pre-wrap;color:#7dd3fc"></pre>
 
-<script src="../ciemny-motyw.js"></script>
-<script src="../medium-dark.js"></script>
+<script src="../wspolne/ciemny-motyw.js"></script>
+<script src="../strony/medium/medium-dark.js"></script>
 <script>
 const AUTO = location.search.includes('auto');
 const $ = (id) => document.getElementById(id);
