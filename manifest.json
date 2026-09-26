@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Page Tweaks",
-  "version": "1.2.0",
-  "description": "Poprawki cudzych stron: ciemny motyw dla medium.com i qnews.pl, czytnik bez reklam i daty wpisów dla limanowa.in, rmf24.pl bez reklam i z wpisami z X za przyciskiem.",
+  "version": "1.3.0",
+  "description": "Poprawki cudzych stron: ciemny motyw dla medium.com i qnews.pl, czytnik bez reklam i daty wpisów dla limanowa.in, rmf24.pl bez reklam i bocznych paneli, z wpisami z X za przyciskiem.",
   "permissions": ["storage", "declarativeNetRequest"],
   "background": { "service_worker": "wspolne/background.js" },
   "action": {
@@ -37,8 +37,8 @@
     },
     {
       "matches": ["https://rmf24.pl/*", "https://www.rmf24.pl/*"],
-      "js": ["strony/rmf24/rmf24-bez-reklam.js", "strony/rmf24/rmf24-wpisy.js"],
-      "css": ["strony/rmf24/rmf24-bez-reklam.css", "strony/rmf24/rmf24-wpisy.css"],
+      "js": ["strony/rmf24/rmf24-bez-reklam.js", "strony/rmf24/rmf24-wpisy.js", "strony/rmf24/rmf24-panele.js"],
+      "css": ["strony/rmf24/rmf24-bez-reklam.css", "strony/rmf24/rmf24-wpisy.css", "strony/rmf24/rmf24-panele.css"],
       "run_at": "document_start"
     }
   ],

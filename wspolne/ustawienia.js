@@ -23,6 +23,7 @@ const DOMYSLNE_USTAWIENIA = {
   rmf24: {
     bezReklam: true,    // bez reklam, okna zgody, wstawek wideo i autopromocji na rmf24.pl (rmf24-bez-reklam.* + rmf24-reguly.json)
     wpisy: true,        // wpisy z X, Instagrama i Facebooka w artykułach za przyciskiem „Zobacz wpis” (rmf24-wpisy.*)
+    panele: true,       // bez bocznych paneli „Najnowsze” i „Najpopularniejsze”, na głównej też bez nagłówka „Najważniejsze Fakty” (rmf24-panele.*)
   },
 };
 

@@ -1,0 +1,156 @@
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ATRAPA rmf24.pl — bez bocznych paneli</title>
+<!-- Szkielet rmf24.pl w pigułce (stan: wrzesień 2026): góra strony głównej
+     (section.top-stories-section), dział z siatką .cat-grid i artykuł
+     (main.articleSingleWrapper) — każdy z lewą kolumną .col-lg-8.col-xl-9
+     i boczną aside.col-lg-4.col-xl-3 z „Najnowsze" i „Najpopularniejsze".
+     Kolumny jak w Bootstrapie 5.3. Klasy jak na żywej stronie. -->
+<style>
+body { margin: 0; font: 16px/1.6 Roboto, Arial, sans-serif; color: #212529; background: #fff; }
+*, ::before, ::after { box-sizing: border-box; }
+.container { width: 100%; margin: 0 auto; padding: 0 12px; }
+@media (min-width: 576px) { .container { max-width: 540px; } }
+@media (min-width: 768px) { .container { max-width: 720px; } }
+@media (min-width: 992px) { .container { max-width: 960px; } }
+@media (min-width: 1200px) { .container { max-width: 1140px; } }
+.row { display: flex; flex-wrap: wrap; margin: 0 -12px; }
+.row > * { flex-shrink: 0; width: 100%; max-width: 100%; padding: 0 12px; }
+.col-6 { flex: 0 0 auto; width: 50%; }
+@media (min-width: 576px) { .col-sm-6 { flex: 0 0 auto; width: 50%; } }
+@media (min-width: 992px) { .col-lg-4 { flex: 0 0 auto; width: 33.33333333%; } .col-lg-8 { flex: 0 0 auto; width: 66.66666667%; } }
+@media (min-width: 1200px) { .col-xl-3 { flex: 0 0 auto; width: 25%; } .col-xl-4 { flex: 0 0 auto; width: 33.33333333%; } .col-xl-9 { flex: 0 0 auto; width: 75%; } }
+.news-card, .cat-card { height: 60px; margin-bottom: 12px; background: #eef2f7; }
+.bg-dark { background: #222; color: #fff; }
+#panelTestu { background: #0f172a; color: #e2e8f0; padding: 10px 14px; }
+</style>
+<link rel="stylesheet" href="../strony/rmf24/rmf24-panele.css">
+
+<div id="panelTestu">
+  <h3 style="margin:0 0 6px">Atrapa rmf24.pl — testy „bez paneli" (zero kontaktu z rmf24.pl)</h3>
+  <button onclick="testuj()" style="cursor:pointer;padding:6px 12px">uruchom testy</button>
+  <button onclick="__lsPanele.wlacz()" style="cursor:pointer;padding:6px 12px">włącz</button>
+  <button onclick="__lsPanele.wylacz()" style="cursor:pointer;padding:6px 12px">wyłącz</button>
+  <pre id="log" style="white-space:pre-wrap;color:#7dd3fc;margin:8px 0 0"></pre>
+</div>
+
+<template id="bocznaKolumna">
+  <aside class="col-lg-4 col-xl-3">
+    <div class="bg-dark text-white mb-4"><div class="bg-dark text-white p-4 mb-4 mixerListNajnowsze"><h2 class="najnowsze-naglowek">NAJNOWSZE</h2></div></div>
+    <div class="bg-dark text-white mb-4"><div class="mrf-widget bg-dark articleListTabbedBoxPopular"><h2>Najpopularniejsze</h2></div></div>
+  </aside>
+</template>
+
+<!-- strona główna -->
+<section class="area container pt-2 top-stories-section mainContent1" id="glowna">
+  <div class="row g-4">
+    <div class="col-xl-9 col-lg-8" id="glownaLewa">
+      <h2 class="top-stories-heading mb-4" id="naglowekFakty">Najważniejsze Fakty</h2>
+      <div class="row g-4" id="glownaSiatka"></div>
+    </div>
+  </div>
+</section>
+
+<!-- dział -->
+<main class="container mb-5 mt-5" id="dzial">
+  <div class="row g-4">
+    <div class="col-lg-8 col-xl-9" id="dzialLewa">
+      <h1 class="cat-heading">Polska</h1>
+      <div class="row g-4 cat-grid" id="dzialSiatka"></div>
+    </div>
+  </div>
+</main>
+
+<!-- artykuł -->
+<main class="area container mb-5 mt-5 articleSingleWrapper" id="artykul">
+  <div class="row g-4">
+    <div class="col-lg-8 col-xl-9" id="artykulLewa">
+      <article class="article-page">
+        <h1 class="article-page__title" id="tytul">Gęsta mgła nadciąga</h1>
+        <div class="article-page__content" id="tresc"><p>Instytut Meteorologii i Gospodarki Wodnej wydał ostrzeżenie.</p></div>
+        <section class="article-related article-related--key-facts najwazniejszeArt"><h2 class="top-stories-heading mb-4" id="naglowekWArtykule">Najważniejsze Fakty</h2></section>
+      </article>
+    </div>
+  </div>
+</main>
+
+<script>
+for (const id of ['glowna', 'dzial', 'artykul']) document.querySelector(`#${id} > .row`).append(document.getElementById('bocznaKolumna').content.cloneNode(true));
+for (let i = 0; i < 8; i++) document.getElementById('glownaSiatka').insertAdjacentHTML('beforeend', '<div class="col-xl-4 col-sm-6"><article class="news-card"></article></div>');
+for (let i = 0; i < 6; i++) document.getElementById('dzialSiatka').insertAdjacentHTML('beforeend', '<div class="col-6"><article class="cat-card"></article></div>');
+</script>
+<script src="../wspolne/ustawienia.js"></script>
+<script src="../strony/rmf24/rmf24-panele.js"></script>
+<script>
+const AUTO = location.search.includes('auto');
+const $ = (id) => document.getElementById(id);
+const log = $('log');
+window.addEventListener('error', (e) => { log.textContent += `\nBŁĄD TESTU: ${e.message} (${e.filename}:${e.lineno})\n`; });
+let n = 0, ok = 0;
+const sprawdz = (nazwa, warunek, szczegol = '') => {
+  n++; if (warunek) ok++;
+  log.textContent += `${warunek ? 'PASS' : 'FAIL'}  ${nazwa}${szczegol ? '  — ' + szczegol : ''}\n`;
+};
+const spij = (ms) => new Promise((r) => setTimeout(r, ms));
+const widoczny = (el) => el.getClientRects().length > 0;
+const boczne = () => [...document.querySelectorAll('.row > aside')];
+const prost = (el) => el.getBoundingClientRect();
+// ile kafelków w pierwszym rzędzie siatki
+const wRzedzie = (siatka) => { const k = [...siatka.children]; return k.filter((x) => Math.abs(prost(x).top - prost(k[0]).top) < 2).length; };
+// szerokość i środek lewej kolumny bez paddingu (jak treść)
+const tresc = (el) => { const r = prost(el), cs = getComputedStyle(el); return { szer: r.width, srodek: r.left + r.width / 2, l: r.left + parseFloat(cs.paddingLeft), p: r.right - parseFloat(cs.paddingRight) }; };
+
+async function testuj() {
+  log.textContent = '';
+  n = 0; ok = 0;
+  const P = __lsPanele;
+  P.wylacz();
+  await spij(20);
+
+  // --- ustawienia --------------------------------------------------------------
+  sprawdz('ustawienia: domyślnie włączony', P.czyWlaczonyWUstawieniach(null) && P.czyWlaczonyWUstawieniach({}) && P.czyWlaczonyWUstawieniach({ rmf24: {} }) && DOMYSLNE_USTAWIENIA.rmf24.panele === true);
+  sprawdz('ustawienia: klucz rmf24.panele', !P.czyWlaczonyWUstawieniach({ rmf24: { panele: false } }) && P.czyWlaczonyWUstawieniach({ rmf24: { bezReklam: false, wpisy: false } }));
+
+  // --- przed włączeniem ----------------------------------------------------------
+  sprawdz('przed włączeniem: 3 boczne kolumny i nagłówek widoczne', boczne().length === 3 && boczne().every(widoczny) && widoczny($('naglowekFakty')));
+  const artykulPrzed = tresc($('artykulLewa'));
+  const szeroko = innerWidth >= 992;
+
+  // --- włączenie -----------------------------------------------------------------
+  P.wlacz();
+  await spij(20);
+  sprawdz('boczne kolumny schowane na głównej, w dziale i w artykule', boczne().every((a) => !widoczny(a)));
+  sprawdz('„Najważniejsze Fakty" schowany na głównej, pod artykułem zostaje', !widoczny($('naglowekFakty')) && widoczny($('naglowekWArtykule')));
+  sprawdz('treść zostaje', [$('glownaSiatka'), $('dzialSiatka'), $('tytul'), $('tresc')].every(widoczny));
+  sprawdz('bez poziomego przewijania', document.documentElement.scrollWidth <= innerWidth);
+
+  if (szeroko) {
+    const kontener = (id) => { const r = prost($(id)), cs = getComputedStyle($(id)); return r.width - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight); };
+    sprawdz('główna: lewa kolumna na całą szerokość', Math.abs(prost($('glownaLewa')).width - kontener('glowna') - 24) < 1, `${prost($('glownaLewa')).width} vs ${kontener('glowna') + 24}`);
+    const naGlownej = innerWidth >= 1200 ? 4 : 3;
+    sprawdz(`główna: ${naGlownej} kafelki w rzędzie przy ${innerWidth} px`, wRzedzie($('glownaSiatka')) === naGlownej, String(wRzedzie($('glownaSiatka'))));
+    sprawdz('dział: lewa kolumna na całą szerokość, 3 kafelki w rzędzie', Math.abs(prost($('dzialLewa')).width - kontener('dzial') - 24) < 1 && wRzedzie($('dzialSiatka')) === 3, String(wRzedzie($('dzialSiatka'))));
+    const a = tresc($('artykulLewa')), srodekStrony = prost($('artykul')).left + prost($('artykul')).width / 2;
+    sprawdz('artykuł: kolumna tej samej szerokości, na środku', Math.abs(a.szer - artykulPrzed.szer) < 1 && Math.abs(a.srodek - srodekStrony) < 1, `${a.szer}px, środek ${a.srodek} vs ${srodekStrony}`);
+  } else {
+    log.textContent += `(okno ${innerWidth} px < 992 px — układ kolumn sprawdzam tylko w szerszym)\n`;
+    sprawdz('wąsko: kafelki po 2 w rzędzie jak na stronie', wRzedzie($('glownaSiatka')) === (innerWidth >= 576 ? 2 : 1) && wRzedzie($('dzialSiatka')) === 2);
+  }
+
+  // --- wyłączenie i ponowne włączenie -----------------------------------------------------
+  P.wylacz();
+  await spij(20);
+  sprawdz('po wyłączeniu: panele, nagłówek i szerokości jak były', !document.documentElement.hasAttribute('data-ls-panele') && boczne().every(widoczny) && widoczny($('naglowekFakty')) && Math.abs(tresc($('artykulLewa')).l - artykulPrzed.l) < 1);
+  P.wlacz();
+  await spij(20);
+  sprawdz('ponowne włączenie: znów schowane', boczne().every((a) => !widoczny(a)) && !widoczny($('naglowekFakty')));
+
+  // --- manifest, ustawienia -------------------------------------------------------------------
+  const manifest = await fetch('../manifest.json').then((r) => r.json());
+  const wpis = manifest.content_scripts.find((c) => c.js.includes('strony/rmf24/rmf24-panele.js'));
+  sprawdz('manifest: content script z CSS na document_start', !!wpis && wpis.css.includes('strony/rmf24/rmf24-panele.css') && wpis.run_at === 'document_start' && ['https://rmf24.pl/*', 'https://www.rmf24.pl/*'].every((m) => wpis.matches.includes(m)));
+  const opcje = await fetch('../wspolne/options.html').then((r) => r.text());
+  sprawdz('ustawienia: przełącznik rmf24.panele', opcje.includes('data-klucz="rmf24" data-pole="panele"'));
+
+  log.textContent += `\nWYNIK: ${ok}/${n}${ok === n ? ' — wszystko OK' : ' — SĄ BŁĘDY'}\n`;
+}
+if (AUTO) testuj();
+</script>

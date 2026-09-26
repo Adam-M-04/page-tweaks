@@ -1,0 +1,32 @@
+/* Bez bocznych paneli na rmf24.pl — pod html[data-ls-panele]
+   (rmf24-panele.js, tam opis układu stron). */
+
+html[data-ls-panele] .row > aside.col-lg-4.col-xl-3,
+html[data-ls-panele] .top-stories-section .top-stories-heading {
+  display: none !important;
+}
+
+/* Artykuły i reszta: lewa kolumna swojej szerokości, na środku. */
+html[data-ls-panele] .row:has(> aside.col-lg-4.col-xl-3) {
+  justify-content: center;
+}
+
+/* Strona główna i działy: lewa kolumna na całą szerokość. */
+html[data-ls-panele] .top-stories-section > .row > .col-lg-8.col-xl-9,
+html[data-ls-panele] .row > .col-lg-8.col-xl-9:has(> .cat-grid) {
+  flex: 0 0 auto;
+  width: 100%;
+}
+
+/* …a kafelki mniej więcej tej samej szerokości co obok panelu. */
+@media (min-width: 992px) {
+  html[data-ls-panele] .top-stories-section .col-lg-8 > .row > .col-sm-6,
+  html[data-ls-panele] .col-lg-8 > .cat-grid > .col-6 {
+    width: 33.33333333%;
+  }
+}
+@media (min-width: 1200px) {
+  html[data-ls-panele] .top-stories-section .col-lg-8 > .row > .col-sm-6 {
+    width: 25%;
+  }
+}
