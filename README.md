@@ -1,4 +1,4 @@
-# Lepsze strony
+# Page Tweaks
 
 Rozszerzenie do Chrome, które poprawia cudze strony tam, gdzie same o siebie
 nie zadbały:
@@ -16,9 +16,6 @@ nie zadbały:
 
 Każda poprawka jest włączona domyślnie i osobno do wyłączenia w ustawieniach
 (klik w ikonę rozszerzenia). Zmiana działa od razu na otwartych kartach.
-
-Wcześniej te poprawki siedziały w rozszerzeniu myFund Turbo (repo
-MyFund) — tam zostało tylko to, co dotyczy portfela.
 
 ## Instalacja
 

@@ -1,12 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "Lepsze strony",
+  "name": "Page Tweaks",
   "version": "1.1.0",
   "description": "Poprawki cudzych stron: ciemny motyw dla medium.com i qnews.pl, czytnik bez reklam i daty wpisów dla limanowa.in.",
   "permissions": ["storage", "declarativeNetRequest"],
   "background": { "service_worker": "background.js" },
   "action": {
-    "default_title": "Lepsze strony — ustawienia",
+    "default_title": "Page Tweaks — ustawienia",
     "default_icon": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
   },
   "content_scripts": [
