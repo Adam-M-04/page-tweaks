@@ -1,0 +1,59 @@
+<meta charset="utf-8">
+<title>Lepsze strony — ustawienia</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0; padding: 28px; background: #0b1220; color: #e5e7eb;
+    font: 13.5px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  }
+  main { max-width: 640px; margin: 0 auto; }
+  h1 { font-size: 17px; margin: 0 0 4px; }
+  h2 { font-size: 14px; margin: 26px 0 8px; color: #cbd5e1; }
+  p.lead { color: #94a3b8; margin: 0 0 8px; font-size: 12.5px; }
+  p.uwaga { color: #94a3b8; margin: 0 0 12px; font-size: 12px; }
+  fieldset { border: 1px solid #1f2937; border-radius: 12px; padding: 14px 16px 16px; margin: 0 0 14px; }
+  legend { padding: 0 6px; color: #cbd5e1; font-weight: 600; font-size: 12px; }
+  .lista { display: grid; gap: 8px; }
+  label.check { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: #cbd5e1; cursor: pointer; }
+  label.check:hover { color: #fff; }
+  label.check input { margin: 0; cursor: pointer; }
+  #zapisano { color: #4ade80; font-size: 12px; min-height: 18px; }
+</style>
+
+<main>
+  <h1>Lepsze strony — ustawienia</h1>
+  <p class="lead">Każda zmiana zapisuje się od razu i działa na otwartych kartach bez przeładowania.</p>
+  <div id="zapisano"></div>
+
+  <h2>Ciemny motyw</h2>
+  <fieldset>
+    <legend>Strony bez własnego trybu ciemnego</legend>
+    <p class="uwaga">
+      Rozszerzenie odwraca jasność kolorów strony z zachowaniem odcieni: ciemne tło, jasny tekst,
+      składnia kodu w palecie ciemnej, obrazki bez zmian (przezroczyste PNG dostają jasny podkład,
+      żeby czarne kreski diagramów nie znikały). Na Medium działa też w publikacjach na własnych
+      domenach (Level Up Coding, ITNEXT, Plain English…).
+    </p>
+    <div class="lista">
+      <label class="check"><input type="checkbox" data-klucz="medium" data-pole="ciemnyMotyw"> ciemny motyw na medium.com</label>
+      <label class="check"><input type="checkbox" data-klucz="qnews" data-pole="ciemnyMotyw"> ciemny motyw na qnews.pl</label>
+    </div>
+  </fieldset>
+
+  <h2>Czytnik</h2>
+  <fieldset>
+    <legend>Strony zasypane reklamami</legend>
+    <p class="uwaga">
+      Na limanowa.in zostaje sama treść: bez banerów, reklam wideo, okna zgody, okienka powiadomień
+      i paska na dole, artykuł w jednej szerokiej na 760 px kolumnie z większą czcionką, komentarze
+      za przyciskiem. Skrypty sieci reklamowych (optad360, Google Ad Manager, AdSense) i analityki
+      są blokowane tylko na tej stronie.
+    </p>
+    <div class="lista">
+      <label class="check"><input type="checkbox" data-klucz="limanowa" data-pole="czytnik"> czytnik na limanowa.in</label>
+    </div>
+  </fieldset>
+</main>
+
+<script src="ustawienia.js"></script>
+<script src="options.js"></script>

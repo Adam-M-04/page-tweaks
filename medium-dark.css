@@ -1,0 +1,67 @@
+/* Ciemny motyw medium.com — część statyczna. Kolory z arkuszy strony
+   przemapowuje medium-dark.js; tu jest to, czego z arkuszy nie da się
+   wyczytać. Wszystko pod html[data-ls-dark], więc bez atrybutu nic nie
+   działa. */
+
+html[data-ls-dark] {
+  color-scheme: dark;            /* formularze, paski, light-dark() w kodzie */
+  --invert-in-dark-mode: 1;      /* token Medium pod logotypy w obrazkach */
+  background-color: #191919;     /* tło, zanim JS przemapuje tokeny :root */
+  color: #e8e8e8;
+}
+
+/* Przezroczyste PNG w treści (diagramy, loga, zrzuty bez tła) rysowane
+   czarną kreską znikałyby na ciemnym tle — jasny podkład pod nimi. Zdjęcia
+   i zrzuty ekranu są kryjące, więc podkładu nie widać. */
+html[data-ls-dark] article img,
+html[data-ls-dark] figure img {
+  background-color: #e6e6e6;
+}
+
+/* Osadzone gisty (ramka medium.com/media/* → skrypt gist.github.com).
+   Arkusz gista jest cross-origin, więc bez lustra — paleta GitHub dark. */
+html[data-ls-dark] .gist .gist-file { border-color: #3a3a3a !important; }
+html[data-ls-dark] .gist .gist-data { background-color: #1e1e1e !important; border-color: #3a3a3a !important; }
+html[data-ls-dark] .gist .gist-meta { background-color: #262626 !important; color: #a3a3a3 !important; }
+html[data-ls-dark] .gist .gist-meta a { color: #e8e8e8 !important; }
+html[data-ls-dark] .gist .highlight,
+html[data-ls-dark] .gist .blob-wrapper,
+html[data-ls-dark] .gist table,
+html[data-ls-dark] .gist .markdown-body { background-color: #1e1e1e !important; }
+html[data-ls-dark] .gist .blob-num { color: #6b6b6b !important; }
+html[data-ls-dark] .gist .blob-code,
+html[data-ls-dark] .gist .blob-code-inner,
+html[data-ls-dark] .gist .markdown-body { color: #e8e8e8 !important; }
+html[data-ls-dark] .gist .pl-c { color: #8b949e !important; }
+html[data-ls-dark] .gist .pl-c1,
+html[data-ls-dark] .gist .pl-s .pl-v { color: #79c0ff !important; }
+html[data-ls-dark] .gist .pl-e,
+html[data-ls-dark] .gist .pl-en { color: #d2a8ff !important; }
+html[data-ls-dark] .gist .pl-smi,
+html[data-ls-dark] .gist .pl-s .pl-s1 { color: #c9d1d9 !important; }
+html[data-ls-dark] .gist .pl-ent { color: #7ee787 !important; }
+html[data-ls-dark] .gist .pl-k { color: #ff7b72 !important; }
+html[data-ls-dark] .gist .pl-s,
+html[data-ls-dark] .gist .pl-pds,
+html[data-ls-dark] .gist .pl-s .pl-pse .pl-s1,
+html[data-ls-dark] .gist .pl-sr,
+html[data-ls-dark] .gist .pl-sr .pl-cce,
+html[data-ls-dark] .gist .pl-sr .pl-sra,
+html[data-ls-dark] .gist .pl-sr .pl-sre { color: #a5d6ff !important; }
+html[data-ls-dark] .gist .pl-v,
+html[data-ls-dark] .gist .pl-smw { color: #ffa657 !important; }
+html[data-ls-dark] .gist .pl-bu { color: #f85149 !important; }
+html[data-ls-dark] .gist .pl-ii { color: #f0f6fc !important; background-color: #8e1519 !important; }
+html[data-ls-dark] .gist .pl-mh,
+html[data-ls-dark] .gist .pl-mh .pl-en,
+html[data-ls-dark] .gist .pl-ms { color: #1f6feb !important; }
+html[data-ls-dark] .gist .pl-mi,
+html[data-ls-dark] .gist .pl-mb { color: #c9d1d9 !important; }
+html[data-ls-dark] .gist .pl-md { color: #ffdcd7 !important; background-color: #67060c !important; }
+html[data-ls-dark] .gist .pl-mi1 { color: #aff5b4 !important; background-color: #033a16 !important; }
+html[data-ls-dark] .gist .pl-mc { color: #ffdfb6 !important; background-color: #5a1e02 !important; }
+html[data-ls-dark] .gist .pl-mi2 { color: #c9d1d9 !important; background-color: #1158c7 !important; }
+html[data-ls-dark] .gist .pl-mdr { color: #d2a8ff !important; }
+html[data-ls-dark] .gist .pl-ba { color: #8b949e !important; }
+html[data-ls-dark] .gist .pl-sg { color: #484f58 !important; }
+html[data-ls-dark] .gist .pl-corl { color: #a5d6ff !important; }

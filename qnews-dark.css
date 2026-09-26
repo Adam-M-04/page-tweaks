@@ -1,0 +1,23 @@
+/* Ciemny motyw qnews.pl — część statyczna. Kolory z arkuszy strony
+   przemapowuje ciemny-motyw.js (paleta w qnews-dark.js); tu jest to, czego
+   z arkuszy nie da się wyczytać. Wszystko pod html[data-ls-dark]. */
+
+html[data-ls-dark] {
+  color-scheme: dark;            /* formularze, paski przewijania */
+  background-color: #1f1e1b;     /* tło, zanim JS przemapuje gradient html/body */
+  color: #ded8cc;
+}
+
+/* Logo: czarny napis „Q|NEWS" na przezroczystym PNG — odwrócony na jasny.
+   Odcień obraca się z powrotem, więc kolorowe elementy logo zostają swoje. */
+html[data-ls-dark] a.site-logo img {
+  filter: invert(0.88) hue-rotate(180deg);
+}
+
+/* Wykresy i zrzuty w treści są kryjące (białe tło w pliku) i zostają, jak są;
+   przezroczysty PNG rysowany czarną kreską dostaje jasny podkład. */
+html[data-ls-dark] article img,
+html[data-ls-dark] .field--name-body img,
+html[data-ls-dark] .field--name-field-obraz-wykresu img {
+  background-color: #e6e6e6;
+}

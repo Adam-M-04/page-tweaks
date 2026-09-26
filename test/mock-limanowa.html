@@ -1,0 +1,217 @@
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ATRAPA limanowa.in — czytnik</title>
+<!-- Szkielet limanowa.in w pigułce (stan: wrzesień 2026): banery sponsorów
+     nad menu, przyklejone menu, sloty optad360 (także w treści i między
+     komentarzami), artykuł z boczną kolumną, cytaty z 80-pikselowymi
+     cudzysłowami, okno zgody Funding Choices z body overflow: hidden,
+     okienko powiadomień, pasek reklamy na dole, sekcje płatne ze strony
+     głównej i dymek toastr o Adblocku. Klasy jak na żywej stronie. -->
+<style>
+body { margin: 0; padding-top: 55px; font: 16px/1.6 Arial, sans-serif; color: rgb(2, 54, 75); background: rgb(254, 254, 254); }
+header { position: fixed; top: 0; left: 0; right: 0; height: 39px; background: rgb(2, 54, 75); color: #fff; z-index: 10; }
+@media (max-width: 1024px) { header { height: calc(100vh - 50px); transform: translateX(-200vw); } }
+#topBarner img { display: block; width: 100%; height: 200px; background: #f5a623; }
+.wrapper { max-width: 1300px; padding: 0 15px; }
+.newsDetails__top { display: flex; justify-content: space-between; }
+.newsDetails__left { width: 930px; flex: 1 1 auto; }
+.newsDetails__right { width: 300px; }
+.newsDetails__title { font: 700 24px/1.4 Poppins, Arial, sans-serif; }
+.newsDetails__text { font-size: 16px; overflow: hidden; }
+.newsDetails__text blockquote { position: relative; font-style: italic; color: rgb(138, 138, 138); background: rgb(252, 252, 252); padding: 10px 20px; }
+.newsDetails__text blockquote::before { content: '"'; position: absolute; font-size: 80px; left: 0; top: 0; }
+.newsDetails__text blockquote::after { content: '"'; position: absolute; font-size: 80px; right: 0; bottom: 0; }
+.ad-placeholder { min-height: 320px; background: #eee; }
+.floatingArd { position: fixed; bottom: 0; left: 0; right: 0; height: 30px; background: #f60; }
+#notificationsPopup { position: fixed; bottom: 0; left: 0; width: 450px; background: #fff; }
+.fc-consent-root { position: fixed; inset: 0; background: rgba(0, 0, 0, .5); }
+#cmpButton { position: fixed; right: 0; top: 40%; }
+.grecaptcha-badge { position: fixed; right: 0; bottom: 14px; width: 256px; height: 60px; }
+#panelTestu { position: relative; z-index: 20; background: #0f172a; color: #e2e8f0; padding: 10px 14px; }
+</style>
+<link rel="stylesheet" href="../limanowa-czytnik.css">
+
+<body style="overflow: hidden;">
+<div id="panelTestu">
+  <h3 style="margin:0 0 6px">Atrapa limanowa.in — testy czytnika (zero kontaktu z limanowa.in)</h3>
+  <button onclick="testuj()" style="cursor:pointer;padding:6px 12px">uruchom testy</button>
+  <button onclick="__lsCzytnik.wlacz()" style="cursor:pointer;padding:6px 12px">włącz</button>
+  <button onclick="__lsCzytnik.wylacz()" style="cursor:pointer;padding:6px 12px">wyłącz</button>
+  <pre id="log" style="white-space:pre-wrap;color:#7dd3fc;margin:8px 0 0"></pre>
+</div>
+
+<section class="header__section">
+  <section id="topBarner" class="topBarner--smaller"><div class="wrapper"><div class="barnerContainer">
+    <a href="/banner/zobacz/833" id="baner"><span class="ardCarousel"><picture class="picture--active"><img alt=""></picture></span></a>
+  </div></div></section>
+  <header id="menu"><div class="wrapper"><ul class="menu"><li><a href="/aktualnosci">Aktualności</a></li></ul></div></header>
+</section>
+<section class="quickNavigation"><div class="wrapper">
+  <div class="quickNavigation__left"><a class="logo" id="logo" href="/">limanowa.in</a><div class="weather small-weather" id="pogoda">18° dziś</div></div>
+  <div class="quickNavigation__right"><div class="icons" id="ikony"><a href="/kino">kino</a></div><div class="search" id="szukaj">szukaj</div></div>
+</div></section>
+<div class="ad-placeholder ad-placeholder--h2" id="slotGora"><div id="oa-360-1790411796977_oelv581ix"></div></div>
+
+<main>
+  <section class="breadcrumb" id="okruszki"><div class="wrapper">Strona główna › Aktualności</div></section>
+  <div class="mainContent newsDetails itemDetails">
+    <div class="wrapper newsDetails__top" id="gora">
+      <div class="newsDetails__left" id="lewa">
+        <div class="newsDetails__title-row">
+          <h1 class="title newsDetails__title" id="tytul">Spór o wyburzony dworzec</h1>
+          <div class="postReactions" id="reakcje"><button class="postReactions__btn">0</button></div>
+        </div>
+        <div class="newsDetails__photos items-grid">
+          <a class="newsDetails__photo" id="zdjecie" href="?image=1"><figure><img alt="" width="930" height="523"></figure></a>
+          <a class="newsDetails__img-small" href="?image=2"><span class="photo"></span></a>
+          <a class="morePhoto newsDetails__img-small" href="?image=5"><span class="lookMore">zobacz zdjęcia</span></a>
+        </div>
+        <div class="newsDetails__date" id="data">Opublikowano 26.09.2026 05:30:00</div>
+        <div class="newsDetails__text textBox overflow" id="tekst">
+          <p class="semiBold" id="lead">Limanowscy radni jednogłośnie podjęli rezolucję.</p>
+          <div class="ad-placeholder mt0" id="slotTekst"><div id="oa-360-1790411796998_anmf132fl"><video id="wideoReklama"></video></div></div>
+          <p id="akapit">W piątek podczas obrad Rady Miasta <a id="linkTekst" href="#">radny</a> zgłosił wniosek.</p>
+          <div id="oa-360-1790411797041_fuxugumlp" class="placeholderOnnetwork"></div>
+          <blockquote id="cytat">Doszliśmy wspólnie do wniosku, że należy go zburzyć.</blockquote>
+          <p>Ostatni akapit.</p>
+        </div>
+        <div class="newsDetails__bar" id="pasekGoogle"><a href="https://www.google.com/preferences/source?q=https://limanowa.in">Dodaj do preferowanych</a></div>
+        <div class="newsDetails__commentsBox commentsBox" id="komentarze">
+          <h3 class="commentsBox__title tt-n">Komentarze <span>(3)</span></h3>
+          <div id="komentarz_1" class="answer-box">pierwszy</div>
+          <div class="ad-placeholder" id="slotKomentarze"></div>
+          <div id="komentarz_2" class="answer-box">drugi</div>
+        </div>
+        <div class="commentsBox__report reportBox" id="zglos"></div>
+        <h3 class="newsDetails__subtitle nextArticle__top" id="zaciekawic">Może Cię zaciekawić</h3>
+        <div class="nextArticle__grid" id="polecane"><a class="nextArticle" href="#">inny artykuł</a></div>
+        <aside class="shareBar" id="udostepnij"></aside>
+      </div>
+      <div class="newsDetails__right" id="prawa"><div class="rightSide__row"><div class="heading">NAJNOWSZE ARTYKUŁY</div></div></div>
+    </div>
+  </div>
+
+  <!-- ze strony głównej -->
+  <section class="announcements" id="ogloszeniaPromowane"><div class="wrapper"><h3 class="heading heading--border left">Ogłoszenia promowane</h3></div></section>
+  <div class="wrapper homepageThreeBoxesNews">
+    <div class="homepageThreeBoxesNews__box" id="kronika"><h3 class="heading heading--border"><a href="/aktualnosci/kategoria/kronika-policyjna">Kronika policyjna</a></h3></div>
+    <div class="homepageThreeBoxesNews__box" id="partnerzy"><h3 class="heading heading--border"><a href="/materialy-partnerow">Materiały partnerów</a></h3></div>
+  </div>
+  <div class="items-grid"><div class="item news-item item--ad" id="slotKafelek"></div><div class="item item--add" id="slotKafelek2"></div></div>
+  <section class="galleries" id="galerie"><h3 class="heading">Galerie</h3></section>
+  <section class="lastComments" id="ostatnieKomentarze">Najnowsze komentarze</section>
+</main>
+<section class="contactUs" id="kontakt">Twój news: przyślij do nas zdjęcia</section>
+<footer id="stopka">Limanowa.in, Jana Pawła II 19</footer>
+<aside class="floatingArd" id="pasekDol"><span class="floatingArd__close"></span></aside>
+<aside id="notificationsPopup" class="notificationsPopup">Włącz powiadomienia</aside>
+<div id="cmpKontener"><div></div><button id="cmpButton">Privacy</button></div>
+<div class="fc-consent-root" id="zgoda"><div class="fc-dialog-container">limanowa.in asks for your consent</div></div>
+<div class="grecaptcha-badge" id="recaptcha"></div>
+
+<script src="../limanowa-czytnik.js"></script>
+<script>
+const AUTO = location.search.includes('auto');
+const $ = (id) => document.getElementById(id);
+const log = $('log');
+window.addEventListener('error', (e) => { log.textContent += `\nBŁĄD TESTU: ${e.message} (${e.filename}:${e.lineno})\n`; });
+let n = 0, ok = 0;
+const sprawdz = (nazwa, warunek, szczegol = '') => {
+  n++; if (warunek) ok++;
+  log.textContent += `${warunek ? 'PASS' : 'FAIL'}  ${nazwa}${szczegol ? '  — ' + szczegol : ''}\n`;
+};
+const spij = (ms) => new Promise((r) => setTimeout(r, ms));
+const widoczny = (id) => $(id).getClientRects().length > 0;
+const styl = (id, p, pseudo) => getComputedStyle($(id), pseudo)[p];
+
+const SMIECI = ['topBarner', 'baner', 'slotGora', 'slotTekst', 'wideoReklama', 'oa-360-1790411797041_fuxugumlp', 'okruszki',
+  'reakcje', 'pasekGoogle', 'zaciekawic', 'polecane', 'prawa', 'ogloszeniaPromowane', 'partnerzy', 'slotKafelek', 'slotKafelek2',
+  'ostatnieKomentarze', 'kontakt', 'stopka', 'pasekDol', 'notificationsPopup', 'cmpKontener', 'zgoda', 'pogoda', 'ikony'];
+const TRESC = ['tytul', 'zdjecie', 'data', 'lead', 'akapit', 'cytat', 'kronika', 'galerie', 'logo', 'szukaj'];
+
+async function testuj() {
+  log.textContent = '';
+  n = 0; ok = 0;
+  const C = __lsCzytnik;
+  C.wylacz();
+  document.querySelector('.ls-komentarze')?.remove();
+
+  // --- ustawienia --------------------------------------------------------------
+  sprawdz('ustawienia: domyślnie włączony', C.czyWlaczonyWUstawieniach(null) && C.czyWlaczonyWUstawieniach({}) && C.czyWlaczonyWUstawieniach({ limanowa: {} }));
+  sprawdz('ustawienia: klucz limanowa.czytnik', !C.czyWlaczonyWUstawieniach({ limanowa: { czytnik: false } }) && C.czyWlaczonyWUstawieniach({ medium: { ciemnyMotyw: false } }));
+
+  // --- przed włączeniem ----------------------------------------------------------
+  sprawdz('przed włączeniem: baner, slot, zgoda i pasek widoczne', ['topBarner', 'slotGora', 'zgoda', 'pasekDol', 'prawa'].every(widoczny));
+  sprawdz('przed włączeniem: zgoda blokuje przewijanie', styl('zgoda', 'display') !== 'none' && getComputedStyle(document.body).overflow === 'hidden');
+
+  // --- włączenie -----------------------------------------------------------------
+  C.wlacz();
+  await spij(20);
+  const zostaly = SMIECI.filter(widoczny);
+  sprawdz(`śmieci schowane (${SMIECI.length})`, zostaly.length === 0, zostaly.join(', '));
+  const znikly = TRESC.filter((id) => !widoczny(id));
+  sprawdz(`treść zostaje (${TRESC.length})`, znikly.length === 0, znikly.join(', '));
+  sprawdz('znaczek reCAPTCHA niewidoczny, ale w układzie', styl('recaptcha', 'visibility') === 'hidden');
+  sprawdz('przewijanie odblokowane mimo body overflow: hidden', getComputedStyle(document.body).overflow === 'auto');
+  const szeroki = innerWidth >= 1025;
+  sprawdz(`menu: ${szeroki ? 'odklejone na szerokim ekranie' : 'wysuwane (≤1024 px) zostaje fixed'}`,
+    styl('menu', 'position') === (szeroki ? 'static' : 'fixed') && getComputedStyle(document.body).paddingTop === (szeroki ? '0px' : '55px'),
+    `${styl('menu', 'position')}, padding-top ${getComputedStyle(document.body).paddingTop}`);
+
+  // --- układ do czytania --------------------------------------------------------------
+  sprawdz('jedna kolumna: blok, max 760 px, środek', styl('gora', 'display') === 'block' && styl('gora', 'maxWidth') === '760px' && $('lewa').getBoundingClientRect().width <= 720, `${styl('gora', 'display')} ${styl('gora', 'maxWidth')} ${$('lewa').getBoundingClientRect().width}`);
+  const waski = innerWidth <= 650;
+  const px = parseFloat(styl('akapit', 'fontSize'));
+  sprawdz(`tekst ${waski ? '18' : '20'} px, szeryfowy, interlinia 1.7`, px === (waski ? 18 : 20) && /Charter|Georgia/.test(styl('akapit', 'fontFamily')) && Math.abs(parseFloat(styl('akapit', 'lineHeight')) / px - 1.7) < 0.01, `${styl('akapit', 'fontSize')} / ${styl('akapit', 'lineHeight')}`);
+  sprawdz('lead większy i pogrubiony', parseFloat(styl('lead', 'fontSize')) > px && styl('lead', 'fontWeight') === '600', styl('lead', 'fontSize'));
+  sprawdz('tytuł większy niż 24 px strony', parseFloat(styl('tytul', 'fontSize')) >= 27, styl('tytul', 'fontSize'));
+  sprawdz('cytat: kreska po lewej, bez 80-pikselowych cudzysłowów', styl('cytat', 'borderLeftWidth') === '3px' && styl('cytat', 'content', '::before') === 'none' && styl('cytat', 'content', '::after') === 'none' && styl('cytat', 'backgroundColor') === 'rgba(0, 0, 0, 0)');
+  sprawdz('link w treści podkreślony', /underline/.test(styl('linkTekst', 'textDecorationLine')));
+  sprawdz('treść nie jest ucinana (overflow)', styl('tekst', 'overflow') === 'visible');
+
+  // --- komentarze ------------------------------------------------------------------
+  const przycisk = document.querySelector('.ls-komentarze');
+  sprawdz('komentarze schowane, przycisk z liczbą przed nimi', !widoczny('komentarze') && !widoczny('zglos') && przycisk?.textContent === 'Pokaż komentarze (3)' && przycisk.nextElementSibling === $('komentarze'), przycisk?.textContent);
+  przycisk.click();
+  sprawdz('klik: komentarze widoczne, przycisk „Schowaj"', widoczny('komentarze') && przycisk.textContent === 'Schowaj komentarze');
+  sprawdz('reklama między komentarzami dalej schowana', !widoczny('slotKomentarze'));
+  przycisk.click();
+  sprawdz('drugi klik: znów schowane', !widoczny('komentarze') && przycisk.textContent === 'Pokaż komentarze (3)');
+
+  // --- dymki toastr ------------------------------------------------------------------
+  const kontener = document.createElement('div');
+  kontener.id = 'toast-container';
+  kontener.innerHTML = '<div class="toast toast-success" id="dymekOk"><div class="toast-message">Komentarz został dodany</div></div>';
+  document.body.appendChild(kontener);
+  await spij(20);
+  kontener.insertAdjacentHTML('beforeend', '<div class="toast toast-warning" id="dymekAdblock"><div class="toast-title">Wykryliśmy że korzystasz z Adblocka.</div><div class="toast-message">Wyłączając AdBlocka, pozwalasz nam…</div></div>');
+  await spij(20);
+  sprawdz('dymek o Adblocku usunięty przez obserwatora', !$('dymekAdblock'));
+  sprawdz('inne dymki zostają', !!$('dymekOk'));
+  kontener.remove();
+
+  // --- wyłączenie i ponowne włączenie -----------------------------------------------------
+  przycisk.click();
+  C.wylacz();
+  await spij(20);
+  sprawdz('po wyłączeniu: atrybuty zdjęte', !document.documentElement.hasAttribute('data-ls-czytnik') && !document.documentElement.hasAttribute('data-ls-komentarze'));
+  sprawdz('po wyłączeniu: strona jak była (baner, kolumna boczna, komentarze)', ['topBarner', 'prawa', 'komentarze', 'zgoda'].every(widoczny) && styl('gora', 'display') === 'flex');
+  sprawdz('po wyłączeniu: przycisk komentarzy schowany', przycisk.getClientRects().length === 0);
+  C.wlacz();
+  await spij(20);
+  sprawdz('ponowne włączenie: jeden przycisk, komentarze schowane', document.querySelectorAll('.ls-komentarze').length === 1 && !widoczny('komentarze'));
+
+  // --- reguły sieciowe i manifest -----------------------------------------------------------
+  const reguly = await fetch('../limanowa-reguly.json').then((r) => r.json());
+  sprawdz('reguły: unikalne id, same blokady', new Set(reguly.map((r) => r.id)).size === reguly.length && reguly.every((r) => r.action.type === 'block'));
+  sprawdz('reguły: tylko żądania wychodzące z limanowa.in, nigdy main_frame', reguly.every((r) => JSON.stringify(r.condition.initiatorDomains) === '["limanowa.in"]' && !(r.condition.resourceTypes || []).includes('main_frame')));
+  const domeny = reguly.flatMap((r) => r.condition.requestDomains || []);
+  sprawdz('reguły: optad360, statsforads, Ad Manager, AdSense, Funding Choices', ['optad360.io', 'optad360-video.com', 'statsforads.com', 'doubleclick.net', 'googlesyndication.com', 'fundingchoicesmessages.google.com'].every((d) => domeny.includes(d)));
+  sprawdz('reguły: nie ruszają portalu, zdjęć, reCAPTCHA ani fontów', !domeny.some((d) => /(^|\.)(limanowa\.in|google\.com|gstatic\.com|googleapis\.com)$/.test(d) && d !== 'fundingchoicesmessages.google.com'), domeny.join(', '));
+  const manifest = await fetch('../manifest.json').then((r) => r.json());
+  const wpis = manifest.content_scripts.find((c) => c.js.includes('limanowa-czytnik.js'));
+  sprawdz('manifest: content script z CSS na document_start', !!wpis && wpis.css.includes('limanowa-czytnik.css') && wpis.run_at === 'document_start' && wpis.matches.includes('https://limanowa.in/*'));
+  sprawdz('manifest: zestaw reguł „limanowa" i uprawnienie declarativeNetRequest', manifest.permissions.includes('declarativeNetRequest') && manifest.declarative_net_request.rule_resources.some((r) => r.id === 'limanowa' && r.path === 'limanowa-reguly.json'));
+
+  log.textContent += `\nWYNIK: ${ok}/${n}${ok === n ? ' — wszystko OK' : ' — SĄ BŁĘDY'}\n`;
+}
+if (AUTO) testuj();
+</script>

@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "Lepsze strony",
+  "version": "1.0.0",
+  "description": "Poprawki cudzych stron: ciemny motyw dla medium.com i qnews.pl, czytnik bez reklam dla limanowa.in.",
+  "permissions": ["storage", "declarativeNetRequest"],
+  "background": { "service_worker": "background.js" },
+  "action": {
+    "default_title": "Lepsze strony — ustawienia",
+    "default_icon": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://medium.com/*", "https://*.medium.com/*",
+        "https://levelup.gitconnected.com/*", "https://itnext.io/*", "https://*.plainenglish.io/*",
+        "https://blog.stackademic.com/*", "https://blog.devgenius.io/*", "https://betterprogramming.pub/*",
+        "https://codeburst.io/*", "https://blog.bitsrc.io/*", "https://faun.pub/*", "https://towardsdev.com/*"
+      ],
+      "exclude_matches": ["https://help.medium.com/*"],
+      "js": ["ciemny-motyw.js", "medium-dark.js"],
+      "css": ["medium-dark.css"],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": ["https://qnews.pl/*", "https://www.qnews.pl/*"],
+      "js": ["ciemny-motyw.js", "qnews-dark.js"],
+      "css": ["qnews-dark.css"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://limanowa.in/*", "https://www.limanowa.in/*"],
+      "js": ["limanowa-czytnik.js"],
+      "css": ["limanowa-czytnik.css"],
+      "run_at": "document_start"
+    }
+  ],
+  "declarative_net_request": {
+    "rule_resources": [{ "id": "limanowa", "enabled": true, "path": "limanowa-reguly.json" }]
+  },
+  "options_page": "options.html",
+  "icons": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+}

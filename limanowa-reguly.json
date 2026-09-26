@@ -1,0 +1,51 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "initiatorDomains": ["limanowa.in"],
+      "requestDomains": [
+        "optad360.io",
+        "optad360.net",
+        "optad360-video.com",
+        "statsforads.com",
+        "onnetwork.tv",
+        "doubleclick.net",
+        "googlesyndication.com",
+        "googleadservices.com",
+        "adtrafficquality.google",
+        "fundingchoicesmessages.google.com",
+        "googletagmanager.com",
+        "google-analytics.com"
+      ]
+    }
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "initiatorDomains": ["limanowa.in"],
+      "urlFilter": "||news.google.com/swg/"
+    }
+  },
+  {
+    "id": 3,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "initiatorDomains": ["limanowa.in"],
+      "urlFilter": "||cdn.jsdelivr.net/gh/prebid/"
+    }
+  },
+  {
+    "id": 4,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "initiatorDomains": ["limanowa.in"],
+      "urlFilter": "||cdn.jsdelivr.net/npm/openplayerjs"
+    }
+  }
+]

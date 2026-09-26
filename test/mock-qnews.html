@@ -1,0 +1,116 @@
+<!doctype html><meta charset="utf-8"><title>ATRAPA qnews.pl — ciemny motyw</title>
+<!-- Motyw „q" w pigułce (stan: wrzesień 2026): gradient na html/body, białe
+     karty z 60-pikselowym cieniem, kremowe bloki, brązowy blok Info z białym
+     tekstem, beżowe guziki, artykuł wklejony z Worda ze stylami inline. -->
+<style>
+html, body { background-image: linear-gradient(rgb(255, 255, 255), rgb(223, 213, 197)); color: rgb(68, 64, 54); margin: 0; padding: 20px; font: 14px "Open Sans", sans-serif; }
+section.region-content { background-color: rgb(255, 255, 255); box-shadow: rgba(50, 50, 50, 0.24) 0px 0px 60px; padding: 12px; }
+div#block-info { background-color: rgb(243, 240, 236); }
+div#block-info div.content { background-color: rgb(119, 102, 84); }
+div#block-info div.content div.field--name-body { color: rgb(255, 255, 255); }
+div#block-qnews-search > button { background-color: rgb(229, 217, 199); border: 1px solid rgb(229, 217, 199); }
+nav ul.menu li a { color: rgb(100, 89, 82); }
+.messages--status { box-shadow: rgb(119, 178, 89) -8px 0px 0px; }
+.luna { box-shadow: rgba(255, 255, 255, 0.5) 0px 0px 20px; }
+a { color: rgb(0, 145, 234); }
+</style>
+<link rel="stylesheet" href="../qnews-dark.css">
+
+<body>
+<h3>Atrapa qnews.pl — testy ciemnego motywu (zero kontaktu z qnews.pl)</h3>
+<p>Silnik jest wspólny z Medium i testowany w <code>mock-medium.html</code>; tu paleta qnews,
+kolory w atrybutach <code>style=""</code>, ciemne cienie kart i statyczny <code>qnews-dark.css</code>.</p>
+<button onclick="testuj()" style="cursor:pointer;padding:6px 12px;margin-bottom:10px">uruchom testy</button>
+<button onclick="__lsDark.wlacz()" style="cursor:pointer;padding:6px 12px;margin-bottom:10px">włącz</button>
+<button onclick="__lsDark.wylacz()" style="cursor:pointer;padding:6px 12px;margin-bottom:10px">wyłącz</button>
+
+<div id="scena">
+  <a class="site-logo" href="#"><img id="logo" alt="Qnews" width="92" height="20"></a>
+  <div id="block-qnews-search"><button id="szukaj">szukaj</button></div>
+  <nav><ul class="menu"><li><a id="menuLink" href="#">Aktualności</a></li></ul></nav>
+  <section class="region-content" id="karta">
+    <article class="node node--type-news">
+      <div class="field--name-body">
+        <p id="akapitInline" style="background-color:rgb(255, 255, 255);color:rgb(68, 64, 54);font-family:&quot;Open Sans&quot;, sans-serif;">Akapit wklejony z Worda.</p>
+        <span id="spanInline" style="background-image:url(#kotwica);background-color:#fff;">span z url()</span>
+        <p id="akapitBezKoloru" style="margin-left:10px">akapit bez koloru w stylu</p>
+        <a id="link" href="#">link</a>
+        <img id="wykres" alt="" width="40" height="20">
+      </div>
+    </article>
+  </section>
+  <div id="block-info"><div class="content"><div class="field--name-body" id="infoTekst">Quercus TFI</div></div></div>
+  <div class="messages--status" id="status">komunikat</div>
+  <div class="luna" id="luna">łuna</div>
+</div>
+<pre id="log" style="white-space:pre-wrap;color:#7dd3fc"></pre>
+
+<script src="../ciemny-motyw.js"></script>
+<script src="../qnews-dark.js"></script>
+<script>
+const AUTO = location.search.includes('auto');
+const $ = (id) => document.getElementById(id);
+const log = $('log');
+window.addEventListener('error', (e) => { log.textContent += `\nBŁĄD TESTU: ${e.message} (${e.filename}:${e.lineno})\n`; });
+let n = 0, ok = 0;
+const sprawdz = (nazwa, warunek, szczegol = '') => {
+  n++; if (warunek) ok++;
+  log.textContent += `${warunek ? 'PASS' : 'FAIL'}  ${nazwa}${szczegol ? '  — ' + szczegol : ''}\n`;
+};
+const kolor = (id, p = 'color') => getComputedStyle($(id))[p];
+const spij = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function testuj() {
+  log.textContent = '';
+  n = 0; ok = 0;
+  const D = __lsDark;
+  D.wylacz();
+
+  // --- paleta ---------------------------------------------------------------
+  sprawdz('biel → ciepła czerń #1f1e1b', D.mapujKolor('rgb(255, 255, 255)') === 'rgb(31, 30, 27)', D.mapujKolor('rgb(255, 255, 255)'));
+  sprawdz('tekst #444036 → #ded8cc', D.mapujKolor('rgb(68, 64, 54)') === 'rgb(222, 216, 204)', D.mapujKolor('rgb(68, 64, 54)'));
+  sprawdz('brązowy blok → jasny brąz', D.mapujKolor('rgb(119, 102, 84)') === 'rgb(154, 138, 118)', D.mapujKolor('rgb(119, 102, 84)'));
+  sprawdz('ustawienia: klucz qnews', D.czyWlaczonyWUstawieniach({ medium: { ciemnyMotyw: false } }) && !D.czyWlaczonyWUstawieniach({ qnews: { ciemnyMotyw: false } }));
+  sprawdz('ciemny cień zostaje ciemny (box-shadow)', D.przemapujWartosc('rgba(50, 50, 50, 0.24) 0px 0px 60px', 'box-shadow') === null);
+  sprawdz('kolorowy cień (pasek statusu) zostaje', D.przemapujWartosc('rgb(119, 178, 89) -8px 0px 0px', 'box-shadow') === null);
+  sprawdz('jasna łuna w cieniu ciemnieje', D.przemapujWartosc('rgba(255, 255, 255, 0.5) 0px 0px 20px', 'box-shadow') === 'rgba(31, 30, 27, 0.5) 0px 0px 20px', D.przemapujWartosc('rgba(255, 255, 255, 0.5) 0px 0px 20px', 'box-shadow'));
+  sprawdz('ten sam ciemny kolor poza cieniem jest mapowany', D.przemapujWartosc('rgba(50, 50, 50, 0.24)', 'background-color') !== null);
+
+  // --- przed włączeniem ------------------------------------------------------
+  sprawdz('przed włączeniem: białe tło akapitu z Worda', kolor('akapitInline', 'backgroundColor') === 'rgb(255, 255, 255)');
+
+  // --- włączenie --------------------------------------------------------------
+  D.wlacz();
+  await spij(50);
+  sprawdz('gradient html/body odwrócony', getComputedStyle(document.body).backgroundImage === 'linear-gradient(rgb(31, 30, 27), rgb(41, 38, 34))', getComputedStyle(document.body).backgroundImage);
+  sprawdz('karta ciemna, cień pod nią nadal ciemny', kolor('karta', 'backgroundColor') === 'rgb(31, 30, 27)' && kolor('karta', 'boxShadow') === 'rgba(50, 50, 50, 0.24) 0px 0px 60px 0px', kolor('karta', 'boxShadow'));
+  sprawdz('kremowy blok i brązowa treść z ciemnym tekstem', kolor('block-info', 'backgroundColor') === 'rgb(38, 37, 34)' && kolor('infoTekst') === 'rgb(31, 30, 27)' && getComputedStyle($('infoTekst').parentElement).backgroundColor === 'rgb(154, 138, 118)', kolor('infoTekst'));
+  sprawdz('beżowy guzik ciemny, ramka też', kolor('szukaj', 'backgroundColor') === 'rgb(58, 52, 44)' && kolor('szukaj', 'borderTopColor') === 'rgb(58, 52, 44)', kolor('szukaj', 'backgroundColor'));
+  sprawdz('menu jaśniejsze', kolor('menuLink') === 'rgb(190, 178, 168)', kolor('menuLink'));
+  const link = D.parsujKolor(kolor('link'));
+  sprawdz('link niebieski jaśnieje, zostaje niebieski', link.b > link.r && link.b > 200, kolor('link'));
+  sprawdz('kolorowy pasek statusu w cieniu bez zmian', kolor('status', 'boxShadow') === 'rgb(119, 178, 89) -8px 0px 0px 0px', kolor('status', 'boxShadow'));
+  sprawdz('łuna białą → ciemna', kolor('luna', 'boxShadow') === 'rgba(31, 30, 27, 0.5) 0px 0px 20px 0px', kolor('luna', 'boxShadow'));
+  sprawdz('style inline z Worda: tło i tekst przepisane w atrybucie', kolor('akapitInline', 'backgroundColor') === 'rgb(31, 30, 27)' && kolor('akapitInline') === 'rgb(222, 216, 204)' && /rgb\(31, 30, 27\)/.test($('akapitInline').getAttribute('style')), $('akapitInline').getAttribute('style'));
+  sprawdz('style inline: url(#kotwica) nietknięty, kolor obok przepisany', /url\("#kotwica"\)|url\(#kotwica\)/.test($('spanInline').getAttribute('style')) && kolor('spanInline', 'backgroundColor') === 'rgb(31, 30, 27)', $('spanInline').getAttribute('style'));
+  sprawdz('style inline bez koloru bez zmian', $('akapitBezKoloru').getAttribute('style') === 'margin-left:10px');
+  sprawdz('logo odwrócone filtrem', /invert/.test(kolor('logo', 'filter')), kolor('logo', 'filter'));
+  sprawdz('obrazek w treści: jasny podkład', kolor('wykres', 'backgroundColor') === 'rgb(230, 230, 230)', kolor('wykres', 'backgroundColor'));
+
+  // „React" nadpisuje styl inline po włączeniu
+  $('akapitInline').setAttribute('style', 'background-color: rgb(243, 240, 236); color: rgb(0, 0, 0);');
+  await spij(20);
+  sprawdz('nowy styl inline z DOM przemapowany przez obserwatora', kolor('akapitInline', 'backgroundColor') === 'rgb(38, 37, 34)' && kolor('akapitInline') === 'rgb(240, 236, 228)', $('akapitInline').getAttribute('style'));
+
+  // --- wyłączenie -------------------------------------------------------------
+  D.wylacz();
+  await spij(20);
+  sprawdz('po wyłączeniu: gradient jasny, karta biała', /rgb\(255, 255, 255\)/.test(getComputedStyle(document.body).backgroundImage) && kolor('karta', 'backgroundColor') === 'rgb(255, 255, 255)');
+  sprawdz('po wyłączeniu: styl inline wraca do ostatniej wersji strony', $('akapitInline').getAttribute('style') === 'background-color: rgb(243, 240, 236); color: rgb(0, 0, 0);', $('akapitInline').getAttribute('style'));
+  sprawdz('po wyłączeniu: url(#kotwica) i #fff jak w źródle', $('spanInline').getAttribute('style') === 'background-image:url(#kotwica);background-color:#fff;', $('spanInline').getAttribute('style'));
+  sprawdz('po wyłączeniu: logo bez filtra', kolor('logo', 'filter') === 'none', kolor('logo', 'filter'));
+
+  log.textContent += `\nWYNIK: ${ok}/${n}${ok === n ? ' — wszystko OK' : ' — SĄ BŁĘDY'}\n`;
+}
+if (AUTO) testuj();
+</script>

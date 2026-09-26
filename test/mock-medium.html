@@ -1,0 +1,160 @@
+<!doctype html><meta charset="utf-8"><title>ATRAPA medium.com — ciemny motyw</title>
+<!-- Medium poznaje się po tej mecie także na domenach własnych publikacji. -->
+<meta property="al:android:package" content="com.medium.reader">
+<!-- Tokeny Medium 1:1 z żywej strony (stan: wrzesień 2026), skrócone. -->
+<style data-href="lite-color-scheme-tokens">:root { color-scheme: light; --invert-in-dark-mode: 0; --color-bg-neutral-primary: #ffffff; --color-bg-neutral-tertiary: #f9f9f9; --color-bg-brand-primary: #191919; --color-fg-neutral-primary: #242424; --color-fg-neutral-secondary: #6b6b6b; --color-fg-neutral-tertiary: #ffffff; --color-fg-accent-primary: #1a8917; --color-border-neutral-primary: #f2f2f2; --color-syntax-keyword: light-dark(#cf222e, #ff7b72); --color-syntax-string: light-dark(#0a3069, #a5d6ff); }</style>
+<!-- Klasy atomowe jak z Feli: jedna klasa = jedna deklaracja. -->
+<style data-fela-type="RULE">
+body { color: var(--color-fg-neutral-primary); background-color: var(--color-bg-neutral-primary); margin: 0; padding: 20px; font: 14px system-ui; }
+.ab { color: var(--color-fg-neutral-secondary) }
+.ac { background-color: var(--color-bg-neutral-tertiary) }
+.ad { border: 1px solid var(--color-border-neutral-primary) }
+.be { color: rgb(255, 255, 255) }
+.bg { background-color: rgb(26, 137, 23) }
+.bi:hover { background-color: rgb(21, 109, 18) }
+.ed { box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px inset }
+.gr { background-image: linear-gradient(rgba(255, 255, 255, 0), rgb(255, 255, 255)) }
+.hljs-keyword { color: var(--color-syntax-keyword) }
+.hljs-string { color: var(--color-syntax-string) }
+.ikona { background-image: url(#a); color: rgb(36, 36, 36) }
+.li, .lj:hover { color: rgb(107, 107, 107) }
+</style>
+<!-- Fela trzyma zapytania medialne na <style media>, nie w @media. -->
+<style data-fela-type="RULE" media="print">.druk { color: rgb(0, 0, 0) }</style>
+<style data-fela-type="RULE" media="all and (min-width: 1px)">.wask { color: rgb(63, 63, 63) }</style>
+<!-- Arkusz gista (na żywo cross-origin z github.githubassets.com) — tu lokalnie, jasny. -->
+<style id="gist-css">.gist .gist-data { background-color: #fff } .gist .blob-code { color: #24292f } .gist .pl-k { color: #cf222e }</style>
+<!-- Statyczna część motywu, jak z manifestu (css: medium-dark.css). -->
+<link rel="stylesheet" href="../medium-dark.css">
+
+<body>
+<h3>Atrapa Medium — testy ciemnego motywu (zero kontaktu z medium.com)</h3>
+<p>Tokeny <code>:root</code>, klasy atomowe Feli, arkusze z <code>media</code>, SVG z <code>fill</code>,
+gist z jasnym arkuszem, obrazek w <code>article</code>. Test włącza motyw przez
+<code>__lsDark.wlacz()</code> (bez <code>chrome.storage</code>) i sprawdza kolory wyliczone przez przeglądarkę.</p>
+<button onclick="testuj()" style="cursor:pointer;padding:6px 12px;margin-bottom:10px">uruchom testy</button>
+<button onclick="__lsDark.wlacz()" style="cursor:pointer;padding:6px 12px;margin-bottom:10px">włącz</button>
+<button onclick="__lsDark.wylacz()" style="cursor:pointer;padding:6px 12px;margin-bottom:10px">wyłącz</button>
+
+<div id="scena">
+  <svg width="120" height="24" viewBox="0 0 120 24"><path id="logo" fill="#242424" d="M0 0h120v24H0z"/><path id="ikonaM" fill="currentColor" d="M0 0h10v10H0z"/></svg>
+  <p id="akapit">Akapit w kolorze tokenu.</p>
+  <p id="szary" class="ab">Tekst drugorzędny.</p>
+  <pre id="kod" class="ac ad"><span class="hljs-keyword" id="kw">namespace</span> <span class="hljs-string" id="str">'App'</span></pre>
+  <button id="zielony" class="bg be bi ed">Get started</button>
+  <div id="gradient" class="gr">paywall</div>
+  <span id="ikona" class="ikona">ikona</span>
+  <span id="druk" class="druk">tylko do druku</span>
+  <span id="wask" class="wask">media all</span>
+  <span id="nowa" class="nowa">reguła dołożona w locie</span>
+  <span id="dynamiczny" class="dyn">styl dołożony w locie</span>
+  <article><figure><img id="obrazek" alt="" width="40" height="20"></figure></article>
+  <div class="gist"><div class="gist-data" id="gistData"><table><tr><td class="blob-code" id="gistKod"><span class="pl-k" id="gistK">use</span> App;</td></tr></table></div></div>
+</div>
+<pre id="log" style="white-space:pre-wrap;color:#7dd3fc"></pre>
+
+<script src="../ciemny-motyw.js"></script>
+<script src="../medium-dark.js"></script>
+<script>
+const AUTO = location.search.includes('auto');
+const $ = (id) => document.getElementById(id);
+const log = $('log');
+window.addEventListener('error', (e) => { log.textContent += `\nBŁĄD TESTU: ${e.message} (${e.filename}:${e.lineno})\n`; });
+let n = 0, ok = 0;
+const sprawdz = (nazwa, warunek, szczegol = '') => {
+  n++; if (warunek) ok++;
+  log.textContent += `${warunek ? 'PASS' : 'FAIL'}  ${nazwa}${szczegol ? '  — ' + szczegol : ''}\n`;
+};
+const kolor = (id, p = 'color') => getComputedStyle($(id))[p];
+const spij = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function testuj() {
+  log.textContent = '';
+  n = 0; ok = 0;
+  const D = __lsDark;
+  D.wylacz();
+
+  // --- czyste funkcje ---------------------------------------------------------
+  sprawdz('biel → tło #191919', D.mapujKolor('#ffffff') === 'rgb(25, 25, 25)', D.mapujKolor('#ffffff'));
+  sprawdz('tekst #242424 → #e8e8e8 (także z rgb())', D.mapujKolor('rgb(36, 36, 36)') === 'rgb(232, 232, 232)', D.mapujKolor('rgb(36, 36, 36)'));
+  sprawdz('cień: czerń z alfą → biel z tą samą alfą', D.mapujKolor('rgba(0, 0, 0, 0.05)') === 'rgba(255, 255, 255, 0.05)', D.mapujKolor('rgba(0, 0, 0, 0.05)'));
+  sprawdz('zieleń Medium z tabeli ręcznej', D.mapujKolor('rgb(26, 137, 23)') === 'rgb(75, 194, 71)', D.mapujKolor('rgb(26, 137, 23)'));
+  sprawdz('skróty #fff i „white" to ta sama biel', D.mapujKolor('#fff') === 'rgb(25, 25, 25)' && D.mapujKolor('white') === 'rgb(25, 25, 25)');
+  const niebieski = D.parsujKolor(D.mapujKolor('#0550ae'));
+  sprawdz('kolor spoza tabeli: ciemny niebieski jaśnieje, odcień zostaje', niebieski.b > niebieski.r && niebieski.b > niebieski.g && niebieski.b > 174, JSON.stringify(niebieski));
+  const jasnyNieb = D.parsujKolor(D.mapujKolor('#e5f2ff'));
+  sprawdz('jasne tło spoza tabeli ciemnieje', jasnyNieb.r < 60 && jasnyNieb.g < 70 && jasnyNieb.b < 90, JSON.stringify(jasnyNieb));
+  sprawdz('przezroczystość i nie-kolory bez zmian', D.mapujKolor('rgba(0, 0, 0, 0)') === 'rgba(0, 0, 0, 0)' && D.mapujKolor('transparent') === 'transparent' && D.mapujKolor('1px') === '1px');
+  sprawdz('gradient: oba kolory przemapowane', D.przemapujWartosc('linear-gradient(rgba(255, 255, 255, 0), rgb(255, 255, 255))') === 'linear-gradient(rgba(255, 255, 255, 0), rgb(25, 25, 25))', D.przemapujWartosc('linear-gradient(rgba(255, 255, 255, 0), rgb(255, 255, 255))'));
+  sprawdz('url(#id) i light-dark() nietknięte', D.przemapujWartosc('url(#a)') === null && D.przemapujWartosc('light-dark(#fff, #000)') === null && D.przemapujWartosc('1px solid') === null);
+  sprawdz('lista selektorów: każdy z osobna', D.prefiksujSelektor('.a, .b:hover') === 'html[data-ls-dark] .a, html[data-ls-dark] .b:hover', D.prefiksujSelektor('.a, .b:hover'));
+  sprawdz(':root i html dostają atrybut na sobie', D.prefiksujSelektor(':root') === ':root[data-ls-dark]' && D.prefiksujSelektor('html.x') === 'html[data-ls-dark].x' && D.prefiksujSelektor('body') === 'html[data-ls-dark] body');
+  sprawdz('przecinek w :is() i w atrybucie nie dzieli', D.prefiksujSelektor(':is(.a, .b) .c') === 'html[data-ls-dark] :is(.a, .b) .c' && D.prefiksujSelektor('[title="a,b"]') === 'html[data-ls-dark] [title="a,b"]');
+  sprawdz('ustawienia: brak klucza = włączony, false = wyłączony', D.czyWlaczonyWUstawieniach(undefined) && D.czyWlaczonyWUstawieniach({}) && !D.czyWlaczonyWUstawieniach({ medium: { ciemnyMotyw: false } }));
+  sprawdz('atrapa uchodzi za Medium po mecie al:android:package', D.czyStrona());
+
+  // --- przed włączeniem: jasno ------------------------------------------------
+  sprawdz('przed włączeniem: białe tło, ciemny tekst', kolor('akapit') === 'rgb(36, 36, 36)' && getComputedStyle(document.body).backgroundColor === 'rgb(255, 255, 255)');
+
+  // --- włączenie --------------------------------------------------------------
+  D.wlacz();
+  await spij(50);
+  const lustro = document.getElementById('ls-dark-lustro').sheet;
+  sprawdz('atrybut na <html> i własny arkusz lustra', document.documentElement.hasAttribute('data-ls-dark') && lustro.cssRules.length > 5, String(lustro.cssRules.length));
+  sprawdz('tło strony ciemne (token :root przemapowany)', getComputedStyle(document.body).backgroundColor === 'rgb(25, 25, 25)', getComputedStyle(document.body).backgroundColor);
+  sprawdz('tekst z tokenu jasny', kolor('akapit') === 'rgb(232, 232, 232)', kolor('akapit'));
+  sprawdz('tekst drugorzędny jaśniejszy szary', kolor('szary') === 'rgb(163, 163, 163)', kolor('szary'));
+  sprawdz('blok kodu: ciemne tło, ciemna ramka', kolor('kod', 'backgroundColor') === 'rgb(34, 34, 34)' && kolor('kod', 'borderTopColor') === 'rgb(44, 44, 44)', kolor('kod', 'backgroundColor') + ' / ' + kolor('kod', 'borderTopColor'));
+  sprawdz('składnia: light-dark() przełączone przez color-scheme', kolor('kw') === 'rgb(255, 123, 114)' && kolor('str') === 'rgb(165, 214, 255)', kolor('kw') + ' / ' + kolor('str'));
+  sprawdz('zielony przycisk: jaśniejsza zieleń, tekst ciemny, cień biały', kolor('zielony', 'backgroundColor') === 'rgb(75, 194, 71)' && kolor('zielony') === 'rgb(25, 25, 25)' && /rgba\(255, 255, 255, 0\.05\)/.test(kolor('zielony', 'boxShadow')), kolor('zielony', 'backgroundColor') + ' / ' + kolor('zielony') + ' / ' + kolor('zielony', 'boxShadow'));
+  sprawdz('gradient paywalla zanika w ciemne', /rgb\(25, 25, 25\)/.test(kolor('gradient', 'backgroundImage')), kolor('gradient', 'backgroundImage'));
+  sprawdz('url(#a) w tle zostaje, kolor obok przemapowany', /url\(/.test(kolor('ikona', 'backgroundImage')) && kolor('ikona') === 'rgb(232, 232, 232)', kolor('ikona'));
+  sprawdz('lista selektorów .li, .lj:hover — lustro dla obu', [...lustro.cssRules].some((r) => r.cssText.includes('html[data-ls-dark] .li, html[data-ls-dark] .lj:hover')));
+  sprawdz('arkusz media=print nie wycieka na ekran', kolor('druk') === 'rgb(232, 232, 232)', kolor('druk'));
+  sprawdz('arkusz media=all and (min-width: 1px) działa przez @media', kolor('wask') === 'rgb(212, 212, 212)', kolor('wask'));
+  sprawdz('własne reguły (medium-dark.css) bez bliźniaka — tło <html> nie odwrócone z powrotem', getComputedStyle(document.documentElement).backgroundColor === 'rgb(25, 25, 25)' && ![...lustro.cssRules].some((r) => r.cssText.includes('[data-ls-dark][data-ls-dark]')), getComputedStyle(document.documentElement).backgroundColor);
+  sprawdz('color-scheme: dark na <html>', getComputedStyle(document.documentElement).colorScheme === 'dark', getComputedStyle(document.documentElement).colorScheme);
+  sprawdz('obrazek w artykule: jasny podkład pod przezroczystość', kolor('obrazek', 'backgroundColor') === 'rgb(230, 230, 230)', kolor('obrazek', 'backgroundColor'));
+  sprawdz('SVG: fill="#242424" → jasny, currentColor nietknięty', $('logo').getAttribute('fill') === 'rgb(232, 232, 232)' && $('ikonaM').getAttribute('fill') === 'currentColor', $('logo').getAttribute('fill'));
+  sprawdz('gist: jasny arkusz przykryty (kod jasny, tło ciemne, keyword z palety GitHub dark)', kolor('gistKod') === 'rgb(232, 232, 232)' && kolor('gistData', 'backgroundColor') === 'rgb(30, 30, 30)' && kolor('gistK') === 'rgb(255, 123, 114)', kolor('gistKod') + ' / ' + kolor('gistData', 'backgroundColor') + ' / ' + kolor('gistK'));
+
+  // reguła dołożona insertRule (Fela w locie) — łapie ją zegar
+  const fela = document.querySelector('style[data-fela-type="RULE"]').sheet;
+  fela.insertRule('.nowa { color: rgb(107, 107, 107) }', fela.cssRules.length);
+  sprawdz('insertRule: przed skanem kolor jasny-szary oryginału', kolor('nowa') === 'rgb(107, 107, 107)', kolor('nowa'));
+  await spij(1300);
+  sprawdz('insertRule: po zegarze (1 s) przemapowany', kolor('nowa') === 'rgb(163, 163, 163)', kolor('nowa'));
+
+  // nowy <style> — łapie go MutationObserver od razu
+  const nowyStyl = document.createElement('style');
+  nowyStyl.textContent = '.dyn { color: rgb(36, 36, 36); background-color: rgb(249, 249, 249) }';
+  document.head.appendChild(nowyStyl);
+  await spij(20);
+  sprawdz('nowy <style>: przemapowany bez czekania na zegar', kolor('dynamiczny') === 'rgb(232, 232, 232)' && kolor('dynamiczny', 'backgroundColor') === 'rgb(34, 34, 34)', kolor('dynamiczny') + ' / ' + kolor('dynamiczny', 'backgroundColor'));
+
+  // SVG podmieniony przez „Reacta" po włączeniu
+  $('logo').setAttribute('fill', '#000');
+  await spij(20);
+  sprawdz('SVG: nowy fill z DOM przemapowany przez obserwatora', $('logo').getAttribute('fill') === 'rgb(255, 255, 255)', $('logo').getAttribute('fill'));
+
+  // --- wyłączenie -------------------------------------------------------------
+  D.wylacz();
+  await spij(20);
+  sprawdz('po wyłączeniu: bez atrybutu, białe tło, ciemny tekst', !document.documentElement.hasAttribute('data-ls-dark') && getComputedStyle(document.body).backgroundColor === 'rgb(255, 255, 255)' && kolor('akapit') === 'rgb(36, 36, 36)');
+  sprawdz('po wyłączeniu: SVG z oryginalnym fill', $('logo').getAttribute('fill') === '#000', $('logo').getAttribute('fill'));
+  sprawdz('po wyłączeniu: składnia z powrotem jasna', kolor('kw') === 'rgb(207, 34, 46)', kolor('kw'));
+  fela.insertRule('.nowa2 { color: rgb(0, 0, 0) }', fela.cssRules.length);
+  await spij(1300);
+  sprawdz('po wyłączeniu: zegar stoi (nowa reguła bez bliźniaka)', ![...lustro.cssRules].some((r) => r.cssText.includes('.nowa2')));
+
+  // --- ponowne włączenie: bliźniaki bez duplikatów -----------------------------
+  const przed = lustro.cssRules.length;
+  D.wlacz();
+  await spij(50);
+  sprawdz('ponowne włączenie: te same reguły bez duplikatów (+1 za .nowa2)', lustro.cssRules.length === przed + 1 && kolor('akapit') === 'rgb(232, 232, 232)', `${przed} → ${lustro.cssRules.length}`);
+  D.wylacz();
+
+  log.textContent += `\nWYNIK: ${ok}/${n}${ok === n ? ' — wszystko OK' : ' — SĄ BŁĘDY'}\n`;
+}
+if (AUTO) testuj();
+</script>
