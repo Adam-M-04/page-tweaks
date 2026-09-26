@@ -2,6 +2,12 @@
 // po kluczu na stronę. Ładowane w opcjach i w service workerze
 // (importScripts); content scripty czytają ten sam obiekt same, bo działają
 // od document_start i nie czekają na nic więcej niż storage.
+//
+// Nowa strona: folder w strony/, wpis w content_scripts w manifeście, klucz
+// tutaj i sekcja z przełącznikami w options.html. Reguły sieciowe: zestaw
+// w declarative_net_request i wpis w background.js. Atrapa z testami
+// w test/mock-<strona>.html — `php -S localhost:8000`, potem
+// http://localhost:8000/test/mock-<strona>.html?auto=1.
 
 const DOMYSLNE_USTAWIENIA = {
   medium: {
