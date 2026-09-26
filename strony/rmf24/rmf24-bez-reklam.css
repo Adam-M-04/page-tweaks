@@ -1,0 +1,29 @@
+/* Bez reklam na rmf24.pl — wszystko pod html[data-ls-bez-reklam] (atrybut
+   stawia rmf24-bez-reklam.js, zdjęcie go przywraca stronę bez przeładowania).
+   Skrypty reklam, okna zgody, analityki, powiadomień push i wideo OnNetwork
+   odcinają reguły z rmf24-reguly.json; tu jest to, co zostaje: puste ramki
+   slotów, wstawki w artykule, treści sponsorowane i autopromocja. */
+
+html[data-ls-bez-reklam] :is(
+  #gr-consent-layer, #gr-consent-layer-area,                       /* okno zgody Grupy RMF (z regułami się nie ładuje; to zapas) */
+  .fc-consent-root, .fc-ab-root,                                   /* Google Funding Choices */
+  [id^="RMF_24_" i], [id^="google_ads_iframe"],                    /* sloty Google Ad Manager, też te dokładane przez jQuery */
+  .bg-light.text-muted:has([id^="RMF_24_" i]),                     /* szara ramka „REKLAMA" wokół slotu… */
+  .text-center.my-4:has(> .bg-light.text-muted [id^="RMF_24_" i]), /* …i jej odstępy */
+  #adsOutSky, .adsContent,                                         /* sky z lewej, prostokąt pod artykułem */
+  #wtg-taboola, #taboola-article-for-you,                          /* Taboola pod artykułem i w jego środku */
+  #specialVideoCont,                                               /* „Dalsza część artykułu pod materiałem video" z OnNetwork */
+  .news-card.sponsored, [class*="col-"]:has(> .news-card.sponsored), /* „Artykuł sponsorowany" między newsami */
+  #belkaRadio,                                                     /* pasek „Weekend w Radiu RMF24" — radio jest też pod „Słuchaj" w menu */
+  .mb-4:has(> .bg-primary-blue > a[href*="/rozmowy-sg/"]),         /* boks „Sprawdzam! w RMF FM" */
+  .article-page__google-promo,                                     /* „chcesz widzieć więcej artykułów od RMF24? dodaj w Google" */
+  .zdrowie-section-fullwidth,                                      /* strona główna: sekcja „Twoje Zdrowie" */
+  #weatherWrapper                                                  /* pogoda w bocznej kolumnie */
+) {
+  display: none !important;
+}
+
+/* Okno zgody dokłada body.gr-consent-layer-shown — okna już nie ma. */
+html[data-ls-bez-reklam] body.gr-consent-layer-shown {
+  overflow: auto !important;
+}

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Page Tweaks",
-  "version": "1.1.0",
-  "description": "Poprawki cudzych stron: ciemny motyw dla medium.com i qnews.pl, czytnik bez reklam i daty wpisów dla limanowa.in.",
+  "version": "1.2.0",
+  "description": "Poprawki cudzych stron: ciemny motyw dla medium.com i qnews.pl, czytnik bez reklam i daty wpisów dla limanowa.in, rmf24.pl bez reklam i z wpisami z X za przyciskiem.",
   "permissions": ["storage", "declarativeNetRequest"],
   "background": { "service_worker": "wspolne/background.js" },
   "action": {
@@ -34,10 +34,19 @@
       "js": ["strony/limanowa/limanowa-czytnik.js", "strony/limanowa/limanowa-daty.js"],
       "css": ["strony/limanowa/limanowa-czytnik.css", "strony/limanowa/limanowa-daty.css"],
       "run_at": "document_start"
+    },
+    {
+      "matches": ["https://rmf24.pl/*", "https://www.rmf24.pl/*"],
+      "js": ["strony/rmf24/rmf24-bez-reklam.js", "strony/rmf24/rmf24-wpisy.js"],
+      "css": ["strony/rmf24/rmf24-bez-reklam.css", "strony/rmf24/rmf24-wpisy.css"],
+      "run_at": "document_start"
     }
   ],
   "declarative_net_request": {
-    "rule_resources": [{ "id": "limanowa", "enabled": true, "path": "strony/limanowa/limanowa-reguly.json" }]
+    "rule_resources": [
+      { "id": "limanowa", "enabled": true, "path": "strony/limanowa/limanowa-reguly.json" },
+      { "id": "rmf24", "enabled": true, "path": "strony/rmf24/rmf24-reguly.json" }
+    ]
   },
   "options_page": "wspolne/options.html",
   "icons": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }

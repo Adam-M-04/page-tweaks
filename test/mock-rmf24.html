@@ -1,0 +1,214 @@
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ATRAPA rmf24.pl — bez reklam</title>
+<!-- Szkielet rmf24.pl w pigułce (stan: wrzesień 2026): sloty Google Ad
+     Manager #RMF_24_* w szarych ramkach (także ten, który jQuery dokłada
+     między zdjęciem a tekstem artykułu, i #Rmf_24_ z małej litery),
+     przyklejone #stickerSky i #sticker, Taboola, wstawka wideo OnNetwork
+     #specialVideoCont pokazana przez jQuery .show(), okno zgody Grupy RMF
+     z body.gr-consent-layer-shown, kafelek sponsorowany w siatce Bootstrapa
+     i autopromocja. Klasy jak na żywej stronie. -->
+<style>
+body { margin: 0; font: 16px/1.6 Roboto, Arial, sans-serif; color: #212529; background: #fff; }
+body.gr-consent-layer-shown { overflow: hidden; }
+.navbar { position: sticky; top: 0; height: 72px; background: #fcd200; z-index: 5; }
+.bg-light { background: #f8f9fa; }
+.bg-light.text-muted::before { content: 'REKLAMA'; display: block; text-align: center; letter-spacing: .4em; color: #999; }
+.row { display: flex; flex-wrap: wrap; }
+.col-xl-4 { width: 33%; }
+.bg-primary-blue { background: #1c3a8a; color: #fff; }
+.gr-consent-layer-area { position: fixed; inset: 0; background: rgba(0, 0, 0, .5); z-index: 30; }
+.gr-consent-layer { position: fixed; top: 20%; left: 20%; width: 60%; background: #fff; z-index: 31; }
+.fc-consent-root { position: fixed; inset: 0; z-index: 32; }
+#panelTestu { position: relative; z-index: 40; background: #0f172a; color: #e2e8f0; padding: 10px 14px; }
+</style>
+<link rel="stylesheet" href="../strony/rmf24/rmf24-bez-reklam.css">
+
+<body class="gr-consent-layer-shown">
+<div id="panelTestu">
+  <h3 style="margin:0 0 6px">Atrapa rmf24.pl — testy „bez reklam" (zero kontaktu z rmf24.pl)</h3>
+  <button onclick="testuj()" style="cursor:pointer;padding:6px 12px">uruchom testy</button>
+  <button onclick="__lsBezReklam.wlacz()" style="cursor:pointer;padding:6px 12px">włącz</button>
+  <button onclick="__lsBezReklam.wylacz()" style="cursor:pointer;padding:6px 12px">wyłącz</button>
+  <pre id="log" style="white-space:pre-wrap;color:#7dd3fc;margin:8px 0 0"></pre>
+</div>
+
+<div id="RMF_24_interstitial_mobile"></div>
+<div id="RMF_24_podstrony_premiumboard" style="height: 20px"></div>
+<nav class="navbar navbar-expand-xl brand-yellow-bg sticky-top" id="menu"><a class="navbar-brand" id="logo" href="/">RMF24</a></nav>
+<div id="Rmf_24_podstrony_screening" style="height: 20px"></div>
+
+<!-- strona główna -->
+<section class="area container top-stories-section mainContent1">
+  <div id="belkaRadio" class="belkaradioNew bbNewest mb-4"><a href="https://www.rmfon.pl/stacja/rmf-24/graj" id="belkaRadioLink">NA ŻYWO Weekend w Radiu RMF24 — SŁUCHAJ</a></div>
+  <div class="container my-4 text-center d-none d-md-block" id="ramkaGora">
+    <div class="bg-light text-muted" style="position: relative;min-height: 200px;"><div id="RMF_24_sg_top_bill"></div></div>
+  </div>
+  <h2 class="top-stories-heading">Najważniejsze Fakty</h2>
+  <div class="row g-4">
+    <div class="col-xl-4 col-sm-6" id="kolumna1"><article class="news-card" id="kafelek"><a href="/fakty/polska/news-atomowa-gra,nIdn,1">Atomowa gra Rijadu</a></article></div>
+    <div class="col-xl-4 col-sm-6" id="kolumna2"><article class="news-card" id="kafelekCiekawostki"><a href="/ciekawostki-rmf24/news-czy-kot-teskni,nIdn,2">Czy kot tęskni?</a></article></div>
+    <div class="col-xl-4 col-sm-6" id="kolumnaSponsor"><article class="news-card sponsored" id="sponsor">
+      <div class="article-sponsored">ARTYKUŁ SPONSOROWANY</div>
+      <a href="/ciekawostki-rmf24/news-lego-na-dlugie-wieczory,nIdn,3" class="cat-card__img-wrap--sponsored">LEGO na długie wieczory</a>
+    </article></div>
+  </div>
+  <div class="container my-4 text-center d-none d-md-block mb-5" id="ramkaBill">
+    <div class="bg-light text-muted" style="position: relative;min-height: 300px;"><div id="RMF_24_sg_bill"></div></div>
+  </div>
+</section>
+<section class="zdrowie-section-fullwidth mb-5 py-4 areaCont" id="zdrowie"><a href="/zdrowie">Twoje Zdrowie</a></section>
+
+<!-- artykuł z boczną kolumną -->
+<div id="adsOutSky"><div class="box ad adsSkyOut adsSky visible-lg-block"><div class="boxBodySky">
+  <div class="adsSticky_absolute" id="stickerSky"><div id="RMF_24_podstrony_lewy_sky"></div></div>
+</div></div></div>
+<main class="area container mb-5 mt-5 articleSingleWrapper">
+  <div class="row g-4">
+    <div class="col-lg-8 col-xl-9">
+      <article class="article-page">
+        <header class="article-page__header"><h1 class="article-page__title" id="tytul">Nawrocki i Putin zaproszeni na jeden szczyt</h1></header>
+        <div class="audio-bed-switch-container" id="posluchaj">Posłuchaj artykułu</div>
+        <p class="article-page__lead" id="lead">Szef Biura Polityki Międzynarodowej ocenił…</p>
+        <div class="container my-4 text-center d-block d-sm-none" id="ramkaMobile">
+          <div class="bg-light text-muted" style="position: relative;min-height: 300px;"><div id="RMF_24_podstrony_bill_mobile"></div></div>
+        </div>
+        <figure class="article-page__figure" id="zdjecie"><img alt="" width="800" height="450"></figure>
+        <!-- to dokłada jQuery po załadowaniu (insertAfter .article-page__figure) -->
+        <div class="bg-light text-muted d-none d-md-block" style="position: relative;min-height: 300px;" id="ramkaPodZdjeciem"><div id="RMF_24_podstrony_top_bill" style="margin-bottom:30px;"></div></div>
+        <div class="article-page__content article_speakable" id="tresc">
+          <p class="par0" id="akapit">Tegoroczne spotkanie G20 odbędzie się w Miami.</p>
+          <div class="embed embed-youtube" data-youtube-id="nSwCJ422jxE" id="youtube"><iframe title="YouTube" width="560" height="315"></iframe></div>
+          <div class="embed embed-twitter-x" data-x-embed="1" id="wpisX"><iframe width="550" height="300"></iframe></div>
+          <p class="par5">Sekretarz stanu USA poinformował…</p>
+          <div class="mainSpecial videoRozmowy" id="specialVideoCont" style="display: block;">
+            <div class="small-embed-title" id="dalszaCzesc">Dalsza część artykułu pod materiałem video:</div>
+            <aside class="embed embed-video embedRozmowy" id="wideoOnNetwork"><div class="embed-video-player video-type-onnetwork"></div></aside>
+          </div>
+          <p class="par6">Przydacz powiedział…</p>
+          <div id="taboola-article-for-you" class="mb-4"></div>
+          <p class="par7" id="ostatniAkapit">Ostatni akapit.</p>
+        </div>
+        <footer class="article-footer" id="zrodlo">Źródło: RMF24/PAP</footer>
+        <div class="article-page__google-promo" id="googlePromo"><a class="article-page__google-promo-link" href="https://www.google.com/preferences/source?q=rmf24.pl">dodaj w Google</a></div>
+        <section class="article-related article-related--key-facts najwazniejszeArt" id="najwazniejsze"><a href="/fakty/swiat/news-tragedia,nIdn,4">Tragedia podczas manewrów</a></section>
+      </article>
+      <div class="adsContent" id="adsContent_komentarze" style="margin-bottom: 30px;"><div id="RMF_24_podstrony_komentarze_rec"></div></div>
+      <div id="wtg-taboola"></div>
+    </div>
+    <aside class="col-lg-4 col-xl-3" id="kolumnaBoczna">
+      <div class="bg-dark text-white p-4 mb-4 mixerListNajnowsze" id="najnowsze"><h2 class="najnowsze-naglowek">NAJNOWSZE</h2></div>
+      <div class="mb-4" id="sprawdzam">
+        <div class="bg-primary-blue text-white px-3 py-3"><a href="/rozmowy-sg/news-sprawdzam-w-rmf-fm,nIdn,1007951">Sprawdzam! w RMF FM</a></div>
+        <div class="position-relative"><div class="promo-caption">Gościem Beata Szydło</div></div>
+      </div>
+      <div class="my-4 text-center d-none d-md-block" id="ramkaNavibox">
+        <div class="bg-light text-muted" style="position: relative;min-height: 300px;"><div id="RMF_24_podstrony_navibox_rec"></div></div>
+      </div>
+      <div class="bg-dark text-white mb-4" id="popularne"><div class="mrf-widget bg-dark articleListTabbedBoxPopular"><h2>Najpopularniejsze</h2></div></div>
+      <div class="mainContent-right-weather" id="weatherWrapper"><div class="weatherWrapper">Pogoda 15 °C</div></div>
+      <div class="my-4 text-center" id="ramkaSticker">
+        <div class="bg-light text-muted" style="position: relative;min-height: 300px;">
+          <div id="sticker"><div id="adsSmall"><div class="adsContent"><div id="RMF_24_podstrony_prawy_rec"></div></div></div></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+<footer class="pageFooter grayFooter" id="stopka">Copyright by Radio Muzyka Fakty Grupa RMF</footer>
+
+<div id="gr-consent-layer-area" class="gr-consent-layer-area"></div>
+<div id="gr-consent-layer" class="gr-consent-layer gr-cs-default">Wraz z zaufanymi partnerami IAB (1029)… PRZEJDŹ DO SERWISU</div>
+<div class="fc-consent-root" id="zgodaGoogle"></div>
+<iframe id="google_ads_iframe_/119818256/RMF_24_interstitial_mobile_0" width="10" height="10"></iframe>
+
+<script src="../wspolne/ustawienia.js"></script>
+<script src="../strony/rmf24/rmf24-bez-reklam.js"></script>
+<script>
+const AUTO = location.search.includes('auto');
+const $ = (id) => document.getElementById(id);
+const log = $('log');
+window.addEventListener('error', (e) => { log.textContent += `\nBŁĄD TESTU: ${e.message} (${e.filename}:${e.lineno})\n`; });
+let n = 0, ok = 0;
+const sprawdz = (nazwa, warunek, szczegol = '') => {
+  n++; if (warunek) ok++;
+  log.textContent += `${warunek ? 'PASS' : 'FAIL'}  ${nazwa}${szczegol ? '  — ' + szczegol : ''}\n`;
+};
+const spij = (ms) => new Promise((r) => setTimeout(r, ms));
+const widoczny = (id) => $(id).getClientRects().length > 0;
+
+const SMIECI = ['RMF_24_interstitial_mobile', 'RMF_24_podstrony_premiumboard', 'Rmf_24_podstrony_screening',
+  'belkaRadio', 'ramkaGora', 'kolumnaSponsor', 'sponsor', 'ramkaBill', 'zdrowie',
+  'adsOutSky', 'stickerSky', 'ramkaMobile', 'ramkaPodZdjeciem', 'specialVideoCont', 'dalszaCzesc', 'wideoOnNetwork',
+  'taboola-article-for-you', 'googlePromo', 'adsContent_komentarze', 'wtg-taboola',
+  'sprawdzam', 'ramkaNavibox', 'weatherWrapper', 'ramkaSticker', 'sticker',
+  'gr-consent-layer-area', 'gr-consent-layer', 'zgodaGoogle', 'google_ads_iframe_/119818256/RMF_24_interstitial_mobile_0'];
+const TRESC = ['menu', 'logo', 'kafelek', 'kafelekCiekawostki', 'kolumna2', 'tytul', 'posluchaj', 'lead', 'zdjecie', 'akapit',
+  'youtube', 'wpisX', 'ostatniAkapit', 'zrodlo', 'najwazniejsze', 'najnowsze', 'popularne', 'stopka'];
+
+async function testuj() {
+  log.textContent = '';
+  n = 0; ok = 0;
+  const B = __lsBezReklam;
+  B.wylacz();
+
+  // --- ustawienia --------------------------------------------------------------
+  sprawdz('ustawienia: domyślnie włączony', B.czyWlaczonyWUstawieniach(null) && B.czyWlaczonyWUstawieniach({}) && B.czyWlaczonyWUstawieniach({ rmf24: {} }) && DOMYSLNE_USTAWIENIA.rmf24.bezReklam === true);
+  sprawdz('ustawienia: klucz rmf24.bezReklam', !B.czyWlaczonyWUstawieniach({ rmf24: { bezReklam: false } }) && B.czyWlaczonyWUstawieniach({ limanowa: { czytnik: false } }));
+
+  // --- przed włączeniem ----------------------------------------------------------
+  sprawdz('przed włączeniem: ramki, wideo, zgoda i autopromocja widoczne', ['ramkaGora', 'ramkaPodZdjeciem', 'specialVideoCont', 'gr-consent-layer', 'sprawdzam', 'kolumnaSponsor'].every(widoczny));
+  sprawdz('przed włączeniem: zgoda blokuje przewijanie', getComputedStyle(document.body).overflow === 'hidden');
+
+  // --- włączenie -----------------------------------------------------------------
+  B.wlacz();
+  await spij(20);
+  const zostaly = SMIECI.filter(widoczny);
+  sprawdz(`śmieci schowane (${SMIECI.length})`, zostaly.length === 0, zostaly.join(', '));
+  const znikly = TRESC.filter((id) => !widoczny(id));
+  sprawdz(`treść zostaje (${TRESC.length})`, znikly.length === 0, znikly.join(', '));
+  sprawdz('przewijanie odblokowane mimo body.gr-consent-layer-shown', getComputedStyle(document.body).overflow === 'auto');
+  sprawdz('sponsorowany kafelek znika z kolumną siatki, zwykły z /ciekawostki-rmf24/ zostaje', !widoczny('kolumnaSponsor') && widoczny('kolumna2'));
+  sprawdz('wstawka wideo schowana mimo inline display: block z jQuery .show()', $('specialVideoCont').style.display === 'block' && !widoczny('specialVideoCont'));
+  sprawdz('slot #Rmf_24_ z małej litery też schowany', !widoczny('Rmf_24_podstrony_screening'));
+  sprawdz('ramka „REKLAMA" pod zdjęciem nie zajmuje miejsca', $('zdjecie').nextElementSibling.id === 'ramkaPodZdjeciem' && $('zdjecie').getBoundingClientRect().bottom <= $('tresc').getBoundingClientRect().top + 1);
+
+  // --- wyłączenie i ponowne włączenie -----------------------------------------------------
+  B.wylacz();
+  await spij(20);
+  sprawdz('po wyłączeniu: atrybut zdjęty', !document.documentElement.hasAttribute('data-ls-bez-reklam'));
+  sprawdz('po wyłączeniu: strona jak była (ramki, wideo, zgoda, pogoda)', ['ramkaGora', 'ramkaPodZdjeciem', 'specialVideoCont', 'gr-consent-layer', 'weatherWrapper'].every(widoczny) && getComputedStyle(document.body).overflow === 'hidden');
+  B.wlacz();
+  await spij(20);
+  sprawdz('ponowne włączenie: znów schowane', SMIECI.filter(widoczny).length === 0);
+
+  // --- reguły sieciowe ---------------------------------------------------------------------
+  const reguly = await fetch('../strony/rmf24/rmf24-reguly.json').then((r) => r.json());
+  sprawdz('reguły: unikalne id, same blokady', new Set(reguly.map((r) => r.id)).size === reguly.length && reguly.every((r) => r.action.type === 'block'));
+  sprawdz('reguły: tylko żądania wychodzące z rmf24.pl, nigdy main_frame', reguly.every((r) => JSON.stringify(r.condition.initiatorDomains) === '["rmf24.pl"]' && !(r.condition.resourceTypes || []).includes('main_frame')));
+  const domeny = reguly.flatMap((r) => r.condition.requestDomains || []);
+  const filtry = reguly.map((r) => r.condition.urlFilter).filter(Boolean);
+  sprawdz('reguły: Ad Manager, AdSense, Funding Choices, GA, Gemius, OnNetwork, WTG, Taboola',
+    ['doubleclick.net', 'googlesyndication.com', 'fundingchoicesmessages.google.com', 'googletagmanager.com', 'google-analytics.com', 'gemius.pl', 'onnetwork.tv', 'wtg-ads.com', 'taboola.com'].every((d) => domeny.includes(d)));
+  sprawdz('reguły: okno zgody i powiadomienia push z www.rmf.fm', ['||www.rmf.fm/zgody/', '||www.rmf.fm/work/push/'].every((f) => filtry.includes(f)));
+  sprawdz('reguły: nie ruszają portalu, zdjęć, radia, Bootstrapa ani osadzonych postów',
+    !domeny.some((d) => /(^|\.)(rmf24\.pl|rmffm\.pl|rmf\.fm|rmf\.pl|rmfon\.pl|jsdelivr\.net|youtube(-nocookie)?\.com|twitter\.com|instagram\.com|facebook\.com|google\.com|gstatic\.com|googleapis\.com)$/.test(d) && d !== 'fundingchoicesmessages.google.com'),
+    domeny.join(', '));
+  sprawdz('reguły: filtry adresów na domenach RMF zawsze z konkretną ścieżką', filtry.every((f) => /^\|\|[^/]+\/[^/]+\//.test(f)), filtry.join(', '));
+
+  // --- manifest, service worker, ustawienia -------------------------------------------------
+  const manifest = await fetch('../manifest.json').then((r) => r.json());
+  const wpis = manifest.content_scripts.find((c) => c.js.includes('strony/rmf24/rmf24-bez-reklam.js'));
+  sprawdz('manifest: content script z CSS na document_start', !!wpis && wpis.css.includes('strony/rmf24/rmf24-bez-reklam.css') && wpis.run_at === 'document_start' && ['https://rmf24.pl/*', 'https://www.rmf24.pl/*'].every((m) => wpis.matches.includes(m)));
+  const zestawy = manifest.declarative_net_request.rule_resources;
+  sprawdz('manifest: zestaw reguł „rmf24"', zestawy.some((r) => r.id === 'rmf24' && r.path === 'strony/rmf24/rmf24-reguly.json'));
+  const tlo = await fetch('../wspolne/background.js').then((r) => r.text());
+  const wTle = [...tlo.matchAll(/\{ id: '(\w+)', klucz: '(\w+)', pole: '(\w+)' \}/g)].map((m) => ({ id: m[1], klucz: m[2], pole: m[3] }));
+  sprawdz('background.js: każdy zestaw z manifestu ma włącznik z ustawień',
+    zestawy.every((r) => wTle.some((z) => z.id === r.id && typeof DOMYSLNE_USTAWIENIA[z.klucz]?.[z.pole] === 'boolean')),
+    wTle.map((z) => `${z.id} → ${z.klucz}.${z.pole}`).join(', '));
+  const opcje = await fetch('../wspolne/options.html').then((r) => r.text());
+  sprawdz('ustawienia: przełącznik rmf24.bezReklam', opcje.includes('data-klucz="rmf24" data-pole="bezReklam"'));
+
+  log.textContent += `\nWYNIK: ${ok}/${n}${ok === n ? ' — wszystko OK' : ' — SĄ BŁĘDY'}\n`;
+}
+if (AUTO) testuj();
+</script>

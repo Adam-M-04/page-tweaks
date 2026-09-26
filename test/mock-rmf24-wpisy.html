@@ -1,0 +1,136 @@
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ATRAPA rmf24.pl — wpisy za przyciskiem</title>
+<!-- Artykuł rmf24.pl z osadzonymi wpisami (stan: wrzesień 2026): dwa wpisy
+     z X pod rząd (zaślepka z linkiem + ramka platform.twitter.com, min-height
+     520 px jak na stronie), Instagram, Facebook pod SDK i film z YouTube,
+     który ma zostać. Ramki wskazują na data: zamiast X i Instagrama. Klasy
+     jak na żywej stronie. -->
+<style>
+body { margin: 0; font: 16px/1.6 Roboto, Arial, sans-serif; color: #212529; background: #fff; }
+.article-page__content { max-width: 800px; margin: 0 auto; padding: 0 16px; }
+.article-page__content p { margin: 0 0 1rem; }
+.article-page__content a { color: #003f8a; text-decoration: underline; }
+.article-page__content .embed-twitter-x { position: relative; max-width: 550px; min-height: 520px; margin: 1.2rem auto; display: block; }
+.article-page__content .embed-twitter-x iframe { width: 100%; min-height: 520px; border: 0; display: block; }
+.article-page__content .x-embed-placeholder { position: absolute; inset: 0; }
+.article-page__content .embed-instagram-inpl { position: relative; max-width: 420px; min-height: 540px; margin: 1.2rem auto; display: flex; }
+.article-page__content .embed-facebook-inpl { position: relative; max-width: 550px; min-height: 400px; margin: 1.2rem auto; display: flex; }
+#panelTestu { position: relative; z-index: 40; background: #0f172a; color: #e2e8f0; padding: 10px 14px; }
+</style>
+<link rel="stylesheet" href="../strony/rmf24/rmf24-wpisy.css">
+
+<body>
+<div id="panelTestu">
+  <h3 style="margin:0 0 6px">Atrapa rmf24.pl — testy wpisów za przyciskiem (zero kontaktu z rmf24.pl, X i Instagramem)</h3>
+  <button onclick="testuj()" style="cursor:pointer;padding:6px 12px">uruchom testy</button>
+  <button onclick="__lsWpisy.wlacz()" style="cursor:pointer;padding:6px 12px">włącz</button>
+  <button onclick="__lsWpisy.wylacz()" style="cursor:pointer;padding:6px 12px">wyłącz</button>
+  <pre id="log" style="white-space:pre-wrap;color:#7dd3fc;margin:8px 0 0"></pre>
+</div>
+
+<div class="article-page__content article_speakable" id="tresc">
+  <p id="akapit1">Lekarze przez wiele godzin walczyli o życie młodego policjanta.</p>
+  <div class="embed embed-twitter-x is-loading" data-x-embed="1" id="wpisX1"><div class="x-embed-placeholder"><a class="x-embed-placeholder__link" href="https://twitter.com/PolskaPolicja/status/2103586877819277454" target="_blank" rel="nofollow noopener"><span class="x-embed-placeholder__text">Zobacz wpis na X</span></a></div><iframe id="ramkaX1" src="data:text/html,wpis%20X%201" width="550" height="300" frameborder="0" scrolling="no"></iframe></div>
+  <p id="akapit2">Wyrazy współczucia złożył minister spraw wewnętrznych.</p>
+  <div class="embed embed-twitter-x is-loading" data-x-embed="1" id="wpisX2"><div class="x-embed-placeholder"><a class="x-embed-placeholder__link" href="https://twitter.com/MKierwinski/status/2103586024748146831" target="_blank" rel="nofollow noopener"><span class="x-embed-placeholder__text">Zobacz wpis na X</span></a></div><iframe id="ramkaX2" src="data:text/html,wpis%20X%202" width="550" height="300" frameborder="0" scrolling="no"></iframe></div>
+  <div class="embed embed-instagram-inpl is-loading" data-ig-embed="1" id="wpisIG"><div class="ig-embed-placeholder"><a class="ig-embed-placeholder__link" href="https://www.instagram.com/p/DdoAubJirXA/" target="_blank" rel="nofollow noopener"><span class="ig-embed-placeholder__text">Zobacz materiał na Instagramie</span></a></div><iframe class="ig-embed-iframe" id="ramkaIG" src="data:text/html,wpis%20IG" width="540" height="680" loading="lazy"></iframe></div>
+  <div class="embed embed-facebook-inpl embed-facebook-sdk is-loading" data-fb-embed="1" id="wpisFB"><div class="fb-embed-placeholder"><a class="fb-embed-placeholder__link" href="https://www.facebook.com/reel/1104349862086894" target="_blank" rel="nofollow noopener"><span class="fb-embed-placeholder__text">Ladowanie posta z Facebooka...</span></a></div><div class="fb-post" data-href="https://www.facebook.com/reel/1104349862086894"></div></div>
+  <div class="embed embed-youtube" data-youtube-id="nSwCJ422jxE" id="youtube"><iframe id="ramkaYT" src="data:text/html,film" title="YouTube" width="560" height="315"></iframe></div>
+  <p id="akapit3">Ostatni akapit.</p>
+</div>
+
+<script src="../wspolne/ustawienia.js"></script>
+<script src="../strony/rmf24/rmf24-wpisy.js"></script>
+<script>
+const AUTO = location.search.includes('auto');
+const $ = (id) => document.getElementById(id);
+const log = $('log');
+window.addEventListener('error', (e) => { log.textContent += `\nBŁĄD TESTU: ${e.message} (${e.filename}:${e.lineno})\n`; });
+let n = 0, ok = 0;
+const sprawdz = (nazwa, warunek, szczegol = '') => {
+  n++; if (warunek) ok++;
+  log.textContent += `${warunek ? 'PASS' : 'FAIL'}  ${nazwa}${szczegol ? '  — ' + szczegol : ''}\n`;
+};
+const spij = (ms) => new Promise((r) => setTimeout(r, ms));
+const widoczny = (id) => $(id).getClientRects().length > 0;
+const przycisk = (id) => $(id).previousElementSibling;
+const zaladowana = (ramka) => new Promise((r) => ramka.addEventListener('load', () => r(true), { once: true }));
+const ORYGINALY = { ramkaX1: 'data:text/html,wpis%20X%201', ramkaX2: 'data:text/html,wpis%20X%202', ramkaIG: 'data:text/html,wpis%20IG' };
+const WPISY = ['wpisX1', 'wpisX2', 'wpisIG', 'wpisFB'];
+
+async function testuj() {
+  log.textContent = '';
+  n = 0; ok = 0;
+  const W = __lsWpisy;
+
+  // --- ustawienia --------------------------------------------------------------
+  sprawdz('ustawienia: domyślnie włączony', W.czyWlaczonyWUstawieniach(null) && W.czyWlaczonyWUstawieniach({ rmf24: {} }) && DOMYSLNE_USTAWIENIA.rmf24.wpisy === true);
+  sprawdz('ustawienia: klucz rmf24.wpisy, niezależny od bezReklam', !W.czyWlaczonyWUstawieniach({ rmf24: { wpisy: false } }) && W.czyWlaczonyWUstawieniach({ rmf24: { bezReklam: false } }));
+
+  // --- przed włączeniem ----------------------------------------------------------
+  sprawdz('przed włączeniem: wpisy widoczne, bez przycisków', WPISY.every(widoczny) && !document.querySelector('.ls-wpis'));
+  const wysokoscPrzed = $('tresc').offsetHeight;
+
+  // --- włączenie -----------------------------------------------------------------
+  W.wlacz();
+  await spij(20);
+  sprawdz('wpisy z X, Instagrama i Facebooka schowane', WPISY.every((id) => !widoczny(id)));
+  sprawdz('film z YouTube i tekst zostają', ['youtube', 'akapit1', 'akapit2', 'akapit3'].every(widoczny));
+  sprawdz('przed każdym wpisem jeden przycisk', WPISY.every((id) => przycisk(id)?.classList.contains('ls-wpis')) && document.querySelectorAll('.ls-wpis').length === 4);
+  sprawdz('opisy z autorem wpisu z X',
+    przycisk('wpisX1').textContent === 'Zobacz wpis @PolskaPolicja na X' && przycisk('wpisX2').textContent === 'Zobacz wpis @MKierwinski na X',
+    `${przycisk('wpisX1').textContent} | ${przycisk('wpisX2').textContent}`);
+  sprawdz('Instagram bez autora w adresie: „Zobacz wpis na Instagramie"', przycisk('wpisIG').textContent === 'Zobacz wpis na Instagramie', przycisk('wpisIG').textContent);
+  const fb = przycisk('wpisFB');
+  sprawdz('Facebook: link do wpisu w nowej karcie', fb.tagName === 'A' && fb.href === 'https://www.facebook.com/reel/1104349862086894' && fb.target === '_blank' && /noopener/.test(fb.rel) && fb.textContent === 'Zobacz wpis na Facebooku', fb.textContent);
+  sprawdz('ramki X i Instagrama czekają (about:blank, adres odłożony)', Object.entries(ORYGINALY).every(([id, src]) => $(id).getAttribute('src') === 'about:blank' && $(id).dataset.lsSrc === src));
+  // Selektor ramki z app2.js strony — bez trafienia app2 od razu daje is-fallback, a jego zaślepka zasłania potem wpis.
+  const RAMKA_APP2 = '.x-embed-iframe, iframe[src*="platform.twitter.com/embed/Tweet"], iframe[src*="platform.twitter.com"]';
+  sprawdz('odłożona ramka z X dalej do znalezienia dla app2.js', $('wpisX1').querySelector(RAMKA_APP2) === $('ramkaX1') && $('wpisX2').querySelector(RAMKA_APP2) === $('ramkaX2') && $('ramkaIG').matches('.ig-embed-iframe'));
+  sprawdz('ramka YouTube nietknięta', $('ramkaYT').getAttribute('src') === 'data:text/html,film' && !$('ramkaYT').hasAttribute('data-ls-src'));
+  sprawdz(`artykuł krótszy o wpisy (${wysokoscPrzed} → ${$('tresc').offsetHeight} px)`, $('tresc').offsetHeight < wysokoscPrzed - 1500);
+  const s = getComputedStyle(przycisk('wpisX1'));
+  sprawdz('przycisk delikatny: pigułka 14 px w kolorze linków, bez podkreślenia', s.fontSize === '14px' && s.borderRadius === '999px' && s.color === 'rgb(0, 63, 138)' && getComputedStyle(fb).textDecorationLine === 'none');
+
+  // --- rozwijanie ------------------------------------------------------------------
+  const ladujeX1 = zaladowana($('ramkaX1'));
+  przycisk('wpisX1').click();
+  sprawdz('klik: wpis widoczny w tym samym miejscu, „Schowaj wpis @PolskaPolicja"', widoczny('wpisX1') && przycisk('wpisX1').textContent === 'Schowaj wpis @PolskaPolicja' && przycisk('wpisX1').getAttribute('aria-expanded') === 'true');
+  sprawdz('klik: ramka dostaje prawdziwy adres', $('ramkaX1').getAttribute('src') === ORYGINALY.ramkaX1 && !$('ramkaX1').hasAttribute('data-ls-src'));
+  sprawdz('klik: ramka się ładuje (load dla app2.js → is-loaded)', await Promise.race([ladujeX1, spij(2000).then(() => false)]));
+  sprawdz('drugi wpis z X dalej schowany i czeka', !widoczny('wpisX2') && $('ramkaX2').getAttribute('src') === 'about:blank');
+  przycisk('wpisX1').click();
+  await spij(20);
+  sprawdz('drugi klik: schowany, ramka zostaje wczytana (bez ponownego ładowania)', !widoczny('wpisX1') && $('ramkaX1').getAttribute('src') === ORYGINALY.ramkaX1 && przycisk('wpisX1').textContent === 'Zobacz wpis @PolskaPolicja na X');
+
+  // --- wpis dokładany kawałkami (jak parser w trakcie ładowania strony) ---------------
+  const nowy = document.createElement('div');
+  nowy.className = 'embed embed-twitter-x is-loading';
+  nowy.id = 'wpisX3';
+  $('akapit3').before(nowy);
+  await spij(20);
+  sprawdz('niedokończony wpis (bez linku): jeszcze bez przycisku', !nowy.previousElementSibling.classList.contains('ls-wpis'));
+  nowy.innerHTML = '<div class="x-embed-placeholder"><a class="x-embed-placeholder__link" href="https://x.com/IMGWmeteo/status/1">Zobacz wpis na X</a></div><iframe id="ramkaX3" src="data:text/html,wpis%20X%203"></iframe>';
+  await spij(20);
+  sprawdz('dokończony: przycisk „@IMGWmeteo", ramka odłożona', przycisk('wpisX3')?.textContent === 'Zobacz wpis @IMGWmeteo na X' && $('ramkaX3').getAttribute('src') === 'about:blank', przycisk('wpisX3')?.textContent);
+
+  // --- wyłączenie i ponowne włączenie -----------------------------------------------------
+  W.wylacz();
+  await spij(20);
+  sprawdz('po wyłączeniu: wszystkie wpisy widoczne, przyciski schowane', [...WPISY, 'wpisX3'].every(widoczny) && [...document.querySelectorAll('.ls-wpis')].every((p) => p.getClientRects().length === 0));
+  sprawdz('po wyłączeniu: ramki z prawdziwymi adresami', Object.entries(ORYGINALY).every(([id, src]) => $(id).getAttribute('src') === src) && $('ramkaX3').getAttribute('src') === 'data:text/html,wpis%20X%203');
+  W.wlacz();
+  await spij(20);
+  sprawdz('ponowne włączenie: wpisy znów schowane, bez podwójnych przycisków, ramki już nie odkładane',
+    [...WPISY, 'wpisX3'].every((id) => !widoczny(id)) && document.querySelectorAll('.ls-wpis').length === 5 && $('ramkaX2').getAttribute('src') === ORYGINALY.ramkaX2);
+
+  // --- manifest i ustawienia ------------------------------------------------------------------
+  const manifest = await fetch('../manifest.json').then((r) => r.json());
+  const wpis = manifest.content_scripts.find((c) => c.js.includes('strony/rmf24/rmf24-wpisy.js'));
+  sprawdz('manifest: content script z CSS na document_start dla rmf24.pl', !!wpis && wpis.css.includes('strony/rmf24/rmf24-wpisy.css') && wpis.run_at === 'document_start' && ['https://rmf24.pl/*', 'https://www.rmf24.pl/*'].every((m) => wpis.matches.includes(m)));
+  const opcje = await fetch('../wspolne/options.html').then((r) => r.text());
+  sprawdz('ustawienia: przełącznik rmf24.wpisy', opcje.includes('data-klucz="rmf24" data-pole="wpisy"'));
+
+  log.textContent += `\nWYNIK: ${ok}/${n}${ok === n ? ' — wszystko OK' : ' — SĄ BŁĘDY'}\n`;
+}
+if (AUTO) testuj();
+</script>

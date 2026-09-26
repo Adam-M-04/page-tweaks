@@ -14,6 +14,10 @@ const DOMYSLNE_USTAWIENIA = {
     czytnik: true,      // czytnik bez reklam na limanowa.in (limanowa-czytnik.* + limanowa-reguly.json)
     daty: true,         // główna sekcja jako lista od najnowszego, daty na kafelkach (limanowa-daty.*)
   },
+  rmf24: {
+    bezReklam: true,    // bez reklam, okna zgody, wstawek wideo i autopromocji na rmf24.pl (rmf24-bez-reklam.* + rmf24-reguly.json)
+    wpisy: true,        // wpisy z X, Instagrama i Facebooka w artykułach za przyciskiem „Zobacz wpis” (rmf24-wpisy.*)
+  },
 };
 
 async function wczytajUstawienia() {

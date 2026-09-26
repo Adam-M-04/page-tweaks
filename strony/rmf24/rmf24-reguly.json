@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "initiatorDomains": ["rmf24.pl"],
+      "requestDomains": [
+        "doubleclick.net",
+        "googlesyndication.com",
+        "googleadservices.com",
+        "adtrafficquality.google",
+        "fundingchoicesmessages.google.com",
+        "googletagmanager.com",
+        "google-analytics.com",
+        "gemius.pl",
+        "onnetwork.tv",
+        "wtg-ads.com",
+        "teads.tv",
+        "adform.net",
+        "taboola.com",
+        "btloader.com",
+        "realtimely.io",
+        "mrf.io",
+        "ads-twitter.com"
+      ]
+    }
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "initiatorDomains": ["rmf24.pl"],
+      "urlFilter": "||www.rmf.fm/zgody/"
+    }
+  },
+  {
+    "id": 3,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "initiatorDomains": ["rmf24.pl"],
+      "urlFilter": "||www.rmf.fm/work/push/"
+    }
+  },
+  {
+    "id": 4,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "initiatorDomains": ["rmf24.pl"],
+      "urlFilter": "||static.rmf.pl/kreacje-js/"
+    }
+  }
+]
