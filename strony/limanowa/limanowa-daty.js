@@ -26,7 +26,7 @@
 // Teksty o sporcie, które redakcja wrzuca do „Newsroomu", zostają — nic ich
 // pewnie nie odróżnia od zwykłych wiadomości.
 //
-// Włącznik: ustawienia → „daty wpisów na limanowa.in" (chrome.storage.sync,
+// Włącznik: ustawienia → limanowa.in → „Wpisy od najnowszego, z datami" (chrome.storage.sync,
 // `ustawienia.limanowa.daty`, domyślnie włączony).
 
 (() => {

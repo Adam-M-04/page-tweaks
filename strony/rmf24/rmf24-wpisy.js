@@ -21,7 +21,7 @@
 // Facebooka uruchamia dopiero okno zgody, które odcina „bez reklam", więc
 // po rozwinięciu i tak zostałaby sama zaślepka.
 //
-// Włącznik: ustawienia → „wpisy z X, Instagrama i Facebooka za przyciskiem"
+// Włącznik: ustawienia → rmf24.pl → „Wpisy z X, Instagrama i Facebooka…"
 // (chrome.storage.sync, `ustawienia.rmf24.wpisy`, domyślnie włączony).
 // Wyłączenie od razu pokazuje wszystkie wpisy i wczytuje ich ramki.
 

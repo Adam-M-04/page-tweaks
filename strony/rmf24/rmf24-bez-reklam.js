@@ -25,7 +25,7 @@
 // z rmf24.pl), resztę chowa CSS pod html[data-ls-bez-reklam]. Ten skrypt
 // tylko stawia atrybut i pilnuje włącznika.
 //
-// Włącznik: ustawienia → „bez reklam na rmf24.pl" (chrome.storage.sync,
+// Włącznik: ustawienia → rmf24.pl → „Bez reklam" (chrome.storage.sync,
 // `ustawienia.rmf24.bezReklam`, domyślnie włączony). Zmiana działa od razu
 // na otwartych kartach; reguły sieciowe przełącza background.js.
 

@@ -40,7 +40,7 @@ test/               atrapy stron z testami
 ```
 
 Nowa strona: folder w `strony/`, wpis w `content_scripts` w manifeście, klucz
-w `wspolne/ustawienia.js` i przełącznik w `wspolne/options.html`.
+w `wspolne/ustawienia.js` i sekcja z przełącznikami w `wspolne/options.html`.
 Reguły sieciowe: zestaw w `declarative_net_request` i wpis w `wspolne/background.js`.
 
 ## Testy

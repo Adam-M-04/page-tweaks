@@ -13,7 +13,7 @@
 // żeby nie zrobiła się z nich łuna. qnews-dark.css odwraca logo (czarny napis
 // na przezroczystym PNG) i daje jasny podkład pod obrazki w treści.
 //
-// Włącznik: ustawienia → „ciemny motyw na qnews.pl" (chrome.storage.sync,
+// Włącznik: ustawienia → qnews.pl → „Ciemny motyw" (chrome.storage.sync,
 // `ustawienia.qnews.ciemnyMotyw`, domyślnie włączony).
 
 (() => {

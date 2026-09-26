@@ -13,7 +13,7 @@
 // z arkuszy nie widać: color-scheme: dark, tło zanim dojadą arkusze, jasny
 // podkład pod przezroczystymi PNG w treści, ciemny motyw osadzonych gistów.
 //
-// Włącznik: ustawienia → „ciemny motyw na medium.com" (chrome.storage.sync,
+// Włącznik: ustawienia → medium.com → „Ciemny motyw" (chrome.storage.sync,
 // `ustawienia.medium.ciemnyMotyw`, domyślnie włączony). Zmiana działa od razu
 // na otwartych kartach.
 

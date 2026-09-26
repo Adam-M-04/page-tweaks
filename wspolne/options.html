@@ -3,85 +3,63 @@
 <style>
   :root { color-scheme: dark; }
   body {
-    margin: 0; padding: 28px; background: #0b1220; color: #e5e7eb;
+    margin: 0; padding: 28px 16px; background: #0b1220; color: #e5e7eb;
     font: 13.5px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   }
-  main { max-width: 640px; margin: 0 auto; }
-  h1 { font-size: 17px; margin: 0 0 4px; }
-  h2 { font-size: 14px; margin: 26px 0 8px; color: #cbd5e1; }
-  p.lead { color: #94a3b8; margin: 0 0 8px; font-size: 12.5px; }
-  p.uwaga { color: #94a3b8; margin: 0 0 12px; font-size: 12px; }
-  fieldset { border: 1px solid #1f2937; border-radius: 12px; padding: 14px 16px 16px; margin: 0 0 14px; }
-  legend { padding: 0 6px; color: #cbd5e1; font-weight: 600; font-size: 12px; }
-  .lista { display: grid; gap: 8px; }
-  label.check { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: #cbd5e1; cursor: pointer; }
-  label.check:hover { color: #fff; }
-  label.check input { margin: 0; cursor: pointer; }
-  #zapisano { color: #4ade80; font-size: 12px; min-height: 18px; }
+  main { max-width: 520px; margin: 0 auto; }
+  header { display: flex; align-items: baseline; justify-content: space-between; margin: 0 0 16px; }
+  h1 { font-size: 17px; margin: 0; }
+  #zapisano { color: #4ade80; font-size: 12px; }
+  section { background: #111a2d; border: 1px solid #1e293b; border-radius: 12px; margin: 0 0 12px; }
+  h2 { font-size: 13px; margin: 0; padding: 10px 16px; border-bottom: 1px solid #1e293b; color: #cbd5e1; }
+  h2 small { font-weight: 400; color: #64748b; margin-left: 6px; }
+  label {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 10px 16px; color: #cbd5e1; cursor: pointer;
+  }
+  label + label { border-top: 1px solid #1a2438; }
+  label:hover { color: #fff; }
+  /* Checkbox jako przełącznik */
+  input {
+    appearance: none; flex: none; position: relative; margin: 0; cursor: pointer;
+    width: 32px; height: 18px; border-radius: 9px; background: #334155; transition: background .15s;
+  }
+  input::before {
+    content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px;
+    border-radius: 50%; background: #e5e7eb; transition: transform .15s;
+  }
+  input:checked { background: #2563eb; }
+  input:checked::before { transform: translateX(14px); }
+  input:focus-visible { outline: 2px solid #60a5fa; outline-offset: 2px; }
 </style>
 
 <main>
-  <h1>Page Tweaks — ustawienia</h1>
-  <p class="lead">Każda zmiana zapisuje się od razu i działa na otwartych kartach bez przeładowania.</p>
-  <div id="zapisano"></div>
+  <header>
+    <h1>Page Tweaks</h1>
+    <span id="zapisano"></span>
+  </header>
 
-  <h2>Ciemny motyw</h2>
-  <fieldset>
-    <legend>Strony bez własnego trybu ciemnego</legend>
-    <p class="uwaga">
-      Rozszerzenie odwraca jasność kolorów strony z zachowaniem odcieni: ciemne tło, jasny tekst,
-      składnia kodu w palecie ciemnej, obrazki bez zmian (przezroczyste PNG dostają jasny podkład,
-      żeby czarne kreski diagramów nie znikały). Na Medium działa też w publikacjach na własnych
-      domenach (Level Up Coding, ITNEXT, Plain English…).
-    </p>
-    <div class="lista">
-      <label class="check"><input type="checkbox" data-klucz="medium" data-pole="ciemnyMotyw"> ciemny motyw na medium.com</label>
-      <label class="check"><input type="checkbox" data-klucz="qnews" data-pole="ciemnyMotyw"> ciemny motyw na qnews.pl</label>
-    </div>
-  </fieldset>
+  <section>
+    <h2>medium.com <small>i publikacje na własnych domenach</small></h2>
+    <label>Ciemny motyw <input type="checkbox" role="switch" data-klucz="medium" data-pole="ciemnyMotyw"></label>
+  </section>
 
-  <h2>Czytnik</h2>
-  <fieldset>
-    <legend>Strony zasypane reklamami</legend>
-    <p class="uwaga">
-      Na limanowa.in zostaje sama treść: bez banerów, reklam wideo, okna zgody, okienka powiadomień,
-      paska na dole i sekcji „Region - Polska - Świat", „Sport" i „Felietony" na stronie głównej, artykuł
-      w jednej szerokiej na 760 px kolumnie z większą czcionką, komentarze za przyciskiem. Skrypty
-      sieci reklamowych (optad360, Google Ad Manager, AdSense) i analityki są blokowane tylko na
-      tej stronie.
-    </p>
-    <div class="lista">
-      <label class="check"><input type="checkbox" data-klucz="limanowa" data-pole="czytnik"> czytnik na limanowa.in</label>
-    </div>
-    <p class="uwaga" style="margin-top: 14px">
-      Na rmf24.pl znikają reklamy i ich puste ramki „REKLAMA", okno zgody, prośba o powiadomienia,
-      wideo „Dalsza część artykułu pod materiałem video" w środku każdego tekstu, artykuły
-      sponsorowane oraz autopromocja: pasek radia, boks „Sprawdzam! w RMF FM", „dodaj w Google",
-      sekcja „Twoje Zdrowie" i pogoda. Układ strony zostaje. Skrypty reklam (Google Ad Manager, WTG,
-      Teads, Taboola, OnNetwork) i analityki są blokowane tylko na tej stronie. Posty z Facebooka
-      w artykułach zostają samym linkiem, bo ich skrypt uruchamia dopiero okno zgody.
-      Osobno: wpisy z X, Instagrama i Facebooka w artykułach chowają się za przyciskiem „Zobacz wpis"
-      i wczytują dopiero po kliknięciu (wpis z Facebooka otwiera się w nowej karcie).
-    </p>
-    <div class="lista">
-      <label class="check"><input type="checkbox" data-klucz="rmf24" data-pole="bezReklam"> bez reklam na rmf24.pl</label>
-      <label class="check"><input type="checkbox" data-klucz="rmf24" data-pole="wpisy"> wpisy z X, Instagrama i Facebooka za przyciskiem na rmf24.pl</label>
-    </div>
-  </fieldset>
+  <section>
+    <h2>qnews.pl</h2>
+    <label>Ciemny motyw <input type="checkbox" role="switch" data-klucz="qnews" data-pole="ciemnyMotyw"></label>
+  </section>
 
-  <h2>Daty wpisów</h2>
-  <fieldset>
-    <legend>Strony główne bez dat</legend>
-    <p class="uwaga">
-      Główna sekcja strony głównej limanowa.in zamiast mozaiki to lista od najnowszego wpisu
-      ze znaczkiem daty publikacji („dziś 05:30", „wczoraj 16:25", „3 dni temu"), bez felietonów,
-      wpisów z działu sport i codziennego „Odeszli w ostatnich dniach…". Ten sam znaczek dostają kafelki skrzynek. Daty pochodzą z kanału RSS
-      i list kategorii portalu — każdy wpis pobiera się raz i zostaje zapamiętany.
-    </p>
-    <div class="lista">
-      <label class="check"><input type="checkbox" data-klucz="limanowa" data-pole="daty"> daty wpisów na limanowa.in</label>
-    </div>
-  </fieldset>
+  <section>
+    <h2>limanowa.in</h2>
+    <label>Czytnik bez reklam <input type="checkbox" role="switch" data-klucz="limanowa" data-pole="czytnik"></label>
+    <label>Wpisy od najnowszego, z datami <input type="checkbox" role="switch" data-klucz="limanowa" data-pole="daty"></label>
+  </section>
+
+  <section>
+    <h2>rmf24.pl</h2>
+    <label>Bez reklam <input type="checkbox" role="switch" data-klucz="rmf24" data-pole="bezReklam"></label>
+    <label>Wpisy z X, Instagrama i Facebooka za przyciskiem <input type="checkbox" role="switch" data-klucz="rmf24" data-pole="wpisy"></label>
+  </section>
 </main>
 
 <script src="ustawienia.js"></script>

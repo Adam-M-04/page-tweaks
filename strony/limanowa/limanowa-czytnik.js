@@ -23,7 +23,7 @@
 // z Adblocka" (app.js pokazuje go, gdy #optadScript nie dojedzie) i chowa
 // komentarze za przyciskiem.
 //
-// Włącznik: ustawienia → „czytnik na limanowa.in" (chrome.storage.sync,
+// Włącznik: ustawienia → limanowa.in → „Czytnik bez reklam" (chrome.storage.sync,
 // `ustawienia.limanowa.czytnik`, domyślnie włączony). Zmiana działa od razu
 // na otwartych kartach; reguły sieciowe przełącza background.js.
 
