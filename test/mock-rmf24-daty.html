@@ -1,0 +1,346 @@
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ATRAPA rmf24.pl — godzina na kafelkach</title>
+<!-- Strona główna rmf24.pl w pigułce (stan: wrzesień 2026): czołówka (duży
+     kafelek z tytułem na pasku i kafelek obok), „Najważniejsze Fakty" z datą
+     w .top-stories-mobile-meta, schowany kafelek sponsorowany, „Regiony",
+     „Radio RMF24", „Najnowsze Rozmowy" (.dark-card z własną datą), kolumna
+     działu z linkami .category-links, lista działu (.cat-card) i panel
+     „Najpopularniejsze" z datą z rokiem. fetch podstawiony: kanał /feed
+     i strony wpisów to napisy poniżej — zero kontaktu z rmf24.pl. Klasy jak
+     na żywej stronie. -->
+<style>
+body { margin: 0; font: 16px/1.6 Roboto, Arial, sans-serif; color: #212529; background: #fff; }
+*, ::before, ::after { box-sizing: border-box; }
+section, main, aside { max-width: 1100px; margin: 0 auto 24px; padding: 0 12px; }
+.row { display: flex; flex-wrap: wrap; gap: 16px; }
+.row > [class*="col-"] { flex: 1 1 200px; }
+img { display: block; width: 100%; height: 80px; object-fit: cover; background: #cde; }
+.main-hero { position: relative; }
+.main-hero img { height: 200px; }
+.hero-title-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px; font-weight: 700; }
+.text-dark { color: #212529 !important; }
+.text-white { color: #fff !important; }
+.d-flex { display: flex !important; }
+@media (min-width: 768px) { .d-md-none { display: none !important; } }
+.bg-dark { background: #222; color: #fff; }
+.list-unstyled { list-style: none; padding: 0; }
+.cat-card__date { font-size: 12px; color: #585858; }
+#panelTestu { background: #0f172a; color: #e2e8f0; padding: 10px 14px; margin-bottom: 16px; }
+</style>
+<link rel="stylesheet" href="../strony/rmf24/rmf24-daty.css">
+
+<div id="panelTestu">
+  <h3 style="margin:0 0 6px">Atrapa rmf24.pl — testy godziny na kafelkach (zero kontaktu z rmf24.pl)</h3>
+  <button onclick="testuj()" style="cursor:pointer;padding:6px 12px">uruchom testy</button>
+  <pre id="log" style="white-space:pre-wrap;color:#7dd3fc;margin:8px 0 0"></pre>
+</div>
+
+<!-- czołówka -->
+<section id="czolowka"><div class="row">
+  <div class="col-lg-6">
+    <article class="news-card main-hero position-relative" id="k1001">
+      <a href="/regiony/rzeszow/news-areszt,nIdn,1001" class="d-block"><img src="../icons/icon128.png" alt="" class="main-hero-img"></a>
+      <div class="text-white p-3 fw-bold fs-4 position-absolute bottom-0 w-100 hero-title-overlay" style="background: #d6002d;" id="pasek1001">
+        <a href="/regiony/rzeszow/news-areszt,nIdn,1001" class="text-white text-decoration-none">Areszt dla podejrzanego</a>
+      </div>
+    </article>
+  </div>
+  <div class="col-12 col-sm-6">
+    <article class="news-card" id="k1002">
+      <a href="/regiony/trojmiasto/news-tragiczny-wypadek,nIdn,1002" class="d-block"><div class="img-wrapper hero-side-img mb-2"><img src="../icons/icon48.png" alt=""></div></a>
+      <h2 class="hero-article-title fw-bold text-dark pt-1 pb-2 mb-0"><a href="/regiony/trojmiasto/news-tragiczny-wypadek,nIdn,1002" class="text-dark text-decoration-none">Tragiczny wypadek</a></h2>
+    </article>
+  </div>
+</div></section>
+
+<!-- „Najważniejsze Fakty"; k1004 i k1016 z metą bez d-md-none, jak poniżej 768 px -->
+<section class="area container pt-2 top-stories-section" id="fakty"><div class="row g-4">
+  <div class="col-xl-4 col-sm-6"><article class="news-card" id="k1003">
+    <a href="/fakty/polska/news-nawrocki,nIdn,1003" class="d-block text-decoration-none mb-2"><div class="img-wrapper ratio ratio-16x9"><img src="../icons/icon48.png" alt=""></div></a>
+    <a href="/fakty/polska/news-nawrocki,nIdn,1003" class="text-decoration-none"><h3 class="h6 fw-bold text-dark">Nawrocki i Putin</h3></a>
+    <div class="top-stories-mobile-meta d-md-none d-flex align-items-left gap-2 mt-1 mb-2">
+      <time class="cat-card__date mb-0">Dzisiaj, 26 września (08:30)</time>
+      <span class="top-stories-mobile-meta__category">Polska</span>
+    </div>
+  </article></div>
+  <div class="col-xl-4 col-sm-6"><article class="news-card" id="k1004">
+    <a href="/regiony/wroclaw/news-final,nIdn,1004" class="d-block text-decoration-none mb-2"><div class="img-wrapper"><img src="../icons/icon48.png" alt=""></div></a>
+    <a href="/regiony/wroclaw/news-final,nIdn,1004" class="text-decoration-none"><h3 class="h6 fw-bold text-dark">Tragiczny finał interwencji</h3></a>
+    <div class="top-stories-mobile-meta d-flex align-items-left gap-2 mt-1 mb-2" id="meta1004">
+      <time class="cat-card__date mb-0">Wczoraj, 25 września (23:18)</time>
+      <span class="top-stories-mobile-meta__category">Wrocław</span>
+    </div>
+  </article></div>
+  <div class="col-xl-4 col-sm-6"><article class="news-card" id="k1005">
+    <a href="/fakty/swiat/news-pakt,nIdn,1005" class="d-block text-decoration-none mb-2"><div class="img-wrapper"><img src="../icons/icon48.png" alt=""></div></a>
+    <a href="/fakty/swiat/news-pakt,nIdn,1005" class="text-decoration-none"><h3 class="h6 fw-bold text-dark">Pakt obronny</h3></a>
+    <div class="top-stories-mobile-meta d-md-none d-flex align-items-left gap-2 mt-1 mb-2">
+      <time class="cat-card__date mb-0">Czwartek, 24 września (18:00)</time>
+    </div>
+  </article></div>
+  <div class="col-xl-4 col-sm-6"><article class="news-card" id="k1016">
+    <a href="/fakty/swiat/news-bez-daty,nIdn,1016" class="d-block text-decoration-none mb-2"><div class="img-wrapper"><img src="../icons/icon48.png" alt=""></div></a>
+    <a href="/fakty/swiat/news-bez-daty,nIdn,1016" class="text-decoration-none"><h3 class="h6 fw-bold text-dark">Nigdzie daty (strona wpisu 404)</h3></a>
+    <div class="top-stories-mobile-meta d-flex align-items-left gap-2 mt-1 mb-2" id="meta1016">
+      <span class="top-stories-mobile-meta__category">Świat</span>
+    </div>
+  </article></div>
+  <div class="col-xl-4 col-sm-6" style="display: none"><article class="news-card sponsored" id="k1013">
+    <a href="/ciekawostki-rmf24/news-lego,nIdn,1013" class="d-block"><div class="img-wrapper"><img src="../icons/icon48.png" alt=""></div></a>
+    <a href="/ciekawostki-rmf24/news-lego,nIdn,1013"><h3 class="h6 fw-bold text-dark">Artykuł sponsorowany (schowany)</h3></a>
+  </article></div>
+</div></section>
+
+<!-- „Regiony w RMF24" -->
+<section id="regionySection" class="areaCont regiony-home-section"><div class="row g-4">
+  <div class="col-md-6 col-lg-3"><article class="news-card" id="k1006">
+    <div class="position-relative mb-2">
+      <a href="/regiony/wroclaw/news-smierc,nIdn,1006" class="d-block text-decoration-none"><div class="ratio home-card-ratio-636x358"><img src="../icons/icon48.png" alt=""></div></a>
+      <a href="https://www.rmf24.pl/regiony/wroclaw" class="region-card-badge text-decoration-none">Wrocław</a>
+    </div>
+    <h3 class="h6 fw-bold"><a href="/regiony/wroclaw/news-smierc,nIdn,1006" class="text-decoration-none text-dark">Śmierć policjanta</a></h3>
+  </article></div>
+</div></section>
+
+<!-- „Radio RMF24" -->
+<section class="container mb-5 wywiady-w-radiu-rmf24-section areaCont"><div class="row g-4">
+  <div class="col-md-3"><article class="news-card" id="k1007">
+    <a href="/rozmowy/rozmowa-o-7/news-jablonski,nIdn,1007" class="text-decoration-none"><div class="img-wrapper mb-2"><img src="../icons/icon48.png" alt=""></div></a>
+    <h3 class="h6 fw-bold"><a href="/rozmowy/rozmowa-o-7/news-jablonski,nIdn,1007" class="text-dark text-decoration-none hover-blue">Jabłoński (data z „Najnowszych Rozmów")</a></h3>
+  </article></div>
+  <div class="col-md-3"><article class="news-card" id="k1008">
+    <a href="/fakty/polska/news-smiglowiec,nIdn,1008" class="text-decoration-none"><div class="img-wrapper mb-2"><img src="../icons/icon48.png" alt=""></div></a>
+    <h3 class="h6 fw-bold"><a href="/fakty/polska/news-smiglowiec,nIdn,1008" class="text-dark text-decoration-none hover-blue">Rosyjski śmigłowiec (strona wpisu)</a></h3>
+  </article></div>
+</div></section>
+
+<!-- „Najnowsze Rozmowy" — swoje daty -->
+<section class="bg-dark text-white py-5 areaCont2"><div class="row g-4">
+  <div class="col-lg-6"><article class="news-card dark-card" id="k1014">
+    <a href="/rozmowy/poranna-rozmowa/news-nozownik,nIdn,1014" class="d-block text-decoration-none">
+      <div class="img-wrapper ratio ratio-16x9 mb-3"><img src="../icons/icon48.png" alt=""></div>
+      <span style="display: block; font-size: 12px; color: #fc0;">Wczoraj, 25 września (08:02)</span>
+      <h3 class="mb-0 pb-2 text-white">Nożownik z Jarosławia</h3>
+    </a>
+  </article></div>
+  <div class="col-lg-6"><div class="rozmowy-scroll">
+    <article class="d-flex gap-3 align-items-center news-card dark-card border-bottom" id="kRozmowa1007">
+      <div class="img-wrapper rozmowy-thumb-lg"><a href="/rozmowy/rozmowa-o-7/news-jablonski,nIdn,1007" class="d-block"><img src="../icons/icon48.png" alt=""></a></div>
+      <div>
+        <span class="text-warning small d-block rozmowy-timestamp">Wczoraj, 25 września (07:00)</span>
+        <h4 class="h6 fw-bold mb-0 text-white hover-yellow"><a href="/rozmowy/rozmowa-o-7/news-jablonski,nIdn,1007" class="text-white text-decoration-none">Jabłoński</a></h4>
+      </div>
+    </article>
+  </div></div>
+</div></section>
+
+<!-- kolumna działu -->
+<section class="container mb-5 areaCont" id="dzialy"><div class="row g-4">
+  <div class="col-md-4 mb-3">
+    <h2 class="category-heading"><a href="https://www.rmf24.pl/fakty/polska" class="text-primary-blue">Polska</a></h2>
+    <article class="news-card mb-3" id="k1009">
+      <a href="https://www.rmf24.pl/regiony/zakopane/news-topr,nIdn,1009?utm_rs=AP_x" class="d-block text-decoration-none"><div class="img-wrapper ratio ratio-16x9 mb-2"><img src="../icons/icon48.png" alt=""></div></a>
+      <h3 class="h6 fw-bold mb-0"><a href="https://www.rmf24.pl/regiony/zakopane/news-topr,nIdn,1009?utm_rs=AP_x" class="text-dark text-decoration-none hover-blue">TOPR ostrzega (pełny adres z ?utm_rs)</a></h3>
+    </article>
+    <ul class="list-unstyled category-links mb-0" id="linki">
+      <li class="" id="k1010"><a href="/fakty/nauka/news-ksiezyc,nIdn,1010" class="text-dark text-decoration-none hover-blue">Życie na księżycu (strona wpisu)</a></li>
+      <li class="" id="k1011"><a href="/fakty/nauka/news-brak,nIdn,1011" class="text-dark text-decoration-none hover-blue">Strona wpisu 404</a></li>
+      <li class="" id="k1012"><a href="/fakty/polska/news-grzejniki,nIdn,1012" class="text-dark text-decoration-none hover-blue">Grzejniki (data z „Najpopularniejszych")</a></li>
+      <li class="" id="k1008b"><a href="/fakty/polska/news-smiglowiec,nIdn,1008" class="text-dark text-decoration-none hover-blue">Ten sam wpis co w „Radiu"</a></li>
+      <li class="" id="kObcy"><a href="https://www.rmf.fm/magazyn/news,nIdn,5" class="text-dark text-decoration-none hover-blue">Obcy adres</a></li>
+    </ul>
+  </div>
+</div></section>
+
+<!-- lista działu — swoje daty -->
+<main class="container" id="dzial"><div class="row g-4 cat-grid">
+  <div class="col-6"><article class="cat-card" id="k1015">
+    <a href="/fakty/polska/news-z-listy,nIdn,1015" class="cat-card__img-wrap d-block"><img src="../icons/icon48.png" alt="" class="cat-card__img"></a>
+    <div class="cat-card__body">
+      <time class="cat-card__date">Dzisiaj, 26 września (06:26)</time>
+      <h2 class="cat-card__title"><a href="/fakty/polska/news-z-listy,nIdn,1015" class="cat-card__title-link">Z listy działu</a></h2>
+    </div>
+  </article></div>
+</div></main>
+
+<!-- panel „Najpopularniejsze" -->
+<aside class="col-lg-4 col-xl-3"><div class="mrf-widget bg-dark articleListTabbedBoxPopular">
+  <a href="https://www.rmf24.pl/fakty/polska/news-grzejniki,nIdn,1012?utm_rs=AP_u5-gTWp6SdC4mrg4c2bDew" class="mrf-article-item">
+    <span class="mrf-date">
+      Niedziela, 20 września 2026 (09:23)
+    </span>
+    <span class="mrf-title">Grzejniki</span>
+  </a>
+</div></aside>
+
+<script src="../wspolne/ustawienia.js"></script>
+<script src="../strony/rmf24/rmf24-daty.js"></script>
+<script>
+const AUTO = location.search.includes('auto');
+const $ = (id) => document.getElementById(id);
+const log = $('log');
+window.addEventListener('error', (e) => { log.textContent += `\nBŁĄD TESTU: ${e.message} (${e.filename}:${e.lineno})\n`; });
+window.addEventListener('unhandledrejection', (e) => { log.textContent += `\nBŁĄD TESTU (promise): ${e.reason}\n`; });
+let n = 0, ok = 0;
+const sprawdz = (nazwa, warunek, szczegol = '') => {
+  n++; if (warunek) ok++;
+  log.textContent += `${warunek ? 'PASS' : 'FAIL'}  ${nazwa}${szczegol ? '  — ' + szczegol : ''}\n`;
+};
+const spij = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// ---------- czas i odpowiedzi portalu ----------
+// Wszystko w czasie lokalnym: „teraz" to sobota 26.09.2026, 12:00.
+const DZIEN = 864e5, MINUTA = 60e3;
+const D = (dniTemu, h = 0, m = 0) => new Date(2026, 8, 26 - dniTemu, h, m);
+const TERAZ = D(0, 12).getTime();
+
+const kanal = (wpisy) => '<?xml version="1.0" encoding="utf-8"?><rss version="2.0"><channel><title>Najnowsze wiadomości - RMF24.pl</title><link>https://www.rmf24.pl/</link>'
+  + wpisy.map((w) => `<item><title><![CDATA[${w.t}]]></title><link>https://www.rmf24.pl${w.h}</link><guid>${w.h.split(',').pop()}</guid>`
+    + `<pubDate>${w.d}</pubDate><category>Polska</category></item>`).join('')
+  + '</channel></rss>';
+const strona = (d) => `<!doctype html><script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsArticle",
+  "datePublished":"${d.toISOString()}","dateModified":"${new Date(d.getTime() + 90 * MINUTA).toISOString()}"}<\/script><h1>Wpis</h1>`;
+
+const ODPOWIEDZI = {
+  '/feed': kanal([
+    { h: '/regiony/rzeszow/news-areszt,nIdn,1001', t: 'Areszt', d: D(0, 11, 5).toUTCString() },
+    { h: '/regiony/trojmiasto/news-tragiczny-wypadek,nIdn,1002', t: 'Tragiczny wypadek', d: D(0, 9, 4).toUTCString() },
+    { h: '/regiony/zakopane/news-topr,nIdn,1009', t: 'TOPR', d: D(0, 7, 2).toUTCString() },
+    { h: '/regiony/wroclaw/news-smierc,nIdn,1006', t: 'Śmierć policjanta', d: D(1, 16, 25).toUTCString() },
+    { h: '/fakty/polska/news-zla-data,nIdn,1017', t: 'Zła data', d: 'wczoraj wieczorem' },
+  ]),
+  '/fakty/polska/news-smiglowiec,nIdn,1008': strona(D(3, 13, 45)),
+  '/fakty/nauka/news-ksiezyc,nIdn,1010': strona(D(2, 10, 0)),
+  '/ciekawostki-rmf24/news-lego,nIdn,1013': strona(D(1, 10, 35)),
+};
+const prawdziwyFetch = window.fetch.bind(window);
+let wywolania = [];
+window.fetch = async (url, opcje = {}) => {
+  wywolania.push({ url: String(url), credentials: opcje.credentials });
+  const tresc = ODPOWIEDZI[url];
+  return tresc == null ? new Response('<h1>404</h1>', { status: 404 }) : new Response(tresc, { status: 200 });
+};
+const adresy = () => wywolania.map((w) => w.url).sort().join(', ');
+
+const OCZEKIWANE = {
+  k1001: '11:05', k1002: '09:04', k1003: '08:30', k1004: 'wczoraj 23:18', k1005: '24.09 18:00', k1006: 'wczoraj 16:25',
+  k1007: 'wczoraj 07:00', k1008: '23.09 13:45', k1009: '07:02', k1010: '24.09 10:00', k1012: '20.09 09:23', k1008b: '23.09 13:45',
+};
+const BEZ_ZNACZKA = ['k1011', 'k1013', 'k1014', 'kRozmowa1007', 'k1015', 'kObcy', 'k1016'];
+const znaczek = (id) => $(id).querySelector('.ls-data');
+
+async function testuj() {
+  log.textContent = '';
+  n = 0; ok = 0;
+  const L = __lsDaty;
+  L.wylacz();
+  L.wyczyscPamiec();
+  wywolania = [];
+
+  // --- czyste funkcje ----------------------------------------------------------------
+  const e = (d, t = TERAZ) => L.etykieta(d, t).tekst;
+  sprawdz('etykieta: dziś sama godzina, wczoraj z „wczoraj"', e(D(0, 5, 30)) === '05:30' && e(D(0, 0, 0)) === '00:00' && e(D(1, 23, 59)) === 'wczoraj 23:59', e(D(0, 5, 30)));
+  sprawdz('etykieta: starsze dd.mm z godziną, z innego roku z rokiem', e(D(2, 8)) === '24.09 08:00' && e(D(40, 8)) === '17.08 08:00' && e(new Date(2025, 11, 30, 10, 35)) === '30.12.2025 10:35', e(new Date(2025, 11, 30, 10, 35)));
+  sprawdz('etykieta: podpowiedź z pełną datą', L.etykieta(D(1, 23, 18), TERAZ).tytul === 'Opublikowano 25.09.2026 23:18');
+  // 25.10 ma 25 h, 29.03 — 23 h (w strefie Europe/Warsaw; w UTC test i tak przechodzi).
+  sprawdz('etykieta: doby przy zmianie czasu (25.10 i 29.03)',
+    e(new Date(2026, 9, 25, 12), new Date(2026, 9, 26, 10).getTime()) === 'wczoraj 12:00'
+    && e(new Date(2026, 2, 29, 0, 30), new Date(2026, 2, 30, 23).getTime()) === 'wczoraj 00:30'
+    && e(new Date(2026, 9, 24, 12), new Date(2026, 9, 26, 1).getTime()) === '24.10 12:00');
+
+  const z = (tekst, t = TERAZ) => { const d = L.zNapisu(tekst, t); return d ? d.getTime() : null; };
+  sprawdz('napis strony: „Dzisiaj", „Wczoraj", dzień tygodnia, z rokiem',
+    z('Dzisiaj, 26 września (12:28)') === D(0, 12, 28).getTime() && z('Wczoraj, 25 września (23:18)') === D(1, 23, 18).getTime()
+    && z('Czwartek, 24 września (18:00)') === D(2, 18).getTime() && z('Niedziela, 20 września 2026 (09:23)') === D(6, 9, 23).getTime());
+  sprawdz('napis strony: białe znaki i wielkie litery jak z HTML-a', z('\n    Poniedziałek, 21 WRZEŚNIA 2026   (11:51)\n  ') === D(5, 11, 51).getTime());
+  sprawdz('napis strony: bez roku na przełomie roku to zeszły rok', z('Czwartek, 31 grudnia (23:00)', new Date(2027, 0, 1, 8).getTime()) === new Date(2026, 11, 31, 23).getTime()
+    && z('31 grudnia 2026 (23:00)', new Date(2027, 0, 1, 8).getTime()) === new Date(2026, 11, 31, 23).getTime());
+  sprawdz('napis strony: bez dnia i miesiąca albo godziny — nic', z('Dzisiaj (14:09)') === null && z('26 września') === null && z('Polska') === null);
+
+  const k = L.numerWpisu;
+  sprawdz('numer wpisu: względny, pełny z www i bez, ?utm_rs, #, ciąg dalszy po przecinku',
+    k('/fakty/polska/news-a-b,nIdn,1019291') === '1019291' && k('https://www.rmf24.pl/fakty/swiat/news-x,nIdn,1019309') === '1019309'
+    && k('https://rmf24.pl/fakty/x,nIdn,12') === '12' && k('https://www.rmf24.pl/fakty/x,nIdn,1018035?utm_rs=AP_u5') === '1018035'
+    && k('/fakty/x,nIdn,77#forum') === '77' && k('/fakty/x,nIdn,78,nPack,2') === '78');
+  sprawdz('numer wpisu: działy, obce strony i śmieci odpadają',
+    k('https://www.rmf24.pl/regiony/wroclaw') === null && k('https://www.rmf.fm/magazyn/news,nIdn,5') === null && k('/fakty/x,nIdn,') === null && k(undefined) === null);
+  sprawdz('ustawienia: domyślnie włączone, klucz rmf24.daty',
+    L.czyWlaczoneWUstawieniach(null) && L.czyWlaczoneWUstawieniach({ rmf24: { panele: false } }) && !L.czyWlaczoneWUstawieniach({ rmf24: { daty: false } }));
+
+  // --- przed włączeniem ---------------------------------------------------------------
+  sprawdz('przed włączeniem: bez znaczków', !document.querySelector('.ls-data'));
+
+  // --- pierwsze wejście ---------------------------------------------------------------
+  L.wlacz();
+  await L.odswiez(TERAZ);
+  const zle = Object.entries(OCZEKIWANE).filter(([id, t]) => znaczek(id)?.textContent !== t);
+  sprawdz(`znaczki na ${Object.keys(OCZEKIWANE).length} kafelkach (kanał, napisy strony, strony wpisów)`, zle.length === 0, zle.map(([id]) => `${id}: ${znaczek(id)?.textContent}`).join(', '));
+  const zbedne = BEZ_ZNACZKA.filter((id) => $(id).querySelector('.ls-data'));
+  sprawdz('bez znaczka: 404, schowany, „Najnowsze Rozmowy", lista działu, obcy adres', zbedne.length === 0, zbedne.join(', '));
+  sprawdz('pobrane: kanał i 3 strony wpisów (ten sam wpis w dwóch kafelkach raz, schowany wcale)',
+    adresy() === '/fakty/nauka/news-brak,nIdn,1011, /fakty/nauka/news-ksiezyc,nIdn,1010, /fakty/polska/news-smiglowiec,nIdn,1008, /fakty/swiat/news-bez-daty,nIdn,1016, /feed', adresy());
+  sprawdz('pobieranie bez ciasteczek', wywolania.every((w) => w.credentials === 'omit'));
+  sprawdz('miejsce: czołówka — pierwsze na pasku z tytułem', $('pasek1001').firstElementChild === znaczek('k1001'));
+  sprawdz('miejsce: kafelki — tuż przed tytułem (też w linku z tytułem)', znaczek('k1002').nextElementSibling?.tagName === 'H2'
+    && znaczek('k1003').nextElementSibling?.tagName === 'H3' && znaczek('k1003').parentElement.tagName === 'A' && znaczek('k1006').nextElementSibling?.tagName === 'H3');
+  sprawdz('miejsce: linki działu — w wierszu przed linkiem', $('k1010').firstElementChild === znaczek('k1010') && getComputedStyle(znaczek('k1010')).display === 'inline');
+  const zn = znaczek('k1004');
+  sprawdz('znaczek: <time datetime>, podpowiedź, 12 px szary', zn.tagName === 'TIME' && zn.dateTime === D(1, 23, 18).toISOString()
+    && zn.title === 'Opublikowano 25.09.2026 23:18' && getComputedStyle(zn).fontSize === '12px' && getComputedStyle(zn).color === 'rgb(108, 117, 125)');
+  sprawdz('znaczek na pasku czołówki: jasny', getComputedStyle(znaczek('k1001')).color === 'rgba(255, 255, 255, 0.8)');
+  sprawdz('data strony pod „Najważniejszymi Faktami" schowana tylko obok naszego znaczka', getComputedStyle($('meta1004')).display === 'none' && getComputedStyle($('meta1016')).display === 'flex');
+
+  // --- pamięć i ponowne wejścia --------------------------------------------------------
+  wywolania = [];
+  await L.odswiez(TERAZ + MINUTA);
+  sprawdz('minutę później: zero pobrań (404 nie co wejście, kanał świeży)', wywolania.length === 0, adresy());
+  wywolania = [];
+  await L.odswiez(TERAZ + 6 * MINUTA);
+  sprawdz('6 minut później: tylko kanał (są kafelki bez daty)', adresy() === '/feed', adresy());
+  sprawdz('jeden znaczek na kafelek po kilku przebiegach', [...document.querySelectorAll('article, li')].every((el) => el.querySelectorAll('.ls-data').length <= 1));
+
+  // --- następnego dnia ---------------------------------------------------------------------
+  wywolania = [];
+  await L.odswiez(D(-1, 13).getTime());
+  sprawdz('nazajutrz: znaczki przestawione o dzień', znaczek('k1002').textContent === 'wczoraj 09:04' && znaczek('k1004').textContent === '25.09 23:18' && znaczek('k1003').textContent === 'wczoraj 08:30');
+  sprawdz('nazajutrz: strony wpisów bez daty jeszcze raz', adresy() === '/fakty/nauka/news-brak,nIdn,1011, /fakty/swiat/news-bez-daty,nIdn,1016, /feed', adresy());
+
+  // --- przycinanie pamięci -----------------------------------------------------------------
+  await L.odswiez(TERAZ + 50 * DZIEN);
+  const p = L.pamiec();
+  sprawdz('po 50 dniach: stare daty i adresy wypadają z pamięci', Object.keys(p.wpisy).length === 0
+    && Object.values(p.pobrane).every((t) => t === TERAZ + 50 * DZIEN), `${Object.keys(p.wpisy).length} wpisów`);
+
+  // --- wyłączenie i ponowne włączenie --------------------------------------------------------
+  L.wylacz();
+  sprawdz('po wyłączeniu: atrybut i znaczki zdjęte, data strony wraca', !document.documentElement.hasAttribute('data-ls-daty') && !document.querySelector('.ls-data') && getComputedStyle($('meta1004')).display === 'flex');
+  L.wyczyscPamiec();
+  L.wlacz();
+  await L.odswiez(TERAZ);
+  sprawdz('ponowne włączenie: znaczki jak za pierwszym razem', document.querySelectorAll('.ls-data').length === Object.keys(OCZEKIWANE).length);
+
+  // --- obserwator (w bieżącym czasie) -----------------------------------------------------------
+  L.wylacz();
+  L.wlaczZObserwatorem();
+  await spij(100);
+  const li = document.createElement('li');
+  li.id = 'kNowy';
+  li.innerHTML = '<a href="/regiony/trojmiasto/news-tragiczny-wypadek,nIdn,1002" class="text-dark">Doładowany link</a>';
+  $('linki').append(li);
+  await spij(50);
+  sprawdz('obserwator: znaczki od razu, doładowany kafelek dostaje swój, strona nie wisi', document.querySelectorAll('.ls-data').length === Object.keys(OCZEKIWANE).length + 1
+    && $('kNowy').firstElementChild?.classList.contains('ls-data'));
+  L.wylacz();
+  li.remove();
+
+  // --- manifest i ustawienia -------------------------------------------------------------------
+  const manifest = await prawdziwyFetch('../manifest.json').then((r) => r.json());
+  const wpis = manifest.content_scripts.find((c) => c.js.includes('strony/rmf24/rmf24-daty.js'));
+  sprawdz('manifest: skrypt i CSS na rmf24.pl, document_start', !!wpis && wpis.css.includes('strony/rmf24/rmf24-daty.css') && wpis.run_at === 'document_start'
+    && ['https://rmf24.pl/*', 'https://www.rmf24.pl/*'].every((m) => wpis.matches.includes(m)));
+  const opcje = await prawdziwyFetch('../wspolne/options.html').then((r) => r.text());
+  sprawdz('ustawienia: przełącznik rmf24.daty, domyślnie włączony', opcje.includes('data-klucz="rmf24" data-pole="daty"') && DOMYSLNE_USTAWIENIA.rmf24.daty === true);
+
+  log.textContent += `\nWYNIK: ${ok}/${n}${ok === n ? ' — wszystko OK' : ' — SĄ BŁĘDY'}\n`;
+}
+if (AUTO) testuj();
+</script>

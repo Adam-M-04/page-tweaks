@@ -24,6 +24,8 @@ const DOMYSLNE_USTAWIENIA = {
     bezReklam: true,    // bez reklam, okna zgody, wstawek wideo i autopromocji na rmf24.pl (rmf24-bez-reklam.* + rmf24-reguly.json)
     wpisy: true,        // wpisy z X, Instagrama i Facebooka w artykułach za przyciskiem „Zobacz wpis” (rmf24-wpisy.*)
     panele: true,       // bez bocznych paneli „Najnowsze” i „Najpopularniejsze”, na głównej też bez nagłówka „Najważniejsze Fakty” (rmf24-panele.*)
+    daty: true,         // godzina dodania wpisu na kafelkach strony głównej (rmf24-daty.*)
+    przeczytane: true,  // otwarte już wpisy przygaszone na kafelkach i listach (rmf24-przeczytane.*)
   },
 };
 

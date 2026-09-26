@@ -1,0 +1,29 @@
+/* Godzina dodania na kafelkach rmf24.pl — pod html[data-ls-daty] (atrybut
+   i znaczki time.ls-data stawia rmf24-daty.js, przy wyłączeniu zdejmuje). */
+
+/* Jak data na listach działów (.cat-card__date): mała, szara, nad tytułem. */
+html[data-ls-daty] .ls-data {
+  display: block;
+  margin: 0 0 2px;
+  font: 400 12px/18px Roboto, Arial, sans-serif;
+  color: #6c757d;
+  white-space: nowrap;
+}
+
+/* Czołówka: na kolorowym pasku, nad białym tytułem. */
+html[data-ls-daty] .hero-title-overlay .ls-data {
+  font-size: 13px;
+  color: rgba(255, 255, 255, .8);
+}
+
+/* Linki pod kafelkami działów: w wierszu, przed tytułem. */
+html[data-ls-daty] .category-links .ls-data {
+  display: inline;
+  margin: 0 6px 0 0;
+}
+
+/* „Najważniejsze Fakty" poniżej 768 px pokazują swoją datę z działem
+   („Dzisiaj, 26 września (12:28) Polska") — zostaje jedna, nasza. */
+html[data-ls-daty] .news-card:has(.ls-data) .top-stories-mobile-meta {
+  display: none !important;
+}

@@ -1,0 +1,198 @@
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ATRAPA rmf24.pl — przeczytane przygaszone</title>
+<!-- Kafelki i listy wpisów rmf24.pl w pigułce (stan: wrzesień 2026): czołówka
+     z tytułem na pasku, zwykły kafelek, .dark-card z „Najnowszych Rozmów",
+     kolumna działu z linkami .category-links, lista działu (.cat-card),
+     a pod artykułem „Najważniejsze Fakty" (.article-related__card)
+     i „Zobacz również" (.article-see-also__row) oraz link w treści, który
+     przygaszony być nie może. Pamięć przeczytanych podstawia test — zero
+     kontaktu z rmf24.pl. Klasy jak na żywej stronie. -->
+<style>
+body { margin: 0; font: 16px/1.6 Roboto, Arial, sans-serif; color: #212529; background: #fff; }
+*, ::before, ::after { box-sizing: border-box; }
+section, main, article.article-page { max-width: 1100px; margin: 0 auto 24px; padding: 0 12px; }
+.row { display: flex; flex-wrap: wrap; gap: 16px; }
+.row > [class*="col-"] { flex: 1 1 200px; }
+img { display: block; width: 100%; height: 80px; object-fit: cover; background: #cde; }
+.main-hero { position: relative; }
+.hero-title-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px; }
+.text-dark { color: #212529 !important; }
+.text-white { color: #fff !important; }
+.bg-dark { background: #222; color: #fff; }
+.list-unstyled { list-style: none; padding: 0; }
+.article-see-also__title { color: #1a3c7a; }
+#panelTestu { background: #0f172a; color: #e2e8f0; padding: 10px 14px; margin-bottom: 16px; }
+</style>
+<link rel="stylesheet" href="../strony/rmf24/rmf24-przeczytane.css">
+
+<div id="panelTestu">
+  <h3 style="margin:0 0 6px">Atrapa rmf24.pl — testy przygaszania przeczytanych (zero kontaktu z rmf24.pl)</h3>
+  <button onclick="testuj()" style="cursor:pointer;padding:6px 12px">uruchom testy</button>
+  <pre id="log" style="white-space:pre-wrap;color:#7dd3fc;margin:8px 0 0"></pre>
+</div>
+
+<section id="glowna"><div class="row">
+  <div class="col-lg-6"><article class="news-card main-hero position-relative" id="k1001">
+    <a href="/regiony/rzeszow/news-areszt,nIdn,1001" class="d-block"><img src="../icons/icon128.png" alt="" class="main-hero-img"></a>
+    <div class="text-white p-3 fw-bold fs-4 hero-title-overlay" style="background: #d6002d;" id="pasek1001"><a href="/regiony/rzeszow/news-areszt,nIdn,1001" class="text-white text-decoration-none">Areszt</a></div>
+  </article></div>
+  <div class="col-xl-4 col-sm-6"><article class="news-card" id="k1002">
+    <a href="/fakty/polska/news-nawrocki,nIdn,1002" class="d-block text-decoration-none mb-2"><div class="img-wrapper"><img src="../icons/icon48.png" alt=""></div></a>
+    <a href="/fakty/polska/news-nawrocki,nIdn,1002" class="text-decoration-none"><h3 class="h6 fw-bold text-dark" id="tytul1002">Nawrocki i Putin</h3></a>
+  </article></div>
+  <div class="col-xl-4 col-sm-6"><article class="news-card" id="k1003">
+    <a href="/fakty/swiat/news-pakt,nIdn,1003" class="d-block text-decoration-none mb-2"><div class="img-wrapper"><img src="../icons/icon48.png" alt=""></div></a>
+    <a href="/fakty/swiat/news-pakt,nIdn,1003" class="text-decoration-none"><h3 class="h6 fw-bold text-dark">Nieprzeczytany</h3></a>
+  </article></div>
+</div></section>
+
+<section class="bg-dark text-white"><div class="row">
+  <div class="col-lg-6"><article class="d-flex gap-3 news-card dark-card" id="k1004">
+    <div class="img-wrapper"><a href="/rozmowy/rozmowa-o-7/news-jablonski,nIdn,1004" class="d-block"><img src="../icons/icon48.png" alt=""></a></div>
+    <div><span class="text-warning small d-block rozmowy-timestamp">Wczoraj, 25 września (07:00)</span>
+      <h4 class="h6 fw-bold mb-0 text-white hover-yellow"><a href="/rozmowy/rozmowa-o-7/news-jablonski,nIdn,1004" class="text-white text-decoration-none" id="tytul1004">Jabłoński</a></h4></div>
+  </article></div>
+</div></section>
+
+<section id="dzialy"><div class="row"><div class="col-md-4 mb-3">
+  <h2 class="category-heading"><a href="https://www.rmf24.pl/fakty/polska" class="text-primary-blue">Polska</a></h2>
+  <article class="news-card mb-3" id="k1005">
+    <a href="https://www.rmf24.pl/regiony/zakopane/news-topr,nIdn,1005?utm_rs=AP_x" class="d-block text-decoration-none"><div class="img-wrapper"><img src="../icons/icon48.png" alt=""></div></a>
+    <h3 class="h6 fw-bold mb-0"><a href="https://www.rmf24.pl/regiony/zakopane/news-topr,nIdn,1005?utm_rs=AP_x" class="text-dark text-decoration-none hover-blue" id="tytul1005">TOPR (pełny adres)</a></h3>
+  </article>
+  <ul class="list-unstyled category-links mb-0" id="linki">
+    <li class="" id="k1006"><a href="/fakty/nauka/news-ksiezyc,nIdn,1006" class="text-dark text-decoration-none hover-blue" id="link1006">Życie na księżycu</a></li>
+    <li class="" id="k1007"><a href="/fakty/nauka/news-inny,nIdn,1007" class="text-dark text-decoration-none hover-blue" id="link1007">Nieprzeczytany</a></li>
+    <li class="" id="kObcy"><a href="https://www.rmf.fm/magazyn/news,nIdn,1002" class="text-dark">Obcy adres z tym samym numerem</a></li>
+  </ul>
+</div></div></section>
+
+<main class="container" id="dzial"><div class="row g-4 cat-grid">
+  <div class="col-6"><article class="cat-card" id="k1008">
+    <a href="/fakty/polska/news-z-listy,nIdn,1008" class="cat-card__img-wrap d-block"><img src="../icons/icon48.png" alt="" class="cat-card__img"></a>
+    <div class="cat-card__body"><time class="cat-card__date">Dzisiaj, 26 września (06:26)</time>
+      <h2 class="cat-card__title"><a href="/fakty/polska/news-z-listy,nIdn,1008" class="cat-card__title-link" id="tytul1008">Z listy działu</a></h2></div>
+  </article></div>
+</div></main>
+
+<article class="article-page" id="artykul">
+  <h1 class="article-page__title">Artykuł</h1>
+  <div class="article-page__content"><p>W treści link do <a href="/fakty/polska/news-nawrocki,nIdn,1002" id="linkWTresci">przeczytanego wpisu</a>.</p></div>
+  <section class="article-related article-related--key-facts najwazniejszeArt">
+    <ul class="article-related__list article-related__list--cards">
+      <li class="article-related__card" id="k1009"><a href="/fakty/swiat/news-fakt,nIdn,1009" class="article-related__card-link">
+        <span class="article-related__thumb-wrap"><img src="../icons/icon48.png" alt="" class="article-related__thumb"></span>
+        <span class="article-related__card-title" id="tytul1009">Fakt spod artykułu</span></a></li>
+    </ul>
+  </section>
+  <section class="article-related article-related--key-facts zobaczRowniez">
+    <ul class="article-see-also__list mb-4">
+      <li class="article-see-also__row" id="k1010"><a href="/regiony/news-zobacz,nIdn,1010" class="article-see-also__link"><span class="article-see-also__title" id="tytul1010">Zobacz również</span></a></li>
+    </ul>
+  </section>
+</article>
+
+<script src="../wspolne/ustawienia.js"></script>
+<script src="../strony/rmf24/rmf24-przeczytane.js"></script>
+<script>
+const AUTO = location.search.includes('auto');
+const $ = (id) => document.getElementById(id);
+const log = $('log');
+window.addEventListener('error', (e) => { log.textContent += `\nBŁĄD TESTU: ${e.message} (${e.filename}:${e.lineno})\n`; });
+window.addEventListener('unhandledrejection', (e) => { log.textContent += `\nBŁĄD TESTU (promise): ${e.reason}\n`; });
+let n = 0, ok = 0;
+const sprawdz = (nazwa, warunek, szczegol = '') => {
+  n++; if (warunek) ok++;
+  log.textContent += `${warunek ? 'PASS' : 'FAIL'}  ${nazwa}${szczegol ? '  — ' + szczegol : ''}\n`;
+};
+const spij = (ms) => new Promise((r) => setTimeout(r, ms));
+const DZIEN = 864e5;
+const TERAZ = new Date(2026, 8, 26, 12).getTime();
+
+const PRZECZYTANE = ['k1001', 'k1002', 'k1004', 'k1005', 'k1006', 'k1008', 'k1009', 'k1010'];
+const NIEPRZECZYTANE = ['k1003', 'k1007', 'kObcy'];
+const oznaczone = () => [...document.querySelectorAll('[data-ls-przeczytany]')].map((e) => e.id).sort();
+const zdjecie = (id) => getComputedStyle($(id).querySelector('img')).opacity;
+const kolor = (id) => getComputedStyle($(id)).color;
+const SZARY = 'rgb(138, 144, 151)';
+const PRZEJSCIE = 200;   // zdjęcia bledną z transition .15s
+
+async function testuj() {
+  log.textContent = '';
+  n = 0; ok = 0;
+  const P = __lsPrzeczytane;
+  P.wylacz();
+  P.ustawPrzeczytane({});
+
+  // --- czyste funkcje ----------------------------------------------------------------
+  const k = P.numerWpisu;
+  sprawdz('numer wpisu: względny, pełny, ?utm_rs; obce strony i działy odpadają',
+    k('/fakty/polska/news-a,nIdn,1019291') === '1019291' && k('https://www.rmf24.pl/fakty/x,nIdn,1018035?utm_rs=AP_u5') === '1018035'
+    && k('https://www.rmf.fm/magazyn/news,nIdn,5') === null && k('https://www.rmf24.pl/regiony/wroclaw') === null);
+  sprawdz('ustawienia: domyślnie włączone, klucz rmf24.przeczytane',
+    P.czyWlaczoneWUstawieniach(null) && P.czyWlaczoneWUstawieniach({ rmf24: { daty: false } }) && !P.czyWlaczoneWUstawieniach({ rmf24: { przeczytane: false } }));
+
+  // --- zapamiętywanie ---------------------------------------------------------------------
+  P.ustawPrzeczytane({ 999: TERAZ - 61 * DZIEN, 998: TERAZ - 59 * DZIEN });
+  await P.zapamietaj('1001', TERAZ);
+  const pam = P.przeczytane();
+  sprawdz('zapamiętanie: numer z czasem, starsze niż 60 dni wypadają', pam['1001'] === TERAZ && !('999' in pam) && pam['998'] === TERAZ - 59 * DZIEN, JSON.stringify(pam));
+
+  // --- przed włączeniem ---------------------------------------------------------------
+  const przeczytane = Object.fromEntries(['1001', '1002', '1004', '1005', '1006', '1008', '1009', '1010'].map((x) => [x, TERAZ]));
+  P.ustawPrzeczytane(przeczytane);
+  sprawdz('przed włączeniem: nic nie oznaczone', oznaczone().length === 0 && zdjecie('k1002') === '1');
+
+  // --- włączenie ------------------------------------------------------------------------
+  await P.wlacz();
+  await spij(PRZEJSCIE);
+  sprawdz('oznaczone: kafelki, .dark-card, lista działu, linki działu, listy pod artykułem', JSON.stringify(oznaczone()) === JSON.stringify([...PRZECZYTANE].sort()), oznaczone().join(', '));
+  sprawdz('nieoznaczone: nieprzeczytane i obcy adres z tym samym numerem', NIEPRZECZYTANE.every((id) => !$(id).hasAttribute('data-ls-przeczytany')));
+  sprawdz('artykuł z linkiem w treści nie jest kafelkiem', !$('artykul').hasAttribute('data-ls-przeczytany') && getComputedStyle($('linkWTresci')).color !== SZARY);
+  sprawdz('zdjęcie przeczytanego blednie, nieprzeczytanego nie', zdjecie('k1002') === '0.5' && zdjecie('k1008') === '0.5' && zdjecie('k1009') === '0.5' && zdjecie('k1003') === '1');
+  sprawdz('tytuł szary mimo .text-dark / .text-white (!important)', kolor('tytul1002') === SZARY && kolor('tytul1004') === SZARY && kolor('tytul1005') === SZARY && kolor('tytul1008') === SZARY,
+    `${kolor('tytul1002')}, ${kolor('tytul1004')}`);
+  sprawdz('linki działu i listy pod artykułem szare, nieprzeczytany link nie', kolor('link1006') === SZARY && kolor('tytul1009') === SZARY && kolor('tytul1010') === SZARY && kolor('link1007') !== SZARY);
+  sprawdz('czołówka: pasek blednie, biały tytuł zostaje', getComputedStyle($('pasek1001')).opacity === '0.75' && getComputedStyle($('pasek1001').querySelector('a')).color === 'rgb(255, 255, 255)');
+
+  // --- zmiany w trakcie ------------------------------------------------------------------
+  const li = document.createElement('li');
+  li.id = 'kNowy';
+  li.innerHTML = '<a href="/fakty/polska/news-nawrocki,nIdn,1002" class="text-dark">Doładowany link</a>';
+  $('linki').append(li);
+  await spij(0);
+  sprawdz('obserwator: doładowany link do przeczytanego od razu oznaczony', li.hasAttribute('data-ls-przeczytany'));
+  P.ustawPrzeczytane({ ...przeczytane, 1003: TERAZ });
+  P.oznacz();
+  sprawdz('nowo przeczytany (np. z innej karty) oznaczony po oznacz()', $('k1003').hasAttribute('data-ls-przeczytany'));
+  P.ustawPrzeczytane({});
+  P.oznacz();
+  sprawdz('pusta pamięć: oznaczenia zdjęte', oznaczone().length === 0);
+  li.remove();
+
+  // --- wyłączenie i ponowne włączenie --------------------------------------------------------
+  P.ustawPrzeczytane(przeczytane);
+  P.oznacz();
+  P.wylacz();
+  await spij(PRZEJSCIE);
+  sprawdz('po wyłączeniu: atrybut i oznaczenia zdjęte, zdjęcia pełne', !document.documentElement.hasAttribute('data-ls-przeczytane') && oznaczone().length === 0 && zdjecie('k1002') === '1');
+  const li2 = document.createElement('li');
+  li2.innerHTML = '<a href="/fakty/polska/news-nawrocki,nIdn,1002">po wyłączeniu</a>';
+  $('linki').append(li2);
+  await spij(0);
+  sprawdz('po wyłączeniu obserwator nie oznacza', !li2.hasAttribute('data-ls-przeczytany'));
+  li2.remove();
+  await P.wlacz();
+  sprawdz('ponowne włączenie: te same oznaczenia', JSON.stringify(oznaczone()) === JSON.stringify([...PRZECZYTANE].sort()));
+
+  // --- manifest i ustawienia -------------------------------------------------------------------
+  const manifest = await fetch('../manifest.json').then((r) => r.json());
+  const wpis = manifest.content_scripts.find((c) => c.js.includes('strony/rmf24/rmf24-przeczytane.js'));
+  sprawdz('manifest: skrypt i CSS na rmf24.pl, document_start', !!wpis && wpis.css.includes('strony/rmf24/rmf24-przeczytane.css') && wpis.run_at === 'document_start'
+    && ['https://rmf24.pl/*', 'https://www.rmf24.pl/*'].every((m) => wpis.matches.includes(m)));
+  const opcje = await fetch('../wspolne/options.html').then((r) => r.text());
+  sprawdz('ustawienia: przełącznik rmf24.przeczytane, domyślnie włączony', opcje.includes('data-klucz="rmf24" data-pole="przeczytane"') && DOMYSLNE_USTAWIENIA.rmf24.przeczytane === true);
+
+  log.textContent += `\nWYNIK: ${ok}/${n}${ok === n ? ' — wszystko OK' : ' — SĄ BŁĘDY'}\n`;
+}
+if (AUTO) testuj();
+</script>
