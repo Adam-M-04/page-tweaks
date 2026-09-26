@@ -24,7 +24,9 @@ html[data-ls-czytnik] :is(
   .newsDetails__right,                                              /* boczna kolumna: najnowsze, najpopularniejsze, reklamy */
   .lastComments, .contactUs, body > footer,
   section.announcements,                                            /* strona główna: ogłoszenia promowane, firmy */
-  .homepageThreeBoxesNews__box:has(> .heading a[href$="/materialy-partnerow"])
+  .homepageThreeBoxesNews__box:has(> .heading a[href$="/materialy-partnerow"]),
+  .homepageThreeBoxesNews__box:has(> .heading a[href$="/kategoria/felietony"]),
+  section.polandAndWorld, section.sport                             /* strona główna: felietony, „Region - Polska - Świat" i „Sport" — niepotrzebne */
 ) {
   display: none !important;
 }

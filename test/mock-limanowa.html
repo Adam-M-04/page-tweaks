@@ -4,7 +4,8 @@
      komentarzami), artykuł z boczną kolumną, cytaty z 80-pikselowymi
      cudzysłowami, okno zgody Funding Choices z body overflow: hidden,
      okienko powiadomień, pasek reklamy na dole, sekcje płatne ze strony
-     głównej i dymek toastr o Adblocku. Klasy jak na żywej stronie. -->
+     głównej (płatne oraz „Region - Polska - Świat" i „Sport") i dymek
+     toastr o Adblocku. Klasy jak na żywej stronie. -->
 <style>
 body { margin: 0; padding-top: 55px; font: 16px/1.6 Arial, sans-serif; color: rgb(2, 54, 75); background: rgb(254, 254, 254); }
 header { position: fixed; top: 0; left: 0; right: 0; height: 39px; background: rgb(2, 54, 75); color: #fff; z-index: 10; }
@@ -93,9 +94,12 @@ header { position: fixed; top: 0; left: 0; right: 0; height: 39px; background: r
   <section class="announcements" id="ogloszeniaPromowane"><div class="wrapper"><h3 class="heading heading--border left">Ogłoszenia promowane</h3></div></section>
   <div class="wrapper homepageThreeBoxesNews">
     <div class="homepageThreeBoxesNews__box" id="kronika"><h3 class="heading heading--border"><a href="/aktualnosci/kategoria/kronika-policyjna">Kronika policyjna</a></h3></div>
+    <div class="homepageThreeBoxesNews__box" id="felietony"><h3 class="heading heading--border"><a href="/aktualnosci/kategoria/felietony">Felietony</a></h3></div>
     <div class="homepageThreeBoxesNews__box" id="partnerzy"><h3 class="heading heading--border"><a href="/materialy-partnerow">Materiały partnerów</a></h3></div>
   </div>
   <div class="items-grid"><div class="item news-item item--ad" id="slotKafelek"></div><div class="item item--add" id="slotKafelek2"></div></div>
+  <section class="polandAndWorld" id="polskaSwiat"><div class="wrapper"><h3 class="heading heading--border">Region - Polska - Świat</h3></div></section>
+  <section class="sport" id="sport"><div class="wrapper"><h3 class="heading heading--border">Sport</h3></div></section>
   <section class="galleries" id="galerie"><h3 class="heading">Galerie</h3></section>
   <section class="lastComments" id="ostatnieKomentarze">Najnowsze komentarze</section>
 </main>
@@ -124,7 +128,8 @@ const styl = (id, p, pseudo) => getComputedStyle($(id), pseudo)[p];
 
 const SMIECI = ['topBarner', 'baner', 'slotGora', 'slotTekst', 'wideoReklama', 'oa-360-1790411797041_fuxugumlp', 'okruszki',
   'reakcje', 'pasekGoogle', 'zaciekawic', 'polecane', 'prawa', 'ogloszeniaPromowane', 'partnerzy', 'slotKafelek', 'slotKafelek2',
-  'ostatnieKomentarze', 'kontakt', 'stopka', 'pasekDol', 'notificationsPopup', 'cmpKontener', 'zgoda', 'pogoda', 'ikony'];
+  'ostatnieKomentarze', 'kontakt', 'stopka', 'pasekDol', 'notificationsPopup', 'cmpKontener', 'zgoda', 'pogoda', 'ikony',
+  'polskaSwiat', 'sport', 'felietony'];
 const TRESC = ['tytul', 'zdjecie', 'data', 'lead', 'akapit', 'cytat', 'kronika', 'galerie', 'logo', 'szukaj'];
 
 async function testuj() {

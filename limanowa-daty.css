@@ -1,0 +1,67 @@
+/* Daty wpisów na limanowa.in — wszystko pod html[data-ls-daty] (atrybut
+   stawia limanowa-daty.js; znaczki i listę głównej sekcji też wstawia skrypt,
+   a przy wyłączeniu zdejmuje). Działa z czytnikiem i bez niego. */
+
+/* ---------- znaczek na kafelku ---------- */
+
+html[data-ls-daty] .ls-data {
+  display: block;
+  clear: both;                         /* kafelki „static" (Sport, „Region - Polska - Świat" przy wyłączonym czytniku) mają zdjęcie na float */
+  width: fit-content;
+  margin: 0 0 6px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font: 600 12px/1.4 Poppins, Arial, sans-serif;
+  letter-spacing: .01em;
+  white-space: nowrap;
+  color: #fff;
+  background: #69747c;                 /* 2 dni i starsze */
+  pointer-events: none;
+}
+html[data-ls-daty] .ls-data--dzis { background: #1d8348; }
+html[data-ls-daty] .ls-data--wczoraj { background: #02364b; }
+
+/* ---------- główna sekcja jako lista od najnowszego ---------- */
+
+html[data-ls-daty] .ls-lista + .homepage__top { display: none !important; }
+html[data-ls-daty] .ls-lista {
+  max-width: 920px;
+  margin: 8px 0 28px;
+  padding: 0;
+  list-style: none;
+}
+html[data-ls-daty] .ls-lista a {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  align-items: center;
+  gap: 20px;
+  padding: 14px 0;
+  border-bottom: 1px solid #e3e8eb;
+  color: #16181a;
+  text-decoration: none;
+  cursor: pointer;
+}
+html[data-ls-daty] .ls-lista li:first-child a { padding-top: 0; }
+html[data-ls-daty] .ls-lista a:visited { color: #7a848b; }    /* przeczytane */
+html[data-ls-daty] .ls-lista__zdjecie {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #e3e8eb;
+}
+html[data-ls-daty] .ls-lista__tekst { display: flex; flex-direction: column; min-width: 0; }
+html[data-ls-daty] .ls-lista__tytul { font: 600 19px/1.35 Poppins, Arial, sans-serif; }
+html[data-ls-daty] .ls-lista a:hover .ls-lista__tytul { text-decoration: underline; }
+html[data-ls-daty] .ls-lista__komentarze {
+  margin-top: 6px;
+  font: 13px/1.4 Poppins, Arial, sans-serif;
+  color: #69747c;
+}
+
+@media (max-width: 650px) {
+  html[data-ls-daty] .ls-lista a { grid-template-columns: 116px 1fr; gap: 12px; padding: 12px 0; }
+  html[data-ls-daty] .ls-lista__tytul { font-size: 15px; }
+  html[data-ls-daty] .ls-lista__komentarze { font-size: 12px; margin-top: 4px; }
+}

@@ -12,6 +12,7 @@ const DOMYSLNE_USTAWIENIA = {
   },
   limanowa: {
     czytnik: true,      // czytnik bez reklam na limanowa.in (limanowa-czytnik.* + limanowa-reguly.json)
+    daty: true,         // główna sekcja jako lista od najnowszego, daty na kafelkach (limanowa-daty.*)
   },
 };
 

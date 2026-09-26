@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Lepsze strony",
-  "version": "1.0.0",
-  "description": "Poprawki cudzych stron: ciemny motyw dla medium.com i qnews.pl, czytnik bez reklam dla limanowa.in.",
+  "version": "1.1.0",
+  "description": "Poprawki cudzych stron: ciemny motyw dla medium.com i qnews.pl, czytnik bez reklam i daty wpisów dla limanowa.in.",
   "permissions": ["storage", "declarativeNetRequest"],
   "background": { "service_worker": "background.js" },
   "action": {
@@ -31,8 +31,8 @@
     },
     {
       "matches": ["https://limanowa.in/*", "https://www.limanowa.in/*"],
-      "js": ["limanowa-czytnik.js"],
-      "css": ["limanowa-czytnik.css"],
+      "js": ["limanowa-czytnik.js", "limanowa-daty.js"],
+      "css": ["limanowa-czytnik.css", "limanowa-daty.css"],
       "run_at": "document_start"
     }
   ],

@@ -9,6 +9,10 @@ nie zadbały:
 2. **Czytnik na limanowa.in** — z lokalnego portalu zostaje sama treść:
    bez banerów, reklam wideo, okna zgody i okienek, artykuł w jednej
    kolumnie większą czcionką, komentarze za przyciskiem.
+3. **Daty wpisów na limanowa.in** — główna sekcja strony głównej jako
+   lista od najnowszego ze znaczkiem „dziś 05:30" / „wczoraj 16:25" /
+   „3 dni temu", bez felietonów i nekrologów; ten sam znaczek na kafelkach
+   skrzynek.
 
 Każda poprawka jest włączona domyślnie i osobno do wyłączenia w ustawieniach
 (klik w ikonę rozszerzenia). Zmiana działa od razu na otwartych kartach.
@@ -26,7 +30,8 @@ MyFund) — tam zostało tylko to, co dotyczy portfela.
 
 Ustawienia siedzą w `chrome.storage.sync` pod kluczem `ustawienia`, po
 jednym obiekcie na stronę (`ustawienia.medium.ciemnyMotyw`,
-`ustawienia.qnews.ciemnyMotyw`, `ustawienia.limanowa.czytnik`) — domyślne
+`ustawienia.qnews.ciemnyMotyw`, `ustawienia.limanowa.czytnik`,
+`ustawienia.limanowa.daty`) — domyślne
 w `ustawienia.js`.
 
 ## Kolejna strona
@@ -149,6 +154,10 @@ partnerów) na jednym szkielecie: `.newsDetails__top` z kolumną treści
 - **treści płatne** na stronie głównej: „Ogłoszenia promowane" i „Firmy"
   (`section.announcements`), „Materiały partnerów".
 
+Do tego sekcje strony głównej niepotrzebne w czytniku: „Region - Polska - Świat"
+(`section.polandAndWorld`, wiadomości krajowe z PAP), „Sport"
+(`section.sport`) i skrzynka „Felietony".
+
 Plus okienko „włącz powiadomienia" (`#notificationsPopup`; Firebase pyta
 przeglądarkę o zgodę dopiero po kliknięciu w nim, więc wystarczy je
 schować), SwG Google News, znaczek reCAPTCHA.
@@ -167,8 +176,10 @@ schować), SwG Google News, znaczek reCAPTCHA.
    komentarzy), Firebase.
 2. **CSS** chowa resztę: banery portalu, puste sloty, okna i okienka,
    okruszki, reakcje, udostępnianie, pogodę i ikonki z paska, boczną kolumnę,
-   „Może Cię zaciekawić", ostatnie komentarze, stopkę i sekcje płatne ze
-   strony głównej (`:has()` po linku `/materialy-partnerow`).
+   „Może Cię zaciekawić", ostatnie komentarze, stopkę, sekcje płatne ze
+   strony głównej (`:has()` po linku `/materialy-partnerow`) oraz
+   „Region - Polska - Świat", „Sport" i „Felietony" (`:has()` po linku
+   `/kategoria/felietony`).
 3. **Układ do czytania** na stronach szczegółów (listy mają
    `.newsDetails__top--wrap` i zostają w siatce): jedna kolumna 760 px
    (galeria 1100 px), tytuł 36 px, tekst 20 px szeryfowym krojem
@@ -183,9 +194,57 @@ schować), SwG Google News, znaczek reCAPTCHA.
    korzystasz z Adblocka" — `app.js` pokazuje go, gdy `#optadScript` nie
    dojedzie. Inne dymki (np. po dodaniu komentarza) zostają.
 
+## Daty wpisów: limanowa.in
+
+Kafelki na stronie głównej to samo zdjęcie i tytuł, ułożone w mozaikę
+w kolejności redakcji — nie widać, co jest z dziś, a co wisi od dwóch dni. Daty są gdzie indziej (stan: wrzesień 2026):
+
+- **kanał `/rss`** — 50 najnowszych aktualności z godziną publikacji
+  (`pubDate` w ISO) i kategorią (`<category>` = `articleSection` wpisu:
+  Newsroom, Kronika policyjna, Felietony…); bez „Region - Polska - Świat",
+  sport ma osobny `/rss/sport` — pomijany, jak cała sekcja;
+- **listy kategorii** (`/pap`, `/urzedy/kategoria/…`,
+  `/aktualnosci/kategoria/…`, `/aktualnosci`) — 16 wpisów na stronę
+  z samą datą (`.newsList-item__data` „26.09.2026"); skrzynki na stronie
+  głównej linkują do swojej kategorii w nagłówku;
+- **strona wpisu** — JSON-LD `datePublished` i `dateModified`, na stronie
+  „Opublikowano … Zaktualizowano …". `dateModified` to zwykle poprawka
+  literówki kilka minut po publikacji, więc na kafelkach go nie ma.
+
+**Co robi rozszerzenie** (`limanowa-daty.js`, `limanowa-daty.css`, atrybut
+`html[data-ls-daty]`, włącznik `ustawienia.limanowa.daty`; działa z czytnikiem
+i bez niego):
+
+1. Na stronie głównej pobiera kanał, a dla kafelków spoza kanału — listę
+   ich kategorii (tylko gdy któryś kafelek nie ma jeszcze daty). Kilka
+   kafelków, których nie ma na pierwszej stronie listy, dostaje datę ze
+   strony wpisu (najwyżej 6 na wejście, po kolei). Schowane kafelki
+   (np. „Materiały partnerów" pod czytnikiem) nic nie kosztują.
+2. Daty trzyma `chrome.storage.local` (`limanowaDaty`) przez 45 dni — data
+   publikacji się nie zmienia, więc każdy wpis pobiera się raz. Kanał
+   najwyżej co 5 minut, lista co 15; typowe wejście po pierwszym to jedno
+   żądanie o kanał. Wszystko to GET-y do limanowa.in bez ciasteczek.
+3. Znaczek z datą: zielony „dziś 05:30", granatowy „wczoraj 16:25", szary
+   „3 dni temu" / „12.09" (z listy — bez godziny). Po najechaniu pełna
+   data. Na kafelkach skrzynek siedzi nad tytułem.
+4. Mozaikę głównej sekcji (`.homepage__top`) zastępuje lista od
+   najnowszego: miniatura, znaczek, tytuł, liczba komentarzy (przeczytane
+   szare przez `:visited`). Sama data z listy liczy się jako północ, wpisy
+   bez daty idą na koniec w kolejności redakcji, sloty reklam odpadają.
+   Dopóki nowe wpisy nie mają dat, zostaje mozaika — lista nie przeskakuje.
+5. Z listy wypadają felietony (kategoria z kanału, `pamiec.kategorie`),
+   wpisy z działu `/sport/` i codzienne „Odeszli w ostatnich dniach…"
+   (po początku tytułu — końcówka się zmienia: „...", „…", „(AKTUALIZACJA)";
+   pojedyncze wspomnienia typu „Odszedł …" zostają). Teksty o sporcie, które redakcja wrzuca do
+   „Newsroomu" (bez tagów i innej kategorii), zostają — nic ich pewnie nie
+   odróżnia od zwykłych wiadomości, a filtr po słowach mógłby schować coś
+   ważnego.
+6. Po powrocie do karty znaczki i lista przeliczają „dziś" na nowo; nowe
+   wpisy dopiero po przeładowaniu.
+
 ## Testy
 
-Trzy atrapy w `test/`, bez kontaktu z prawdziwymi stronami:
+Cztery atrapy w `test/`, bez kontaktu z prawdziwymi stronami:
 
 ```bash
 php -S localhost:8000
@@ -217,18 +276,37 @@ w adresie.
   limanowa.in z klasami z żywej strony: banery, przyklejone menu, sloty
   optad360 (także w treści z `<video>` i między komentarzami), boczna
   kolumna, cytat z pseudo-cudzysłowami, okno zgody z `body overflow:
-  hidden`, okienko powiadomień, pasek na dole, sekcje płatne ze strony
-  głównej, do tego `limanowa-czytnik.css`. Sprawdza, że 25 śmieci znika
+  hidden`, okienko powiadomień, pasek na dole, sekcje płatne, „Region -
+  Polska - Świat", „Sport" i „Felietony" ze strony głównej, do tego
+  `limanowa-czytnik.css`. Sprawdza, że 28 śmieci znika
   a treść zostaje, układ kolumny i kroje (próg 650 px i 1024 px zależnie od
   szerokości okna), przycisk komentarzy, zdjęcie dymku o Adblocku przy
   zostawieniu innych, powrót strony po wyłączeniu, a na koniec
   `limanowa-reguly.json` (tylko `initiatorDomains: limanowa.in`, żadnej
   blokady portalu, reCAPTCHA ani fontów) i wpisy w manifeście.
+- `http://localhost:8000/test/mock-limanowa-daty.html` — strona główna
+  limanowa.in w pigułce: główna sekcja z dużym kafelkiem (komentarze obok
+  SVG z liczbami Illustratora), zwykłymi (zdjęcie z `src`, z `data-med-src`
+  i bez zdjęcia), felietonem, wpisem z działu sport, „Odeszli w ostatnich
+  dniach…", slotem reklamy i obcym adresem; kafelki „static" ze zdjęciem na float, skrzynka z kategorią
+  w nagłówku, schowana skrzynka partnerów, galeria, do tego
+  `limanowa-daty.css`. `fetch` i czas są podstawione (sobota 26.09.2026,
+  12:00): kanał RSS z kategoriami i złą datą, listy kategorii, strona wpisu
+  z JSON-LD i jedna 404. Sprawdza etykiety (też doby 23- i 25-godzinne przy
+  zmianie czasu), odmianę „komentarz/komentarze/komentarzy", klucze wpisów,
+  znaczki na kafelkach skrzynek i ich miejsce, listę pobrań (każde raz, bez
+  sportu, bez ciasteczek), listę głównej sekcji (kolejność od najnowszego,
+  bez felietonu, działu sport, nekrologów i reklamy, komentarze, miniatury), pamięć przy
+  kolejnych wejściach (minuta, 6 i 16 minut, następny ranek, przycinanie
+  dat i kategorii po 50 dniach), wyłączenie i ponowne włączenie, wpisy
+  w manifeście i ustawieniach.
 
 Na żywej stronie: panel przeglądarki w Claude Code nie ładuje rozszerzeń,
 a `<script src="http://localhost:…">` z cudzej strony jest blokowany — kod
 trzeba wkleić (silnik + plik strony przez `javascript_tool`, CSS jako
-`<style>`) i włączyć przez `__lsDark.wlacz()` / `__lsCzytnik.wlacz()`.
+`<style>`) i włączyć przez `__lsDark.wlacz()` / `__lsCzytnik.wlacz()`
+(daty: `__lsDaty.wlacz(); __lsDaty.odswiez()` — bez `chrome.storage` pamięć
+dat żyje tylko do przeładowania karty).
 Reguł sieciowych tak się nie sprawdzi — tylko w Chrome z wczytanym
 rozszerzeniem (DevTools → Network).
 
@@ -245,6 +323,7 @@ rozszerzeniem (DevTools → Network).
 | `qnews-dark.js`, `qnews-dark.css` | paleta qnews.pl + statyczna część motywu (tło, odwrócone logo, podkład pod obrazki) |
 | `limanowa-czytnik.js`, `limanowa-czytnik.css` | czytnik limanowa.in: chowanie śmieci, kolumna do czytania, przycisk komentarzy, zdjęcie dymku o Adblocku |
 | `limanowa-reguly.json` | reguły declarativeNetRequest: sieć reklamowa i analityka, tylko dla żądań z limanowa.in |
+| `limanowa-daty.js`, `limanowa-daty.css` | daty wpisów limanowa.in: główna sekcja jako lista od najnowszego (bez felietonów, działu sport i nekrologów), znaczki na kafelkach skrzynek, pamięć dat w `chrome.storage.local` |
 | `icons/` | ikona (linie tekstu + półksiężyc) |
 | `test/` | atrapy z testami |
 
@@ -253,6 +332,8 @@ rozszerzeniem (DevTools → Network).
 - nie działa poza stronami z `matches` w manifeście,
 - na Medium i qnews.pl tylko czyta arkusze stylów i dokłada własny — bez
   klikania i bez żądań sieciowych,
-- na limanowa.in chowa elementy i blokuje żądania do sieci reklamowej
-  wychodzące z tej jednej strony — niczego nie klika i nie wysyła,
+- na limanowa.in chowa elementy, blokuje żądania do sieci reklamowej
+  wychodzące z tej jednej strony i pobiera z niej kanał RSS, listy kategorii
+  i pojedyncze strony wpisów (same GET-y, bez ciasteczek) — niczego nie
+  klika i nie wysyła,
 - nie zbiera ani nie wysyła żadnych danych.
