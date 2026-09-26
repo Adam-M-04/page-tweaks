@@ -1,5 +1,11 @@
 # Page Tweaks
 
+```bash
+curl -fsSL https://raw.githubusercontent.com/Adam-M-04/page-tweaks/master/instaluj.sh | bash
+```
+
+Instaluje i aktualizuje (macOS, Linux), bez gita.
+
 Rozszerzenie do Chrome z poprawkami cudzych stron:
 
 - **Medium i qnews.pl** — ciemny motyw (odwrócona jasność kolorów, obrazki bez zmian).
@@ -9,15 +15,11 @@ Każdą poprawkę można wyłączyć osobno w ustawieniach (klik w ikonę rozsze
 
 ## Instalacja
 
-Bez gita (macOS, Linux) — to samo polecenie instaluje i aktualizuje:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/Adam-M-04/page-tweaks/master/instaluj.sh | bash
-```
-
-Pliki trafiają do `~/Rozszerzenia/page-tweaks`. Za pierwszym razem
-`chrome://extensions` → **Tryb programisty** → **Wczytaj rozpakowane** → ten
-folder. Po aktualizacji ⟳ przy rozszerzeniu albo restart Chrome.
+Polecenie z góry kopiuje pliki do `~/Library/Application Support/page-tweaks`
+(Linux: `~/.local/share/page-tweaks`). Za pierwszym razem `chrome://extensions`
+→ **Tryb programisty** → **Wczytaj rozpakowane** → ten folder (ścieżka jest
+w schowku: Cmd+Shift+G i wklej). Po aktualizacji ⟳ przy rozszerzeniu albo
+restart Chrome.
 
 Z repo: **Wczytaj rozpakowane** → katalog repo.
 

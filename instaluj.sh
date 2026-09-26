@@ -3,13 +3,17 @@
 # (macOS, Linux). Pierwszy raz i przy każdej aktualizacji to samo:
 #
 #   curl -fsSL https://raw.githubusercontent.com/Adam-M-04/page-tweaks/master/instaluj.sh | bash
-#
-# albo, gdy już jest zainstalowane: bash ~/Rozszerzenia/page-tweaks/instaluj.sh
 set -euo pipefail
 
 REPO="Adam-M-04/page-tweaks"
 GALAZ="master"
-CEL="${PAGE_TWEAKS_DIR:-$HOME/Rozszerzenia/page-tweaks}"
+# Stałe miejsce na dane programów: poza Biurkiem/Dokumentami/Pobranymi (bez
+# pytań macOS o dostęp dla Chrome) i poza synchronizacją iCloud.
+if [ "$(uname)" = "Darwin" ]; then
+  CEL="$HOME/Library/Application Support/page-tweaks"
+else
+  CEL="${XDG_DATA_HOME:-$HOME/.local/share}/page-tweaks"
+fi
 
 wersja() { sed -n 's/.*"version": *"\([^"]*\)".*/\1/p' "$1/manifest.json" 2>/dev/null | head -1 || true; }
 
