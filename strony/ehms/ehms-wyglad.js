@@ -3,8 +3,8 @@
 //
 // Cały wygląd jest w CSS pod :root[data-ls-ehms] — ten skrypt stawia atrybut,
 // pilnuje włącznika, oznacza w bocznym menu bieżącą podstronę
-// (data-ls-biezacy), bo strona tego nie robi, i powiększa pole kliknięcia
-// zwijanych sekcji na cały wiersz. Poza tym w HTML zmienia tylko tekst linków
+// (data-ls-biezacy), bo strona tego nie robi, puste komunikaty z samą kropką
+// (data-ls-pusty) i powiększa pole kliknięcia zwijanych sekcji na cały wiersz. Poza tym w HTML zmienia tylko tekst linków
 // pod kartą logowania — bez nawiasów „[…]", wracają po wyłączeniu. Żadnego
 // przenoszenia ani podmiany elementów, więc przyciski, formularze i skrypty
 // strony (xajax, jQuery, Bootstrap) widzą ten sam DOM.
@@ -80,11 +80,27 @@
     zNawiasami.clear();
   }
 
+  // Pusty komunikat: strona wypisuje sam znak kropki w czerwonym
+  // <p class="lead text-danger"> (Praca dyplomowa). CSS go chowa
+  // (data-ls-pusty), a obserwator odkrywa, gdy strona wpisze tam tekst.
+  const PUSTY = 'data-ls-pusty';
+  const obserwowane = new WeakSet();
+  function oznaczPusteKomunikaty() {
+    for (const p of document.querySelectorAll('.kal-main .content p.text-danger')) {
+      const sprawdz = () => p.toggleAttribute(PUSTY, html.hasAttribute(ATRYBUT) && /^[\s.]*$/.test(p.textContent));
+      sprawdz();
+      if (obserwowane.has(p)) continue;
+      obserwowane.add(p);
+      new MutationObserver(sprawdz).observe(p, { childList: true, characterData: true, subtree: true });
+    }
+  }
+
   // Po DOMContentLoaded — ustawienia mogły już wyłączyć wygląd.
   function poWczytaniu() {
     if (!html.hasAttribute(ATRYBUT)) return;
     oznaczBiezacy();
     zdejmijNawiasy();
+    oznaczPusteKomunikaty();
   }
 
   function wlacz() {
@@ -95,7 +111,7 @@
 
   function wylacz() {
     html.removeAttribute(ATRYBUT);
-    for (const a of document.querySelectorAll(`[${BIEZACY}]`)) a.removeAttribute(BIEZACY);
+    for (const e of document.querySelectorAll(`[${BIEZACY}], [${PUSTY}]`)) { e.removeAttribute(BIEZACY); e.removeAttribute(PUSTY); }
     przywrocNawiasy();
   }
 

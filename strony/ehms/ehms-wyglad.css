@@ -362,8 +362,10 @@
   --bs-gutter-x: 20px;
   --bs-gutter-y: 20px;
 }
+/* Rząd zawija się jak na stronie: karta ma flex-basis 0, więc zawsze mieści
+   się obok bocznego menu, a inne dzieci rzędu (Praca dyplomowa: pusty
+   <form> na 100%) schodzą do nowej linii zamiast wyciskać kartę do 0 px. */
 @media (min-width: 768px) {
-  :root[data-ls-ehms] main.kal-main > .row:has(> .kal-sidemenu) { flex-wrap: nowrap; }
   :root[data-ls-ehms] main.kal-main > .row > .kal-sidemenu {
     flex: 0 0 250px !important;
     width: 250px !important;
@@ -483,6 +485,10 @@
 :root[data-ls-ehms] .content div.d-flex > i.ti[onclick^="show_hide"] { font-size: 20px; line-height: 1; }
 :root[data-ls-ehms] .content div.d-flex:has(> i.ti[onclick^="show_hide"]) h5 { font-size: 16px; }
 :root[data-ls-ehms] .content dt { color: var(--pt-text-2); font-weight: 600; }
+/* dt/dd obok siebie: odstęp wiersza także przy pustym dd („Temat pracy") */
+@media (min-width: 576px) { :root[data-ls-ehms] .content dl.row > dt { margin-bottom: .5rem; } }
+/* komunikat bez treści (sama kropka) — oznacza go ehms-wyglad.js */
+:root[data-ls-ehms] [data-ls-pusty] { display: none !important; }
 
 /* ---------- tabele ---------- */
 

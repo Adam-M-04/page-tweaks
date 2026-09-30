@@ -3,7 +3,9 @@
      (eHMS 8.36, stan: wrzesień 2026): granatowy pasek z ☰/📌 i menu konta,
      logo, pod nim górne menu z ikonami (≥1275 px style.css kładzie je
      absolutnie na logo — tu zawsze), boczne menu podstron, karta z formularzem,
-     tabela, zwijane sekcje z show_hide(). Dane zmyślone. -->
+     tabela, zwijane sekcje z show_hide(); z Pracy dyplomowej: pusty <form>
+     w rzędzie obok karty, lista dt/dd z pustą wartością i czerwony komunikat
+     z samą kropką. Dane zmyślone. -->
 <style>
 body { margin: 0; font-family: sans-serif; background-color: rgb(248, 249, 250); color: rgb(33, 37, 41); }
 a { color: rgb(159, 2, 60); }
@@ -22,7 +24,10 @@ a { color: rgb(159, 2, 60); }
 .bg-white { background-color: rgb(255, 255, 255) !important; }
 .container-fluid { padding: 0 12px; }
 .row { display: flex; flex-wrap: wrap; }
-.row > * { box-sizing: border-box; width: 100%; padding: 0 6px; }
+.row > * { box-sizing: border-box; flex-shrink: 0; width: 100%; padding: 0 6px; }
+@media (min-width: 576px) { .col-sm-4 { flex: 0 0 auto; width: 33.33%; } .col-sm-8 { flex: 0 0 auto; width: 66.66%; } }
+dt { font-weight: 700; }
+dd { margin: 0 0 8px; }
 @media (min-width: 768px) { .col-md-4 { flex: 0 0 auto; width: 33.33%; } .col-md-8 { flex: 0 0 auto; width: 66.66%; } }
 .kal-topbar { background-color: rgb(28, 80, 140); color: rgb(255, 255, 255); }
 .btn { display: inline-block; padding: 4px 8px; border: 1px solid transparent; border-radius: 4px; font-size: 14px; cursor: pointer; background-color: transparent; }
@@ -136,11 +141,20 @@ header.kal-header { position: relative; }
             <h5 class="d-flex align-content-center mb-0 mx-2"><b id="nazwaSekcji" class="text-uppercase">dane dodatkowe</b></h5>
           </div>
           <div id="sekcja" style="display: none;">Data rozpoczęcia studiów: 01-10-2023</div>
+          <dl class="row" id="lista">
+            <dt class="col-sm-4" id="dt1">Nazwisko i imię</dt><dd class="col-sm-8">KOWALSKA ANNA</dd>
+            <dt class="col-sm-4" id="dt2">Temat pracy</dt><dd class="col-sm-8"></dd>
+            <dt class="col-sm-4" id="dt3">Promotor</dt><dd class="col-sm-8">-</dd>
+            <dt class="col-sm-4" id="dt4">Recenzent</dt><dd class="col-sm-8">-</dd>
+          </dl>
+          <p class="lead text-danger text-center" id="pustyKomunikat">
+                .            </p>
           <div class="alert alert-danger" id="alert">Brak aktywnych ankiet do wypełnienia.</div>
           <a class="btn btn-outline-secondary" id="wydruk" href="#wydruk" onclick="klik('wydruk'); return false;">wersja do wydruku</a>
         </div>
       </div>
     </div>
+    <form method="post" id="pustyFormularz"></form>
   </div>
 </main>
 <footer class="kal-footer bg-accent text-on-accent mt-2"><div class="container-fluid py-3">Dane toku: <label>Wydział Informatyki i Matematyki</label></div></footer>
@@ -238,6 +252,18 @@ async function testuj() {
   sprawdz('boczne menu: linki co najmniej 34 px wysokości', linkiBoczne.every((a) => prostokat(a).height >= 34), linkiBoczne.map((a) => Math.round(prostokat(a).height)).join(','));
   sprawdz('nagłówki: tytuł karty i sekcji zwykłym zapisem', ['tytul', 'nazwaSekcji'].every((id) => styl(id, 'textTransform') === 'none' && styl(id, 'textTransform', '::first-letter') === 'uppercase'));
   sprawdz('tabela: nagłówki kolumn do dołu, <th> w treści na środku', styl('thKolumna', 'verticalAlign') === 'bottom' && styl('thWiersz', 'verticalAlign') === 'middle', styl('thWiersz', 'verticalAlign'));
+  sprawdz('karta obok bocznego menu mimo pustego <form> w rzędzie', prostokat('karta').width > 300 && Math.abs(prostokat('karta').top - prostokat('visible_5').top) < 1, `${Math.round(prostokat('karta').width)} px`);
+  const odstepy = ['dt2', 'dt3', 'dt4'].map((id, i) => prostokat(id).top - prostokat(['dt1', 'dt2', 'dt3'][i]).top);
+  sprawdz('lista danych: równe odstępy także przy pustej wartości', Math.max(...odstepy) - Math.min(...odstepy) <= 1, odstepy.map((x) => x.toFixed(1)).join(' / '));
+  const widoczny = () => styl('pustyKomunikat', 'display') !== 'none';
+  const kropka = $('pustyKomunikat').textContent;
+  const bezKropki = !widoczny();
+  $('pustyKomunikat').textContent = 'Nie udało się zapisać.';
+  await spij(0);
+  const zTekstem = widoczny();
+  $('pustyKomunikat').textContent = kropka;
+  await spij(0);
+  sprawdz('komunikat z samą kropką schowany, z tekstem od razu widoczny', bezKropki && zTekstem && !widoczny());
   sprawdz('formularz: pola co najmniej 38 px', prostokat('od').height >= 38 && prostokat('semestr').height >= 38, `${prostokat('od').height} / ${prostokat('semestr').height}`);
 
   // bieżąca podstrona w bocznym menu
@@ -319,6 +345,7 @@ async function testuj() {
   sprawdz('wyłączenie wyglądu: strona jak była', !html.hasAttribute('data-ls-ehms') && biezacy() === '' && nachodza('logo', 'topmenu') && styl('tytul', 'textTransform') === 'uppercase');
   $('nazwaSekcji').click();
   sprawdz('wyłączenie wyglądu: klik w nazwę sekcji nic nie robi', styl('sekcja', 'display') === 'none');
+  sprawdz('wyłączenie wyglądu: komunikat z kropką jak na stronie', widoczny() && !$('pustyKomunikat').hasAttribute('data-ls-pusty'));
   history.replaceState(null, '', ADRES);
 
   // --- manifest, ustawienia -------------------------------------------------------------------
