@@ -1,0 +1,999 @@
+/* Nowy wygląd Wirtualnego Dziekanatu PK — wszystko pod :root[data-ls-ehms]
+   (atrybut stawia ehms-wyglad.js), więc bez atrybutu strona jest jak była.
+
+   Zasady:
+   - HTML strony zostaje, jak jest; układ zmienia tylko CSS. Nagłówek to
+     jedna siatka: górny pasek i rząd z logo i menu mają display: contents,
+     więc ich dzieci (☰/📌, logo, tytuł, konto, menu) układają się w dwóch
+     rzędach jednego paska. Menu nie jest już position: absolute i nie
+     zasłania logo.
+   - Kolory tylko z tokenów --pt-* (jasne tutaj, ciemne pod [data-ls-dark]).
+     Tokeny strony (--bs-primary, --kal-accent, --apsl-gray…) dostają
+     wartości z tych samych tokenów, więc stare widżety, których tu nie ma,
+     też łapią paletę.
+   - :root[data-ls-ehms] (0,2,0) wygrywa z regułami strony i z ich ciemnymi
+     bliźniakami z ciemny-motyw.js (html[data-ls-dark] …, (0,1,1)) przy tym
+     samym selektorze; kolory mają !important, bo połowa reguł strony też
+     ma (Bootstrap utilities, motyw PK).
+   - Etykiety w menu i nagłówki kart są w HTML małymi literami, a strona
+     robi z nich WERSALIKI — tu wracają do zwykłego zapisu (::first-letter
+     tam, gdzie to blok). Przyciski zostają wersalikami: w <input> nie da
+     się podnieść samej pierwszej litery, a wartości przycisków nie ruszamy.
+   - display sidemenu (#visible_N) należy do strony: ☰ chowa je przez
+     style.display, więc tu żadnego display z !important na tym elemencie. */
+
+/* ---------- tokeny ---------- */
+
+:root[data-ls-ehms] {
+  --pt-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --pt-bok: max(20px, calc((100vw - 1640px) / 2));   /* margines boczny; na bardzo szerokich ekranach treść do 1600 px */
+  --pt-radius: 12px;
+  --pt-radius-sm: 8px;
+
+  --pt-bg: #f3f5f9;
+  --pt-surface: #ffffff;
+  --pt-surface-2: #f7f9fc;
+  --pt-hover: #edf1f7;
+  --pt-input: #ffffff;
+  --pt-border: #e2e7ee;
+  --pt-border-strong: #cbd4e0;
+  --pt-text: #1a2432;
+  --pt-text-2: #526074;
+  --pt-text-3: #7d899a;
+  --pt-link: #1a55ad;
+  --pt-link-hover: #103f86;
+  --pt-accent: #1f5fbf;
+  --pt-accent-hover: #184f9f;
+  --pt-on-accent: #ffffff;
+  --pt-accent-soft: #e8f0fb;
+  --pt-accent-text: #184f9f;
+  --pt-focus: rgba(31, 95, 191, .28);
+  --pt-danger-soft: #fdecee;  --pt-danger-text: #a31a35;  --pt-danger-border: #f5c8d0;  --pt-danger: #c42a47;
+  --pt-success-soft: #e7f6ed; --pt-success-text: #166239; --pt-success-border: #bde3cc;
+  --pt-warning-soft: #fff5d9; --pt-warning-text: #7f5300; --pt-warning-border: #f0d893;
+  --pt-info-soft: #e7f3fa;    --pt-info-text: #0d5a80;    --pt-info-border: #bcdcee;
+  --pt-shadow: 0 1px 2px rgba(16, 24, 40, .05), 0 1px 3px rgba(16, 24, 40, .06);
+  --pt-shadow-lg: 0 12px 32px rgba(16, 24, 40, .14), 0 2px 6px rgba(16, 24, 40, .06);
+  --pt-strzalka: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23526074' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+
+  /* tokeny strony → paleta */
+  --bs-font-sans-serif: var(--pt-font) !important;
+  --bs-primary: var(--pt-link) !important;
+  --bs-primary-hover-border: var(--pt-accent-hover) !important;
+  --bs-primary-hover-background: var(--pt-accent-hover) !important;
+  --bs-secondary: var(--pt-text-2) !important;
+  --bs-light: var(--pt-surface-2) !important;
+  --bs-dark: var(--pt-text) !important;
+  --bs-white: var(--pt-surface) !important;
+  --kal-accent: var(--pt-link) !important;
+  --kal-accent-light: var(--pt-accent-soft) !important;
+  --kal-accent-dark: var(--pt-link-hover) !important;
+  --kal-accent-500: var(--pt-surface-2) !important;
+  --kal-accent-100: var(--pt-surface-2) !important;
+  --apsl-gray: var(--pt-accent-soft) !important;
+  --apsl-gray-light: var(--pt-surface-2) !important;
+  --apsl-gray-dark: var(--pt-text) !important;
+  --apsl-gray-500: var(--pt-text) !important;
+  --apsl-gray-100: var(--pt-border-strong) !important;
+  --black-low-opacity: var(--pt-hover) !important;
+  --black-high-opacity: var(--pt-border-strong) !important;
+  --white-low-opacity: var(--pt-hover) !important;
+  --white-high-opacity: var(--pt-hover) !important;
+
+  font-size: 15px !important;   /* strona: 14px; wszystko w rem rośnie o ~7% */
+  background: var(--pt-bg) !important;
+}
+
+@media screen {
+  :root[data-ls-ehms][data-ls-dark] {
+    color-scheme: dark;
+    --pt-bg: #0c1118;
+    --pt-surface: #141b25;
+    --pt-surface-2: #19222e;
+    --pt-hover: #202b3a;
+    --pt-input: #0f151e;
+    --pt-border: #263241;
+    --pt-border-strong: #364659;
+    --pt-text: #e4eaf2;
+    --pt-text-2: #a0adbf;
+    --pt-text-3: #738196;
+    --pt-link: #8ab6ff;
+    --pt-link-hover: #b5d0ff;
+    --pt-accent: #3570d4;
+    --pt-accent-hover: #4a83e6;
+    --pt-on-accent: #ffffff;
+    --pt-accent-soft: #172a45;
+    --pt-accent-text: #9cc2ff;
+    --pt-focus: rgba(110, 160, 245, .38);
+    --pt-danger-soft: #3a1a21;  --pt-danger-text: #ff9eac;  --pt-danger-border: #5e2732;  --pt-danger: #e0526c;
+    --pt-success-soft: #11301f; --pt-success-text: #83dcaa; --pt-success-border: #1f4d33;
+    --pt-warning-soft: #32290f; --pt-warning-text: #f2c96a; --pt-warning-border: #57451a;
+    --pt-info-soft: #0f2a3a;    --pt-info-text: #82cbef;    --pt-info-border: #1d4660;
+    --pt-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+    --pt-shadow-lg: 0 16px 40px rgba(0, 0, 0, .5), 0 2px 6px rgba(0, 0, 0, .3);
+    --pt-strzalka: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23a0adbf' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  }
+}
+
+/* ---------- podstawa ---------- */
+
+:root[data-ls-ehms] body {
+  background: var(--pt-bg) !important;
+  color: var(--pt-text) !important;
+  font-family: var(--pt-font) !important;
+  font-size: 1rem;
+  line-height: 1.5 !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+:root[data-ls-ehms] a,
+:root[data-ls-ehms] .href,
+:root[data-ls-ehms] td.href,
+:root[data-ls-ehms] span.href {
+  color: var(--pt-link);
+  text-underline-offset: 2px;
+}
+:root[data-ls-ehms] a:hover,
+:root[data-ls-ehms] .href:hover {
+  color: var(--pt-link-hover);
+}
+:root[data-ls-ehms] :focus-visible {
+  outline: 2px solid var(--pt-accent) !important;
+  outline-offset: 2px;
+}
+
+:root[data-ls-ehms] :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6) {
+  color: var(--pt-text);
+}
+:root[data-ls-ehms] hr {
+  border-color: var(--pt-border) !important;
+  opacity: 1;
+}
+
+/* utilities Bootstrapa z kolorami na sztywno */
+:root[data-ls-ehms] :is(.text-dark, .text-body, .text-black) { color: var(--pt-text) !important; }
+:root[data-ls-ehms] :is(.text-muted, .text-secondary, .text-black-50) { color: var(--pt-text-2) !important; }
+:root[data-ls-ehms] .text-primary { color: var(--pt-link) !important; }
+:root[data-ls-ehms] .text-danger { color: var(--pt-danger-text) !important; }
+:root[data-ls-ehms] .text-success { color: var(--pt-success-text) !important; }
+:root[data-ls-ehms] .text-warning { color: var(--pt-warning-text) !important; }
+:root[data-ls-ehms] .text-info { color: var(--pt-info-text) !important; }
+:root[data-ls-ehms] .bg-white { background-color: var(--pt-surface) !important; }
+:root[data-ls-ehms] .bg-light { background-color: var(--pt-surface-2) !important; }
+:root[data-ls-ehms] :is(.border, .border-top, .border-bottom, .border-start, .border-end) { border-color: var(--pt-border) !important; }
+:root[data-ls-ehms] .shadow { box-shadow: var(--pt-shadow) !important; }
+
+/* ---------- nagłówek: jeden pasek, dwa rzędy ---------- */
+
+:root[data-ls-ehms] header.kal-header:has(> .kal-topbar) {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "przyciski logo tytul konto"
+    "menu menu menu menu";
+  align-items: center;
+  column-gap: 12px;
+  padding: 10px var(--pt-bok) 8px;
+  background: var(--pt-surface) !important;
+  border-bottom: 1px solid var(--pt-border);
+}
+:root[data-ls-ehms] .kal-topbar,
+:root[data-ls-ehms] .kal-topbar > .container-fluid,
+:root[data-ls-ehms] .kal-topbar > .container-fluid > .d-flex,
+:root[data-ls-ehms] header.kal-header > .d-flex,
+:root[data-ls-ehms] header.kal-header > .d-flex > .container-fluid {
+  display: contents !important;
+}
+:root[data-ls-ehms] .kal-topbar div:has(> #menuPin, > #sh_l_menu_area) {
+  grid-area: przyciski;
+  gap: 4px;
+}
+@media (min-width: 768px) {
+  :root[data-ls-ehms] .kal-topbar div.d-md-block:has(> #menuPin, > #sh_l_menu_area) { display: flex !important; }
+}
+:root[data-ls-ehms] header.kal-header a.navbar-brand {
+  grid-area: logo;
+  display: flex;
+  align-items: center;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+:root[data-ls-ehms] header.kal-header img.kal-logo {
+  height: 34px !important;
+  max-height: none !important;
+  width: auto !important;
+}
+:root[data-ls-ehms] .kal-topbar div:has(> #ProfileName) {
+  grid-area: tytul;
+  min-width: 0;
+  text-align: left !important;
+}
+:root[data-ls-ehms] #ProfileName {
+  display: inline-block;
+  padding-left: 12px;
+  border-left: 1px solid var(--pt-border-strong);
+  color: var(--pt-text-2) !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  line-height: 22px;
+}
+:root[data-ls-ehms] .kal-topbar div:has(> .dropdown #dropdownMenuButton) {
+  grid-area: konto;
+  display: flex !important;
+  align-items: center;
+  gap: 6px;
+}
+
+/* przyciski ☰ i 📌 (strona: bordowe kółka) */
+:root[data-ls-ehms] header .btn-transparent--dark,
+:root[data-ls-ehms] header .btn-transparent--dark:is(:hover, :focus, :active, .active) {
+  background-color: transparent !important;
+  border: 1px solid transparent !important;
+  color: var(--pt-text-2) !important;
+  box-shadow: none !important;
+}
+:root[data-ls-ehms] header :is(#sh_l_menu_area, #menuPin) {
+  width: 38px;
+  height: 38px;
+  padding: 0 !important;
+  border-radius: var(--pt-radius-sm) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+:root[data-ls-ehms] header :is(#sh_l_menu_area, #menuPin) i.ti { font-size: 20px; }
+:root[data-ls-ehms] header .btn-transparent--dark:hover {
+  background-color: var(--pt-hover) !important;
+  color: var(--pt-text) !important;
+}
+:root[data-ls-ehms] header .btn-transparent--dark:disabled {
+  opacity: .4;
+}
+
+/* konto: zwykły „chip" zamiast bordowej pigułki */
+:root[data-ls-ehms] header #dropdownMenuButton,
+:root[data-ls-ehms] header #dropdownMenuButton:is(:hover, :focus, :active, .show) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 10px 0 14px !important;
+  border: 1px solid var(--pt-border-strong) !important;
+  border-radius: 999px !important;
+  background-color: var(--pt-surface) !important;
+  color: var(--pt-text) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+:root[data-ls-ehms] header #dropdownMenuButton:hover { background-color: var(--pt-hover) !important; }
+:root[data-ls-ehms] header #dropdownMenuButton::after { display: none; }   /* strzałka Bootstrapa — jest ikona ⋮ */
+
+/* menu główne: rząd pod logo, pigułki z ikonami */
+:root[data-ls-ehms] #topmenu {
+  grid-area: menu;
+  position: static !important;
+  margin: 8px 0 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  line-height: normal !important;
+  justify-content: flex-start;
+}
+:root[data-ls-ehms] #topmenu .navbar-collapse { flex-grow: 1; }
+:root[data-ls-ehms] #topmenu .navbar-nav {
+  flex-wrap: wrap;
+  justify-content: flex-start !important;
+  gap: 2px 4px;
+  margin: 0 0 0 -2px !important;
+  padding: 0 !important;
+}
+:root[data-ls-ehms] #topmenu li.nav-item { padding: 0 !important; }
+:root[data-ls-ehms] #topmenu .nav-link {
+  display: block !important;
+  position: relative;
+  padding: 8px 12px 8px 38px !important;
+  border-radius: var(--pt-radius-sm) !important;
+  background: transparent !important;
+  color: var(--pt-text-2) !important;
+  font-size: 14.5px !important;
+  font-weight: 500 !important;
+  line-height: 22px;
+  letter-spacing: 0;
+  text-transform: none !important;
+  white-space: nowrap;
+  transition: background-color .15s, color .15s;
+}
+:root[data-ls-ehms] #topmenu .nav-link::first-letter { text-transform: uppercase; }
+:root[data-ls-ehms] #topmenu .nav-link i.ti {
+  display: block !important;
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0 !important;
+  font-size: 19px;
+  line-height: 1;
+}
+:root[data-ls-ehms] #topmenu .nav-link:hover {
+  background: var(--pt-hover) !important;
+  color: var(--pt-text) !important;
+}
+:root[data-ls-ehms] #topmenu .nav-link.active {
+  background: var(--pt-accent-soft) !important;
+  color: var(--pt-accent-text) !important;
+  font-weight: 600 !important;
+}
+/* Wąskie okno: Bootstrap zwija menu pod przycisk (navbar-expand-lg). */
+/* Podpis „Menu", bo obok jest ☰ bocznego menu z identyczną ikoną. */
+:root[data-ls-ehms] #topmenu .navbar-toggler {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 14px 0 10px !important;
+  border: 1px solid var(--pt-border-strong) !important;
+  border-radius: var(--pt-radius-sm) !important;
+  background: var(--pt-surface) !important;
+  color: var(--pt-text) !important;
+  box-shadow: none !important;
+  font-size: 14.5px;
+  font-weight: 600;
+}
+:root[data-ls-ehms] #topmenu .navbar-toggler::after { content: "Menu"; }
+:root[data-ls-ehms] #topmenu .navbar-toggler .navbar-toggler-default { display: flex; }
+:root[data-ls-ehms] #topmenu .navbar-toggler path { stroke: var(--pt-text-2); }
+@media (min-width: 992px) {
+  :root[data-ls-ehms] #topmenu .navbar-toggler { display: none; }
+}
+@media (max-width: 991.98px) {
+  :root[data-ls-ehms] #topmenu .navbar-nav { flex-direction: column; padding-top: 6px !important; }
+  :root[data-ls-ehms] #topmenu .nav-link { padding-top: 10px !important; padding-bottom: 10px !important; }
+}
+
+/* ---------- układ: boczne menu + karta z treścią ---------- */
+
+:root[data-ls-ehms] main.kal-main {
+  margin-top: 0 !important;
+  padding: 20px var(--pt-bok) 28px !important;
+}
+:root[data-ls-ehms] main.kal-main > .row {
+  --bs-gutter-x: 20px;
+  --bs-gutter-y: 20px;
+}
+@media (min-width: 768px) {
+  :root[data-ls-ehms] main.kal-main > .row:has(> .kal-sidemenu) { flex-wrap: nowrap; }
+  :root[data-ls-ehms] main.kal-main > .row > .kal-sidemenu {
+    flex: 0 0 250px !important;
+    width: 250px !important;
+    max-width: 250px;
+  }
+  :root[data-ls-ehms] main.kal-main > .row:has(> .kal-sidemenu) > .content {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    max-width: none;
+    min-width: 0;
+  }
+}
+
+/* boczne menu */
+:root[data-ls-ehms] .kal-sidemenu > div.bg-white {
+  background: var(--pt-surface) !important;
+  border: 1px solid var(--pt-border);
+  border-radius: var(--pt-radius);
+  box-shadow: var(--pt-shadow) !important;
+  padding: 8px !important;
+  top: 16px;
+}
+:root[data-ls-ehms] .kal-sidemenu > div.bg-white > b:first-child { display: none !important; }   /* „MENU" */
+:root[data-ls-ehms] .kal-sidemenu ul.nav { margin: 0 !important; gap: 1px; }
+:root[data-ls-ehms] .kal-sidemenu .nav-link,
+:root[data-ls-ehms] .kal-sidemenu ul.nav a {
+  display: block;
+  padding: 8px 12px !important;
+  margin: 0 !important;
+  border-radius: var(--pt-radius-sm);
+  background: transparent;
+  color: var(--pt-text-2) !important;
+  font-size: 14.5px !important;
+  font-weight: 500;
+  line-height: 1.35;
+  text-decoration: none;
+  transition: background-color .15s, color .15s;
+}
+:root[data-ls-ehms] .kal-sidemenu .nav-link:hover,
+:root[data-ls-ehms] .kal-sidemenu ul.nav a:hover {
+  background: var(--pt-hover);
+  color: var(--pt-text) !important;
+}
+:root[data-ls-ehms] .kal-sidemenu .nav-link[data-ls-biezacy] {
+  background: var(--pt-accent-soft);
+  color: var(--pt-accent-text) !important;
+  font-weight: 600;
+}
+:root[data-ls-ehms] .kal-sidemenu h6 {
+  margin: 14px 12px 6px !important;
+  color: var(--pt-text-3) !important;
+  font-size: 12px !important;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+:root[data-ls-ehms] .kal-sidemenu :is(label, span.href, ul.nav li.ms-3 span) { color: var(--pt-text-2) !important; }
+:root[data-ls-ehms] .kal-sidemenu .alert { margin: 8px 0 0 !important; border-top: 1px solid !important; }
+/* ankiety: panel akcji z jasnym tłem w bocznym menu */
+:root[data-ls-ehms] .kal-sidemenu div#ankietyAkcje { background-color: var(--pt-surface-2) !important; border-radius: var(--pt-radius-sm); }
+:root[data-ls-ehms] .kal-sidemenu div#ankietyAkcje label.form-label { color: var(--pt-text) !important; }
+
+/* karta z treścią */
+:root[data-ls-ehms] .kal-main .content > .bg-white {
+  background: var(--pt-surface) !important;
+  border: 1px solid var(--pt-border);
+  border-radius: var(--pt-radius);
+  box-shadow: var(--pt-shadow) !important;
+}
+:root[data-ls-ehms] .kal-main .content > .bg-white > .border-bottom:first-child {
+  padding: 4px 8px;
+  border-color: var(--pt-border) !important;
+}
+:root[data-ls-ehms] .kal-main .content > .bg-white > .p-3 { padding: 20px !important; }
+
+/* nagłówki (w HTML małymi literami, strona robi wersaliki) */
+:root[data-ls-ehms] .content :is(b.d-block, h1, h2, h3, h4, h5, h6).text-uppercase:not(.d-flex, .d-inline-flex) {
+  text-transform: none !important;
+  letter-spacing: -.005em;
+}
+:root[data-ls-ehms] .content :is(b.d-block, h1, h2, h3, h4, h5, h6).text-uppercase:not(.d-flex, .d-inline-flex)::first-letter {
+  text-transform: uppercase;
+}
+:root[data-ls-ehms] .content b.d-block.h6 {
+  color: var(--pt-text);
+  font-size: 16px;
+  font-weight: 650 !important;
+}
+:root[data-ls-ehms] .kal-main .content > .bg-white > .border-bottom:first-child b.h6 {
+  font-size: 19px;
+  font-weight: 650 !important;
+  letter-spacing: -.01em;
+}
+:root[data-ls-ehms] .content h5 { font-weight: 650; }
+:root[data-ls-ehms] .content b.text-uppercase { letter-spacing: .02em; }
+/* <h5><b class="text-uppercase">dane podstawowe</b></h5> — inline-block, bo
+   ::first-letter nie działa na elementach inline */
+:root[data-ls-ehms] .content :is(h1, h2, h3, h4, h5, h6) > b.text-uppercase {
+  display: inline-block;
+  text-transform: none !important;
+  letter-spacing: 0;
+}
+:root[data-ls-ehms] .content :is(h1, h2, h3, h4, h5, h6) > b.text-uppercase::first-letter { text-transform: uppercase; }
+
+/* zwijane sekcje: ikonka ⊞/⊟ z onclick="show_hide(…)"; klik w cały wiersz
+   przekazuje do niej ehms-wyglad.js */
+:root[data-ls-ehms] .content div.d-flex:has(> i.ti[onclick^="show_hide"]) {
+  margin: 4px -10px !important;
+  padding: 8px 10px;
+  gap: 2px;
+  border-radius: var(--pt-radius-sm);
+  cursor: pointer;
+  user-select: none;
+  transition: background-color .15s;
+}
+:root[data-ls-ehms] .content div.d-flex:has(> i.ti[onclick^="show_hide"]):hover { background: var(--pt-hover); }
+:root[data-ls-ehms] .content div.d-flex > i.ti[onclick^="show_hide"] { font-size: 20px; line-height: 1; }
+:root[data-ls-ehms] .content div.d-flex:has(> i.ti[onclick^="show_hide"]) h5 { font-size: 16px; }
+:root[data-ls-ehms] .content dt { color: var(--pt-text-2); font-weight: 600; }
+
+/* ---------- tabele ---------- */
+
+:root[data-ls-ehms] .table {
+  --bs-table-bg: transparent;
+  --bs-table-accent-bg: transparent;
+  --bs-table-striped-bg: var(--pt-surface-2);
+  --bs-table-striped-color: var(--pt-text);
+  --bs-table-active-bg: var(--pt-hover);
+  --bs-table-active-color: var(--pt-text);
+  --bs-table-hover-bg: var(--pt-hover);
+  --bs-table-hover-color: var(--pt-text);
+  color: var(--pt-text) !important;
+  border-color: var(--pt-border) !important;
+  margin-top: .5rem;
+  font-size: 14px;
+}
+:root[data-ls-ehms] .table > :not(caption) > * > * {
+  padding: 9px 8px;
+  border-bottom-color: var(--pt-border) !important;
+  vertical-align: middle;
+}
+:root[data-ls-ehms] .table > :not(:last-child) > :last-child > * { border-bottom-color: var(--pt-border-strong) !important; }
+:root[data-ls-ehms] .table th {
+  background-color: var(--pt-surface-2);
+  color: var(--pt-text-2) !important;
+  font-size: 13px;
+  font-weight: 600;
+}
+/* Nagłówki kolumn do dołu; <th> w treści (np. suma godzin w programie studiów) zostaje na środku. */
+:root[data-ls-ehms] .table > thead > tr > * { vertical-align: bottom; }
+:root[data-ls-ehms] .table > tbody > tr > th { color: var(--pt-text) !important; }
+:root[data-ls-ehms] .table td { color: inherit; }
+:root[data-ls-ehms] .table-hover > tbody > tr:hover > * { --bs-table-accent-bg: var(--pt-hover); color: var(--pt-text) !important; }
+:root[data-ls-ehms] .table-primary { --bs-table-bg: var(--pt-accent-soft); --bs-table-hover-bg: var(--pt-accent-soft); color: var(--pt-text) !important; border-color: var(--pt-border) !important; }
+:root[data-ls-ehms] .table-warning { --bs-table-bg: var(--pt-warning-soft); --bs-table-hover-bg: var(--pt-warning-soft); color: var(--pt-text) !important; border-color: var(--pt-border) !important; }
+:root[data-ls-ehms] .table-danger { --bs-table-bg: var(--pt-danger-soft); --bs-table-hover-bg: var(--pt-danger-soft); color: var(--pt-text) !important; border-color: var(--pt-border) !important; }
+:root[data-ls-ehms] .table-success { --bs-table-bg: var(--pt-success-soft); --bs-table-hover-bg: var(--pt-success-soft); color: var(--pt-text) !important; border-color: var(--pt-border) !important; }
+:root[data-ls-ehms] .table-info { --bs-table-bg: var(--pt-info-soft); --bs-table-hover-bg: var(--pt-info-soft); color: var(--pt-text) !important; border-color: var(--pt-border) !important; }
+:root[data-ls-ehms] :is(.table-secondary, .table-light, .table-active) { --bs-table-bg: var(--pt-surface-2); color: var(--pt-text) !important; border-color: var(--pt-border) !important; }
+:root[data-ls-ehms] .table-dark { --bs-table-bg: var(--pt-text); color: var(--pt-surface) !important; }
+:root[data-ls-ehms] .table-responsive { border-radius: var(--pt-radius-sm); }
+/* ramka „do wydruku" wokół tabel (2px #B6CCEA) — karta już jest ramką */
+:root[data-ls-ehms] div.print_area { border: 0 !important; }
+
+/* stare tabele i widżety z common.css */
+:root[data-ls-ehms] :is(td.lista_header, tr.lista_header, th.lista_header, td.msg_header, tr.rap_oc_header, td.plans1_header, tr.zajecia_header, tr.l_stud_header, tr.s_stud_header, tr.plans_header, tr.sylabusy_header, tr.poll_header, tr.stats1_header, tr.rekrutacje_header, td.limi_header) {
+  background-color: var(--pt-surface-2) !important;
+  color: var(--pt-text-2) !important;
+}
+:root[data-ls-ehms] :is(table.plans, table.l_stud, table.sylabusy, table.limi, table.poll, table.rekrutacje, table.irka_foso) {
+  background-color: transparent !important;
+  color: var(--pt-text) !important;
+}
+:root[data-ls-ehms] :is(div.chose, div.mytab, td.mytab, tr.plans1, tr.stats1, tr.sylabusy1, span.opt_hover, td.lista_select) { background-color: var(--pt-accent-soft) !important; }
+:root[data-ls-ehms] :is(.info, .infotxt) { background-color: var(--pt-info-soft) !important; color: var(--pt-info-text); }
+:root[data-ls-ehms] .warn { background-color: var(--pt-warning-soft) !important; }
+:root[data-ls-ehms] :is(.error, .error_info, span.nolink, span.no) { color: var(--pt-danger-text) !important; }
+:root[data-ls-ehms] .error_box { background-color: var(--pt-danger-soft) !important; color: var(--pt-danger-text); }
+:root[data-ls-ehms] span.yes { color: var(--pt-success-text) !important; }
+:root[data-ls-ehms] span.href_inactive { color: var(--pt-text-3) !important; }
+:root[data-ls-ehms] div.bchPanel { background: var(--pt-surface-2) !important; color: var(--pt-text); border-bottom: 1px solid var(--pt-border); }
+:root[data-ls-ehms] div.bchMain { color: var(--pt-text) !important; }
+
+/* ---------- przyciski ---------- */
+
+:root[data-ls-ehms] .btn {
+  border-radius: var(--pt-radius-sm) !important;
+  font-weight: 600;
+  font-size: 13.5px;
+  letter-spacing: .02em;
+  line-height: 20px;
+  padding: 8px 16px;
+  box-shadow: none;
+  transition: background-color .15s, border-color .15s, color .15s, box-shadow .15s;
+}
+:root[data-ls-ehms] .btn-sm { padding: 5px 11px; font-size: 12.5px; }
+:root[data-ls-ehms] .btn:focus,
+:root[data-ls-ehms] .btn:focus-visible { box-shadow: 0 0 0 3px var(--pt-focus) !important; outline: 0 !important; }
+:root[data-ls-ehms] .btn:disabled,
+:root[data-ls-ehms] .btn.disabled { opacity: .5; }
+
+:root[data-ls-ehms] :is(.btn-primary, .btn-primary:disabled, .btn-primary.disabled, .btn-check:checked + .btn-primary),
+:root[data-ls-ehms] div.left_menu_option input[type=button] {
+  background-color: var(--pt-accent) !important;
+  border: 1px solid var(--pt-accent) !important;
+  color: var(--pt-on-accent) !important;
+}
+:root[data-ls-ehms] :is(.btn-primary:hover, .btn-primary:focus, .btn-primary:active) {
+  background-color: var(--pt-accent-hover) !important;
+  border-color: var(--pt-accent-hover) !important;
+  color: var(--pt-on-accent) !important;
+}
+:root[data-ls-ehms] :is(.btn-outline-secondary, .btn-outline-primary, .btn-outline-dark, .btn-outline-light, .btn-secondary, .btn-light, .btn-default, .btnSelect),
+:root[data-ls-ehms] .bootstrap-select > .dropdown-toggle {
+  background-color: var(--pt-surface) !important;
+  border: 1px solid var(--pt-border-strong) !important;
+  color: var(--pt-text) !important;
+}
+:root[data-ls-ehms] :is(.btn-outline-secondary, .btn-outline-primary, .btn-outline-dark, .btn-outline-light, .btn-secondary, .btn-light, .btn-default, .btnSelect):is(:hover, :active, .active),
+:root[data-ls-ehms] .bootstrap-select > .dropdown-toggle:hover {
+  background-color: var(--pt-hover) !important;
+  border-color: var(--pt-border-strong) !important;
+  color: var(--pt-text) !important;
+}
+:root[data-ls-ehms] :is(.btn-danger, .btn-outline-danger:hover) { background-color: var(--pt-danger) !important; border-color: var(--pt-danger) !important; color: #fff !important; }
+:root[data-ls-ehms] .btn-outline-danger { border-color: var(--pt-danger) !important; color: var(--pt-danger-text) !important; }
+:root[data-ls-ehms] .btn-success { background-color: var(--pt-success-text) !important; border-color: var(--pt-success-text) !important; color: var(--pt-surface) !important; }
+:root[data-ls-ehms] .btn-link { color: var(--pt-link) !important; }
+:root[data-ls-ehms] .btn-close { opacity: .6; }
+
+/* ---------- formularze ---------- */
+
+:root[data-ls-ehms] :is(.form-control, .form-select),
+:root[data-ls-ehms] .select2-container--default .select2-selection--single,
+:root[data-ls-ehms] .select2-container--default .select2-selection--multiple {
+  background-color: var(--pt-input) !important;
+  color: var(--pt-text) !important;
+  border: 1px solid var(--pt-border-strong) !important;
+  border-radius: var(--pt-radius-sm) !important;
+  box-shadow: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+:root[data-ls-ehms] :is(.form-control, .form-select) {
+  min-height: 38px;
+  padding: 7px 12px;
+  font-size: 14.5px !important;
+  line-height: 22px;
+  margin-top: 0 !important;
+}
+:root[data-ls-ehms] .form-select {
+  padding-right: 36px;
+  background-image: var(--pt-strzalka) !important;
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px 10px;
+}
+:root[data-ls-ehms] :is(.form-control-sm, .form-select-sm) { min-height: 32px; padding-top: 4px; padding-bottom: 4px; font-size: 13.5px !important; }
+:root[data-ls-ehms] :is(.form-control, .form-select):focus,
+:root[data-ls-ehms] .select2-container--focus .select2-selection,
+:root[data-ls-ehms] .select2-container--open .select2-selection {
+  border-color: var(--pt-accent) !important;
+  box-shadow: 0 0 0 3px var(--pt-focus) !important;
+  outline: 0;
+}
+:root[data-ls-ehms] :is(.form-control, .form-select):is(:disabled, [readonly]) {
+  background-color: var(--pt-surface-2) !important;
+  color: var(--pt-text-2) !important;
+}
+:root[data-ls-ehms] :is(.form-control, input, textarea)::placeholder { color: var(--pt-text-3) !important; opacity: 1; }
+/* pola bez klas Bootstrapa (stare formularze) — tylko kolory */
+:root[data-ls-ehms] :is(input:not([type]), input[type=text], input[type=password], input[type=email], input[type=number], input[type=search], input[type=tel], input[type=date], textarea, select):not(.form-control, .form-select, .select2-search__field) {
+  background-color: var(--pt-input);
+  color: var(--pt-text);
+  border: 1px solid var(--pt-border-strong);
+  border-radius: 6px;
+}
+:root[data-ls-ehms] .input-group-text {
+  background-color: var(--pt-surface-2) !important;
+  border: 1px solid var(--pt-border-strong) !important;
+  color: var(--pt-text-2) !important;
+  border-radius: var(--pt-radius-sm);
+}
+/* ikonka + pole w .input-group to jeden kształt — jak w Bootstrapie, tylko
+   zaokrąglenie pól wyżej jest !important, więc trzeba je tu zdjąć */
+:root[data-ls-ehms] .input-group > :not(:last-child):not(.dropdown-menu) { border-top-right-radius: 0 !important; border-bottom-right-radius: 0 !important; }
+:root[data-ls-ehms] .input-group > :not(:first-child):not(.dropdown-menu) { border-top-left-radius: 0 !important; border-bottom-left-radius: 0 !important; }
+:root[data-ls-ehms] :is(.form-label, .col-form-label, label.label) {
+  color: var(--pt-text-2) !important;
+  font-size: 13.5px !important;
+  font-weight: 500;
+}
+:root[data-ls-ehms] .form-check { font-size: 14.5px !important; }
+:root[data-ls-ehms] .form-check-label { color: var(--pt-text); }
+:root[data-ls-ehms] .form-check-input {
+  width: 1.1em;
+  height: 1.1em;
+  background-color: var(--pt-input) !important;
+  border: 1px solid var(--pt-border-strong) !important;
+}
+:root[data-ls-ehms] .form-check-input:checked {
+  background-color: var(--pt-accent) !important;
+  border-color: var(--pt-accent) !important;
+}
+:root[data-ls-ehms] .form-check-input:focus { box-shadow: 0 0 0 3px var(--pt-focus) !important; }
+:root[data-ls-ehms] :is(input[type=checkbox], input[type=radio]):not(.form-check-input) { accent-color: var(--pt-accent); }
+
+/* select2 */
+:root[data-ls-ehms] .select2-container--default .select2-selection--single { height: 38px !important; }
+:root[data-ls-ehms] .select2-container--default .select2-selection--single .select2-selection__rendered { color: var(--pt-text) !important; line-height: 36px !important; padding-left: 12px; }
+:root[data-ls-ehms] .select2-container--default .select2-selection--single .select2-selection__arrow { height: 36px !important; }
+:root[data-ls-ehms] .select2-dropdown {
+  background-color: var(--pt-surface) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius-sm) !important;
+  box-shadow: var(--pt-shadow-lg);
+  overflow: hidden;
+}
+:root[data-ls-ehms] .select2-container .select2-results__option { color: var(--pt-text) !important; padding: 7px 12px; }
+:root[data-ls-ehms] .select2-container--default .select2-results__option--highlighted[aria-selected],
+:root[data-ls-ehms] .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+  background-color: var(--pt-accent-soft) !important;
+  color: var(--pt-accent-text) !important;
+}
+:root[data-ls-ehms] .select2-container--default .select2-results__option[aria-selected=true] { background-color: var(--pt-hover) !important; }
+:root[data-ls-ehms] .select2-search__field {
+  background-color: var(--pt-input) !important;
+  color: var(--pt-text) !important;
+  border: 1px solid var(--pt-border-strong) !important;
+  border-radius: 6px;
+}
+
+/* ---------- menu rozwijane, okna, alerty, zakładki ---------- */
+
+:root[data-ls-ehms] .dropdown-menu {
+  background-color: var(--pt-surface) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: 10px !important;
+  box-shadow: var(--pt-shadow-lg) !important;
+  padding: 6px !important;
+  color: var(--pt-text);
+}
+:root[data-ls-ehms] .dropdown-item {
+  border-radius: 6px;
+  padding: 8px 12px !important;
+  color: var(--pt-text) !important;
+  font-size: 14px;
+}
+:root[data-ls-ehms] .dropdown-item:is(:hover, :focus) { background-color: var(--pt-hover) !important; color: var(--pt-text) !important; }
+:root[data-ls-ehms] .dropdown-item:is(.active, :active) { background-color: var(--pt-accent-soft) !important; color: var(--pt-accent-text) !important; }
+:root[data-ls-ehms] .dropdown-divider { border-color: var(--pt-border) !important; }
+
+:root[data-ls-ehms] .modal-content {
+  background-color: var(--pt-surface) !important;
+  color: var(--pt-text) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--pt-shadow-lg);
+}
+:root[data-ls-ehms] :is(.modal-header, .modal-footer) { border-color: var(--pt-border) !important; }
+:root[data-ls-ehms] :is(.card, .list-group-item, .accordion-item) {
+  background-color: var(--pt-surface) !important;
+  color: var(--pt-text) !important;
+  border-color: var(--pt-border) !important;
+}
+:root[data-ls-ehms] .card { border-radius: var(--pt-radius) !important; }
+:root[data-ls-ehms] :is(.card-header, .card-footer) { background-color: var(--pt-surface-2) !important; border-color: var(--pt-border) !important; }
+:root[data-ls-ehms] .accordion-button { background-color: var(--pt-surface) !important; color: var(--pt-text) !important; box-shadow: none !important; }
+:root[data-ls-ehms] .accordion-button:not(.collapsed) { background-color: var(--pt-accent-soft) !important; color: var(--pt-accent-text) !important; }
+:root[data-ls-ehms] .popover { background-color: var(--pt-surface); border-color: var(--pt-border); }
+:root[data-ls-ehms] .popover-body { color: var(--pt-text); }
+
+:root[data-ls-ehms] .alert {
+  border: 1px solid var(--pt-border) !important;
+  border-radius: 10px !important;
+  padding: 12px 16px !important;
+}
+:root[data-ls-ehms] .alert-danger { background-color: var(--pt-danger-soft) !important; color: var(--pt-danger-text) !important; border-color: var(--pt-danger-border) !important; }
+:root[data-ls-ehms] .alert-success { background-color: var(--pt-success-soft) !important; color: var(--pt-success-text) !important; border-color: var(--pt-success-border) !important; }
+:root[data-ls-ehms] .alert-warning { background-color: var(--pt-warning-soft) !important; color: var(--pt-warning-text) !important; border-color: var(--pt-warning-border) !important; }
+:root[data-ls-ehms] .alert-info { background-color: var(--pt-info-soft) !important; color: var(--pt-info-text) !important; border-color: var(--pt-info-border) !important; }
+:root[data-ls-ehms] .alert-primary { background-color: var(--pt-accent-soft) !important; color: var(--pt-accent-text) !important; border-color: var(--pt-border) !important; }
+:root[data-ls-ehms] :is(.alert-secondary, .alert-light, .alert-dark) { background-color: var(--pt-surface-2) !important; color: var(--pt-text) !important; }
+:root[data-ls-ehms] .alert .alert-link { color: inherit !important; }
+
+:root[data-ls-ehms] .badge.bg-primary { background-color: var(--pt-accent) !important; color: var(--pt-on-accent) !important; }
+:root[data-ls-ehms] .bg-primary:not(.badge) { background-color: var(--pt-accent) !important; color: var(--pt-on-accent) !important; }
+
+/* zakładki w treści: Bootstrap .nav-tabs, #tabPanel i stare a.tab/a.tabactive */
+:root[data-ls-ehms] .nav-tabs { border-bottom-color: var(--pt-border) !important; gap: 2px; }
+:root[data-ls-ehms] ul.nav-tabs li.nav-item a.nav-link {
+  color: var(--pt-text-2) !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-bottom: 2px solid transparent !important;
+  border-radius: 0 !important;
+  padding: 9px 14px !important;
+  font-weight: 500;
+}
+:root[data-ls-ehms] ul.nav-tabs li.nav-item a.nav-link:hover { color: var(--pt-text) !important; }
+:root[data-ls-ehms] ul.nav-tabs li.nav-item a.nav-link.active {
+  color: var(--pt-accent-text) !important;
+  border-bottom-color: var(--pt-accent) !important;
+  font-weight: 600;
+}
+:root[data-ls-ehms] :is(#tabPanel .nav-link, a.tab, .tab, .tabcaution) {
+  background-color: var(--pt-surface-2) !important;
+  color: var(--pt-text-2) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius-sm) !important;
+}
+:root[data-ls-ehms] :is(#tabPanel .nav-link.active, a.tabactive, .tabactive) {
+  background-color: var(--pt-accent-soft) !important;
+  color: var(--pt-accent-text) !important;
+  border-color: var(--pt-accent-soft) !important;
+}
+:root[data-ls-ehms] .nav-pills .nav-link.active:not(#topmenu .nav-link) { background-color: var(--pt-accent-soft) !important; color: var(--pt-accent-text) !important; }
+:root[data-ls-ehms] .page-link { background-color: var(--pt-surface) !important; border-color: var(--pt-border) !important; color: var(--pt-link) !important; }
+:root[data-ls-ehms] .page-item.active .page-link { background-color: var(--pt-accent) !important; border-color: var(--pt-accent) !important; color: var(--pt-on-accent) !important; }
+
+/* ikony-akcje strony (+, −, pinezki, kalendarz) */
+:root[data-ls-ehms] :is(#s_plus, #s_minus, #pin_r, #pin_g, #s_toggle).ti,
+:root[data-ls-ehms] :is(.ti.ti--lg, .ti-calendar),
+:root[data-ls-ehms] .table .ti.href { color: var(--pt-link) !important; }
+
+/* ---------- kalendarz jQuery UI ---------- */
+
+:root[data-ls-ehms] #ui-datepicker-div.ui-datepicker {
+  background: var(--pt-surface) !important;
+  color: var(--pt-text) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius) !important;
+  box-shadow: var(--pt-shadow-lg);
+  padding: 10px;
+  font-family: var(--pt-font);
+  font-size: 14px;
+}
+:root[data-ls-ehms] #ui-datepicker-div .ui-datepicker-header {
+  background: transparent !important;
+  border: 0 !important;
+  color: var(--pt-text) !important;
+  padding: 4px 0 8px;
+}
+:root[data-ls-ehms] #ui-datepicker-div .ui-datepicker-title { color: var(--pt-text) !important; }
+:root[data-ls-ehms] #ui-datepicker-div .ui-datepicker-title select {
+  background-color: var(--pt-input) !important;
+  color: var(--pt-text) !important;
+  border: 1px solid var(--pt-border-strong) !important;
+  border-radius: 6px;
+}
+:root[data-ls-ehms] #ui-datepicker-div :is(.ui-datepicker-prev, .ui-datepicker-next) {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 6px;
+  cursor: pointer;
+}
+:root[data-ls-ehms] #ui-datepicker-div :is(.ui-datepicker-prev, .ui-datepicker-next):hover { background: var(--pt-hover) !important; }
+:root[data-ls-ehms] #ui-datepicker-div :is(.ui-icon-circle-triangle-e, .ui-icon-circle-triangle-w) {
+  border-right-color: var(--pt-text-2) !important;
+  border-bottom-color: var(--pt-text-2) !important;
+}
+:root[data-ls-ehms] #ui-datepicker-div th { color: var(--pt-text-3) !important; font-size: 12px; font-weight: 600; }
+:root[data-ls-ehms] #ui-datepicker-div td { background: transparent !important; }
+:root[data-ls-ehms] #ui-datepicker-div td :is(a, span).ui-state-default {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 6px;
+  color: var(--pt-text) !important;
+  text-align: center;
+  padding: 6px 4px;
+}
+:root[data-ls-ehms] #ui-datepicker-div td a.ui-state-default:hover,
+:root[data-ls-ehms] #ui-datepicker-div td a.ui-state-hover { background: var(--pt-hover) !important; }
+:root[data-ls-ehms] #ui-datepicker-div .ui-datepicker-today a.ui-state-default {
+  color: var(--pt-accent-text) !important;
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px var(--pt-accent);
+}
+:root[data-ls-ehms] #ui-datepicker-div .ui-datepicker-current-day a.ui-state-default,
+:root[data-ls-ehms] #ui-datepicker-div a.ui-state-active {
+  background: var(--pt-accent) !important;
+  color: var(--pt-on-accent) !important;
+}
+:root[data-ls-ehms] #ui-datepicker-div .ui-datepicker-unselectable .ui-state-default { color: var(--pt-text-3) !important; }
+:root[data-ls-ehms] #ui-datepicker-div .ui-datepicker-buttonpane { border-color: var(--pt-border) !important; }
+:root[data-ls-ehms] #ui-datepicker-div .ui-datepicker-buttonpane button {
+  background: var(--pt-surface) !important;
+  border: 1px solid var(--pt-border-strong) !important;
+  color: var(--pt-text) !important;
+  border-radius: 6px;
+}
+
+/* ---------- stopka ---------- */
+
+:root[data-ls-ehms] footer.kal-footer {
+  background: var(--pt-surface) !important;
+  color: var(--pt-text-2) !important;
+  border-top: 1px solid var(--pt-border);
+  margin-top: 0 !important;
+  font-size: 13px;
+}
+:root[data-ls-ehms] footer.kal-footer > .container-fluid { padding: 12px var(--pt-bok) !important; }
+:root[data-ls-ehms] footer.kal-footer label { color: var(--pt-text-2) !important; }
+/* białe logo na granat → szare na jasnym */
+:root[data-ls-ehms] footer.kal-footer img { filter: brightness(0); opacity: .45; max-height: 34px; width: auto; }
+:root[data-ls-ehms] footer.kal-footer .btn-transparent--dark,
+:root[data-ls-ehms] footer.kal-footer .btn-transparent--dark:is(:hover, :focus, :active, .show) {
+  background-color: var(--pt-surface) !important;
+  border: 1px solid var(--pt-border-strong) !important;
+  color: var(--pt-text) !important;
+  border-radius: 999px !important;
+  padding: 4px 12px !important;
+  font-size: 13px;
+}
+:root[data-ls-ehms] footer.kal-footer .btn-transparent--dark:hover { background-color: var(--pt-hover) !important; }
+
+/* ---------- strona logowania ----------
+   Bez paska i menu: nagłówek (tytuł, logo), main.container z .kal-login
+   (karta z formularzem, pod nią linki), a pod spodem luzem w body logo
+   Kalasoftu, wersja i copyright. main jest tu .container, nie
+   .container-fluid — boczny margines --pt-bok liczony od szerokości okna
+   zjadłby mu na szerokim ekranie całą szerokość (karta miała 0 px). */
+
+:root[data-ls-ehms] header.kal-header:not(:has(> .kal-topbar)) {
+  display: flex;
+  flex-direction: column-reverse;   /* logo nad tytułem */
+  align-items: center;
+  gap: 16px;
+  margin: 56px auto 28px !important;
+  padding: 0 16px;
+}
+:root[data-ls-ehms] header.kal-header:not(:has(> .kal-topbar)) h1.content__title {
+  margin: 0;
+  color: var(--pt-text);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  text-align: center;
+}
+:root[data-ls-ehms] header.kal-header:not(:has(> .kal-topbar)) img.kal-logo { height: 52px !important; max-height: none !important; width: auto !important; }
+:root[data-ls-ehms] header.kal-header:not(:has(> .kal-topbar)) font { color: var(--pt-text-2); }
+:root[data-ls-ehms] main.kal-main:has(.kal-login) { max-width: none; padding: 0 16px 8px !important; }
+:root[data-ls-ehms] main.kal-main > .row:has(> .kal-login) { height: auto !important; margin: 0; }
+:root[data-ls-ehms] .kal-login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 0 !important;
+}
+:root[data-ls-ehms] .kal-login > .container.bg-white {
+  flex: none;
+  width: 100% !important;
+  max-width: 400px;
+  margin: 0 !important;
+  padding: 28px !important;
+  border: 1px solid var(--pt-border);
+  border-radius: 16px;
+  box-shadow: var(--pt-shadow-lg) !important;
+}
+:root[data-ls-ehms] .kal-login h3.content__title { margin: 0 0 22px !important; font-size: 20px; font-weight: 700; text-align: center; }
+:root[data-ls-ehms] .kal-login h3.content__title.text-uppercase { text-transform: none !important; }
+:root[data-ls-ehms] .kal-login h3.content__title.text-uppercase::first-letter { text-transform: uppercase; }
+:root[data-ls-ehms] .kal-login div.mb-3 { margin-bottom: 16px !important; }
+:root[data-ls-ehms] .kal-login label.label { display: block; margin-bottom: 6px !important; text-transform: none !important; }
+:root[data-ls-ehms] .kal-login label.label b { font-weight: 600; }
+:root[data-ls-ehms] .kal-login .input-group { flex-wrap: nowrap; }
+:root[data-ls-ehms] .kal-login .input-group-text { justify-content: center; width: 44px; padding: 0 !important; color: var(--pt-text-3) !important; }
+:root[data-ls-ehms] .kal-login .form-control { min-height: 42px; }
+:root[data-ls-ehms] .kal-login form > div.d-flex.my-4 { margin: 24px 0 0 !important; }
+:root[data-ls-ehms] .kal-login .btn-primary { width: 100%; min-height: 44px; font-size: 14px; letter-spacing: .06em; }
+:root[data-ls-ehms] .kal-login > .container > div.d-flex.justify-content-between {
+  justify-content: center !important;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--pt-border);
+}
+:root[data-ls-ehms] div.kal-login button#dropdownLanguageMenuButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px !important;
+  border: 1px solid var(--pt-border-strong) !important;
+  border-radius: 999px !important;
+  background-color: var(--pt-surface) !important;
+  color: var(--pt-text-2) !important;
+  font-size: 13px;
+}
+:root[data-ls-ehms] div.kal-login button#dropdownLanguageMenuButton:hover { background-color: var(--pt-hover) !important; color: var(--pt-text) !important; }
+
+/* linki pod kartą (nawiasy […] zdejmuje z tekstu ehms-wyglad.js) */
+:root[data-ls-ehms] .kal-login__footer { flex: none; width: 100% !important; max-width: 400px; margin: 0 !important; padding: 0 !important; }
+:root[data-ls-ehms] .kal-login__footer-links { display: flex; flex-direction: column; gap: 2px; }
+:root[data-ls-ehms] .kal-login__footer-links > br { display: none; }   /* w kolumnie flex każdy <br> to pusty wiersz */
+:root[data-ls-ehms] .kal-login__footer-links > a {
+  display: block;
+  margin: 0 !important;
+  padding: 9px 12px;
+  border-radius: var(--pt-radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.35;
+  text-align: center;
+  text-decoration: none;
+}
+:root[data-ls-ehms] .kal-login__footer-links > a::first-letter { text-transform: uppercase; }
+:root[data-ls-ehms] .kal-login__footer-links > a:hover { background: var(--pt-hover); }
+:root[data-ls-ehms] .kal-login__footer-links > a i.ti { margin-left: 4px; color: var(--pt-text-3); font-size: 17px; }
+
+/* logo Kalasoftu, wersja, copyright */
+:root[data-ls-ehms] body:has(.kal-login) > div.d-flex.justify-content-center > a.m-3 { margin: 28px 0 6px !important; }
+:root[data-ls-ehms] body:has(.kal-login) > div.d-flex.justify-content-center > a.m-3 > img { height: 20px; width: auto; opacity: .55; }
+:root[data-ls-ehms] body:has(.kal-login) > p.text-end,
+:root[data-ls-ehms] body:has(.kal-login) p.kal-login__footer-copyright {
+  margin: 0 !important;
+  color: var(--pt-text-2) !important;
+  font-size: 12px;
+  text-align: center !important;
+}
+:root[data-ls-ehms] body:has(.kal-login) p.kal-login__footer-copyright { padding-bottom: 20px; }
+:root[data-ls-ehms] body:has(.kal-login) p.kal-login__footer-copyright a { color: var(--pt-text); }
+
+/* ---------- przycisk motywu (ehms-dark.js) ---------- */
+
+:root[data-ls-ehms] #ls-ehms-motyw {
+  width: 38px;
+  height: 38px;
+  border: 1px solid transparent;
+  border-radius: var(--pt-radius-sm);
+  background: transparent;
+  color: var(--pt-text-2);
+}
+:root[data-ls-ehms] #ls-ehms-motyw:hover { background: var(--pt-hover); color: var(--pt-text); }
+:root[data-ls-ehms] #ls-ehms-motyw.ls-ehms-motyw--rog { background: var(--pt-surface); border-color: var(--pt-border-strong); }

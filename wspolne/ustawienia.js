@@ -27,6 +27,10 @@ const DOMYSLNE_USTAWIENIA = {
     daty: true,         // godzina dodania wpisu na kafelkach strony głównej (rmf24-daty.*)
     przeczytane: true,  // otwarte już wpisy przygaszone na kafelkach i listach (rmf24-przeczytane.*)
   },
+  ehms: {
+    wyglad: true,       // nowy wygląd Wirtualnego Dziekanatu PK: pasek z menu, boczne menu, karty, tabele, formularze (ehms-wyglad.*)
+    ciemnyMotyw: true,  // ciemny motyw na ehms.pk.edu.pl, przełącznik też w nagłówku strony (ciemny-motyw.js + ehms-dark.*)
+  },
 };
 
 async function wczytajUstawienia() {

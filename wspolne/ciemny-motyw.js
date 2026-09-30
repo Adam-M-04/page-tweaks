@@ -29,6 +29,10 @@
 //   zachowajCiemneCienie — true: ciemne i kolorowe kolory w box-shadow/
 //                         text-shadow zostają (cień pod kartą nie robi się
 //                         łuną, pasek statusu nie zmienia barwy)
+//   odRazu              — true: start() włącza motyw, zanim dojedzie odczyt
+//                         ustawień, a wyłączony zdejmuje chwilę później
+//                         (strony, które przy każdym kliknięciu wczytują się
+//                         od nowa, nie mrugają bielą)
 //   atrybut, idArkusza  — domyślnie data-ls-dark / ls-dark-lustro
 
 globalThis.lsCiemnyMotyw = function utworzCiemnyMotyw(konfig = {}) {
@@ -38,6 +42,7 @@ globalThis.lsCiemnyMotyw = function utworzCiemnyMotyw(konfig = {}) {
   const RECZNE = new Map(Object.entries(konfig.reczne || {}));
   const czyStrona = konfig.czyStrona || (() => true);
   const zachowajCiemneCienie = !!konfig.zachowajCiemneCienie;
+  const odRazu = !!konfig.odRazu;
 
   // ---------- kolory ----------
 
@@ -357,6 +362,9 @@ globalThis.lsCiemnyMotyw = function utworzCiemnyMotyw(konfig = {}) {
           const tag = n.tagName;
           if (tag === 'STYLE' || tag === 'LINK') style = true;
           else { naprawSvg(n); naprawInlineW(n); }
+          // Reguły <link> są w document.styleSheets dopiero po wczytaniu
+          // pliku — bez tego czekałyby na zegar do sekundy, w jasnym kolorze.
+          if (tag === 'LINK') n.addEventListener('load', zaplanujSkan, { once: true });
         } else if (n.nodeType === 3 && n.parentNode && n.parentNode.tagName === 'STYLE') {
           style = true;
         }
@@ -401,9 +409,10 @@ globalThis.lsCiemnyMotyw = function utworzCiemnyMotyw(konfig = {}) {
   }
 
   async function start() {
+    if (odRazu) wlacz();
     let ustawienia = null;
     try { ustawienia = (await chrome.storage.sync.get('ustawienia')).ustawienia; } catch (e) { /* domyślnie włączony */ }
-    if (czyWlaczonyWUstawieniach(ustawienia)) wlacz();
+    if (czyWlaczonyWUstawieniach(ustawienia)) wlacz(); else if (odRazu) wylacz();
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', sprawdzStrone, { once: true });
     else sprawdzStrone();
     chrome.storage.onChanged.addListener((zmiany, obszar) => {

@@ -1,0 +1,77 @@
+/* Ciemny motyw Wirtualnego Dziekanatu PK — część statyczna. Kolory z arkuszy
+   strony przemapowuje ciemny-motyw.js (paleta w ehms-dark.js), a nowy wygląd
+   ma własną ciemną paletę w ehms-wyglad.css. Tu jest to, czego z arkuszy nie
+   da się wyczytać, i paski strony przy wyłączonym nowym wyglądzie.
+   Wszystko pod :root[data-ls-dark]. */
+
+@media screen {
+  :root[data-ls-dark] {
+    color-scheme: dark;              /* formularze, paski przewijania */
+    background-color: #0c1118;       /* tło, zanim JS przemapuje arkusze */
+    color: #e4eaf2;
+  }
+  :root[data-ls-dark] body {
+    background: #0c1118 !important;  /* strona: gradient biel → szarość */
+  }
+
+  /* Logo PK: granatowy SVG na przezroczystym tle — białe. */
+  :root[data-ls-dark] img.kal-logo { filter: brightness(0) invert(.93); }
+  /* Logo w stopce jest białe; nowy wygląd robi z niego szare — tu jasne. */
+  :root[data-ls-dark][data-ls-ehms] footer.kal-footer img { filter: brightness(0) invert(1); opacity: .55; }
+  /* Logo Kalasoftu pod kartą logowania: czarny napis — jasny. */
+  :root[data-ls-dark] body:has(.kal-login) > div.d-flex.justify-content-center > a.m-3 > img { filter: brightness(0) invert(.85); }
+
+  /* ---------- stary wygląd (bez data-ls-ehms): paski i menu ----------
+     Strona maluje je granatem var(--apsl-gray) z jasnym tekstem
+     var(--bs-light); lustro zrobiłoby z tego jasny błękit z ciemnym tekstem.
+     Zostaje układ strony, tylko granat ciemnieje, a zmienne tekstu wracają
+     do jasnych wewnątrz pasków. */
+  :root[data-ls-dark]:not([data-ls-ehms]) :is(.kal-topbar, .kal-footer, #topmenu, .kal-sidemenu > .bg-white) {
+    --bs-light: #dbe4ef;
+    --bs-dark: #ffffff;
+    --bs-white: #ffffff;
+    --kal-accent-100: #dbe4ef;       /* tytuł „Wirtualny Dziekanat PK" */
+    background: #15243a !important;
+    color: #dbe4ef !important;
+  }
+  :root[data-ls-dark]:not([data-ls-ehms]) #topmenu { border-bottom-color: #2b4a75 !important; }
+  :root[data-ls-dark]:not([data-ls-ehms]) #topmenu .nav-link.active { background-color: #2b4a75 !important; color: #ffffff !important; }
+  :root[data-ls-dark]:not([data-ls-ehms]) :is(.kal-topbar, .kal-footer) .btn-transparent--dark { background-color: #8c1a45 !important; color: #ffffff !important; }
+}
+
+/* ---------- przycisk motywu (ehms-dark.js) ----------
+   Wygląd na starym granatowym pasku; nowy wygląd nadpisuje go swoimi tokenami. */
+
+#ls-ehms-motyw {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .14);
+  color: #ffffff;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+#ls-ehms-motyw:hover { background: rgba(255, 255, 255, .24); }
+#ls-ehms-motyw i.ti { font-size: 19px; }
+#ls-ehms-motyw .ti-sun { display: none; }
+:root[data-ls-dark] #ls-ehms-motyw .ti-sun { display: inline-block; }
+:root[data-ls-dark] #ls-ehms-motyw .ti-moon { display: none; }
+/* strona logowania: bez paska, prawy górny róg */
+#ls-ehms-motyw.ls-ehms-motyw--rog {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 1050;
+  background: #1c508c;
+}
+@media print {
+  #ls-ehms-motyw { display: none !important; }
+}

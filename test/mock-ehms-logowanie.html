@@ -1,0 +1,196 @@
+<meta charset="utf-8"><title>ATRAPA ehms.pk.edu.pl — strona logowania</title>
+<!-- Bez doctype, jak strona (tryb quirks). Logowanie do Wirtualnego
+     Dziekanatu PK (eHMS 8.36, stan: wrzesień 2026): nagłówek bez paska
+     (tytuł, logo), main.container z .kal-login — karta z formularzem
+     i przyciskiem języka, pod nią linki w nawiasach rozdzielone <br>;
+     luzem w body logo Kalasoftu, wersja i copyright. Dane zmyślone. -->
+<style>
+body { margin: 0; font-family: sans-serif; background-color: rgb(248, 249, 250); color: rgb(3, 55, 115); }
+a { color: rgb(159, 2, 60); }
+.d-flex { display: flex !important; }
+.justify-content-center { justify-content: center !important; }
+.justify-content-between { justify-content: space-between !important; }
+.align-items-end { align-items: flex-end !important; }
+.text-uppercase { text-transform: uppercase !important; }
+.text-center { text-align: center !important; }
+.text-end { text-align: right !important; }
+.bg-white { background-color: rgb(255, 255, 255) !important; }
+.my-4 { margin-top: 24px !important; margin-bottom: 24px !important; }
+.mb-3 { margin-bottom: 16px !important; }
+.m-3 { margin: 16px !important; }
+.p-4 { padding: 24px !important; }
+.container { box-sizing: border-box; width: 100%; max-width: 1320px; margin: 0 auto; padding: 0 12px; }
+.row { display: flex; flex-wrap: wrap; }
+.row > * { box-sizing: border-box; flex-shrink: 0; width: 100%; max-width: 100%; }
+@media (min-width: 768px) { .col-md-4 { flex: 0 0 auto; width: 33.33%; } }
+.kal-login .container { max-width: 460px; }
+.kal-main { margin-top: 3.05rem; }
+.input-group { display: flex; flex-wrap: wrap; align-items: stretch; width: 100%; }
+.input-group > .form-control { flex: 1 1 auto; width: 1%; min-width: 0; }
+.input-group > :not(:first-child) { margin-left: -1px; }
+.input-group-text { display: flex; align-items: center; padding: 6px 12px; border: 1px solid rgb(206, 212, 218); background-color: rgb(233, 236, 239); }
+.form-control { display: block; box-sizing: border-box; width: 100%; padding: 6px 12px; border: 1px solid rgb(206, 212, 218); background-color: rgb(255, 255, 255); color: rgb(33, 37, 41); }
+.btn { display: inline-block; padding: 6px 12px; border: 1px solid transparent; border-radius: 4px; font-size: 16px; cursor: pointer; background-color: transparent; }
+.btn-primary { background-color: rgb(159, 2, 60); border-color: rgb(159, 2, 60); color: rgb(255, 255, 255); }
+div.kal-login button#dropdownLanguageMenuButton { background-color: rgb(159, 2, 60); color: rgb(248, 249, 250); }
+.ti { display: inline-block; width: 1em; height: 1em; }
+</style>
+
+<body id="webSiteBodyElement">
+<p style="margin:8px 12px">Atrapa strony logowania ehms.pk.edu.pl (zero kontaktu z ehms.pk.edu.pl).
+<button onclick="testuj()" style="cursor:pointer">uruchom testy</button>
+<button onclick="__lsEhmsWyglad.wlacz()" style="cursor:pointer">wygląd</button>
+<button onclick="__lsEhmsWyglad.wylacz()" style="cursor:pointer">stary wygląd</button>
+<button onclick="__lsDark.wlacz()" style="cursor:pointer">ciemny</button>
+<button onclick="__lsDark.wylacz()" style="cursor:pointer">jasny</button></p>
+
+<div id="web_content"></div>
+<header class="kal-header header container my-4 center">
+  <h1 class="content__title" id="naglowek"><b>Wirtualny Dziekanat PK</b></h1>
+  <img id="logo" class="kal-logo" alt="Logo" width="160" height="48" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='48'%3E%3Crect width='160' height='48' fill='%23033773'/%3E%3C/svg%3E">
+</header>
+<main class="kal-main container" id="main">
+  <div class="row g-2 h-100">
+    <div class="kal-login">
+      <div class="container bg-white shadow col-xs-10 col-sm-6 col-md-4 p-4 my-4" id="karta">
+        <form method="post" id="formularz" onsubmit="return wyslij(event)">
+          <input type="hidden" name="ref" value="1">
+          <h3 class="content__title text-uppercase text-center"><b id="tytul">logowanie do systemu</b></h3>
+          <div class="mb-3">
+            <label class="label text-uppercase" for="login"><b>Login:</b></label>
+            <div class="input-group"><span class="input-group-text" id="ikonaLoginu"><i class="ti ti-user ti--lg"></i></span><input type="text" class="form-control" id="login" name="login"></div>
+          </div>
+          <div class="mb-3">
+            <label class="label text-uppercase" for="haslo"><b>Hasło:</b></label>
+            <div class="input-group"><span class="input-group-text"><i class="ti ti-key ti--lg"></i></span><input type="password" class="form-control" id="haslo" name="haslo"></div>
+          </div>
+          <div class="d-flex justify-content-center my-4"><button type="submit" class="btn btn-primary text-uppercase" id="zaloguj">zaloguj</button></div>
+          <input type="hidden" name="jezyk" value="pl">
+        </form>
+        <div class="d-flex justify-content-between align-items-end">
+          <form id="sl" name="sl"><div class="dropdown"><button class="dropdown-toggle kal-dropdown kal-dropdown--invisible btn btn-transparent btn-transparent--dark btn-icon rounded-pill text-truncate" type="button" id="dropdownLanguageMenuButton" onclick="klik('jezyk')"><i class="ti ti-world"></i> <span>Polski</span></button></div></form>
+        </div>
+      </div>
+      <div class="kal-login__footer container text-center col-xs-10 col-sm-6 col-md-4">
+        <div class="kal-login__footer-links">
+          <a class="mb-3" id="link1" href="#studenci">[rejestracja/odzyskiwanie kont studentów] <i class="ti ti--md ti-info-square align-middle" id="info" title="Informacja" onclick="klik('info'); return false;"></i></a><br>
+          <a class="mb-3" id="link2" href="#pracownicy">[rejestracja/odzyskiwanie kont pracowników Uczelni] <i class="ti ti--md ti-info-square align-middle" title="Informacja"></i></a><br>
+          <a class="mb-3" id="link3" href="#konto">[Wyszukiwanie numeru konta wirtualnego]</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<div class="d-flex justify-content-center"><a class="m-3" href="#kalasoft"><img id="kalasoft" alt="" width="160" height="23" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='23'%3E%3Crect width='160' height='23' fill='%23222'/%3E%3C/svg%3E"></a></div>
+<p class="text-end mb-0 mx-4" id="wersja">wersja: 8.36 (17-06-2026)</p>
+<div class="d-flex justify-content-center"><p class="kal-login__footer-copyright">© 2005-2026 - <a href="#kalasoft">KALASOFT Sp. z o.o.</a></p></div>
+<pre id="log" style="white-space:pre-wrap;margin:12px"></pre>
+
+<script>
+const klikniete = [];
+function klik(co) { klikniete.push(co); }
+function wyslij(e) { klikniete.push('wyslano ' + new FormData(e.target).get('login')); e.preventDefault(); return false; }
+</script>
+<script src="../wspolne/ciemny-motyw.js"></script>
+<script src="../strony/ehms/ehms-dark.js"></script>
+<script src="../strony/ehms/ehms-wyglad.js"></script>
+<script>
+const AUTO = location.search.includes('auto');
+const $ = (id) => document.getElementById(id);
+const log = $('log');
+window.addEventListener('error', (e) => { log.textContent += `\nBŁĄD TESTU: ${e.message} (${e.filename}:${e.lineno})\n`; });
+let n = 0, ok = 0;
+const sprawdz = (nazwa, warunek, szczegol = '') => {
+  n++; if (warunek) ok++;
+  log.textContent += `${warunek ? 'PASS' : 'FAIL'}  ${nazwa}${szczegol ? '  — ' + szczegol : ''}\n`;
+};
+const styl = (el, p, pseudo) => getComputedStyle(typeof el === 'string' ? $(el) : el, pseudo)[p];
+const prostokat = (el) => (typeof el === 'string' ? $(el) : el).getBoundingClientRect();
+const nachodza = (a, b) => { const x = prostokat(a), y = prostokat(b); return x.left < y.right && y.left < x.right && x.top < y.bottom && y.top < x.bottom; };
+const spij = (ms) => new Promise((r) => setTimeout(r, ms));
+const lum = (c) => {
+  const [r, g, b] = c.match(/[\d.]+/g).slice(0, 3).map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+const kontrast = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+const klikalny = (el) => {
+  el.scrollIntoView({ block: 'center' });
+  const r = prostokat(el);
+  const trafiony = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+  return !!trafiony && (trafiony === el || el.contains(trafiony));
+};
+
+// CSS rozszerzenia jak w content scripcie (poza document.styleSheets), bez przejść.
+const bezPrzejsc = new CSSStyleSheet();
+bezPrzejsc.replaceSync('*, *::before, *::after { transition: none !important; }');
+const arkusze = Promise.all(['../strony/ehms/ehms-wyglad.css', '../strony/ehms/ehms-dark.css'].map(async (u) => {
+  const s = new CSSStyleSheet();
+  s.replaceSync(await fetch(u).then((r) => r.text()));
+  return s;
+})).then((s) => { document.adoptedStyleSheets = [...s, bezPrzejsc]; });
+
+async function testuj() {
+  log.textContent = '';
+  n = 0; ok = 0;
+  await arkusze;
+  const W = __lsEhmsWyglad, D = __lsDark;
+  W.wylacz(); D.wylacz();
+  const html = document.documentElement;
+  const linki = [...document.querySelectorAll('.kal-login__footer-links > a')];
+  const tekstyStrony = linki.map((a) => a.textContent);
+  sprawdz('stary wygląd: linki w nawiasach, jak na stronie', tekstyStrony.every((t) => /^\s*\[.*\]\s*$/.test(t)));
+
+  // --- nowy wygląd ---------------------------------------------------------------------------
+  W.wlacz();
+  await spij(20);
+  const szerokoscKarty = () => Math.round(prostokat('karta').width);
+  const oczekiwana = Math.min(400, document.documentElement.clientWidth - 32);
+  sprawdz('karta 400 px (albo cała szerokość na telefonie)', Math.abs(szerokoscKarty() - oczekiwana) <= 1, `${szerokoscKarty()} px`);
+  // Ekran 3200 px: --pt-bok = (3200 − 1640) / 2 = 780 px. Na stronie logowania
+  // main to .container — ten margines zjadał mu całą szerokość.
+  html.style.setProperty('--pt-bok', '780px');
+  const naSzerokim = szerokoscKarty();
+  html.style.removeProperty('--pt-bok');
+  sprawdz('bardzo szeroki ekran: karta dalej ma swoją szerokość', Math.abs(naSzerokim - oczekiwana) <= 1, `${naSzerokim} px`);
+  const srodek = (el) => { const r = prostokat(el); return r.left + r.width / 2; };
+  sprawdz('logo nad tytułem, oba i karta na środku', prostokat('logo').bottom <= prostokat('naglowek').top && ['logo', 'naglowek', 'karta'].every((id) => Math.abs(srodek(id) - document.documentElement.clientWidth / 2) < 2));
+  sprawdz('tytuł karty zwykłym zapisem', styl('tytul', 'textTransform') === 'none' && styl($('tytul').closest('h3'), 'textTransform', '::first-letter') === 'uppercase');
+  sprawdz('pola co najmniej 42 px, ikonka tej samej wysokości', ['login', 'haslo'].every((id) => prostokat(id).height >= 42) && prostokat('ikonaLoginu').height === prostokat('login').height, `${prostokat('login').height} / ${prostokat('ikonaLoginu').height}`);
+  sprawdz('ikonka i pole jednym kształtem (wspólna krawędź bez zaokrągleń)', styl('ikonaLoginu', 'borderTopRightRadius') === '0px' && styl('login', 'borderTopLeftRadius') === '0px' && styl('ikonaLoginu', 'borderTopLeftRadius') !== '0px' && styl('login', 'borderTopRightRadius') !== '0px' && Math.abs(prostokat('ikonaLoginu').right - prostokat('login').left) <= 1);
+  sprawdz('przycisk „Zaloguj” na całą szerokość formularza', Math.abs(prostokat('zaloguj').width - prostokat('formularz').width) < 1 && prostokat('zaloguj').height >= 44);
+  sprawdz('linki bez nawiasów, z wielkiej litery', linki.every((a) => !/[[\]]/.test(a.textContent)) && styl(linki[0], 'textTransform', '::first-letter') === 'uppercase', JSON.stringify(linki[0].textContent));
+  sprawdz('linki jeden pod drugim, bez pustych wierszy po <br>', linki.slice(1).every((a, i) => prostokat(a).top - prostokat(linki[i]).bottom <= 4) && linki.every((a) => prostokat(a).height >= 34));
+  const przycisk = $('ls-ehms-motyw');
+  sprawdz('przycisk motywu w rogu: type=button, poza formularzem i kartą', !!przycisk && przycisk.type === 'button' && przycisk.classList.contains('ls-ehms-motyw--rog') && styl(przycisk, 'position') === 'fixed' && !przycisk.closest('form') && !nachodza(przycisk, 'karta'));
+  sprawdz('pola, przyciski i linki niczym nieprzykryte', ['login', 'haslo', 'zaloguj', 'dropdownLanguageMenuButton', 'link1', 'link2', 'link3', 'ls-ehms-motyw'].every((id) => klikalny($(id))));
+  klikniete.length = 0;
+  $('login').value = 'test';
+  $('zaloguj').click();
+  $('dropdownLanguageMenuButton').click();
+  $('info').click();
+  sprawdz('wysłanie formularza, przycisk języka i ikonka informacji działają', klikniete.join('|') === 'wyslano test|jezyk|info', klikniete.join('|'));
+  $('login').value = '';
+  const tloStrony = styl(document.body, 'backgroundColor'), tloKarty = styl('karta', 'backgroundColor');
+  const kontrasty = () => [kontrast(styl('zaloguj', 'color'), styl('zaloguj', 'backgroundColor')), kontrast(styl(linki[0], 'color'), styl(document.body, 'backgroundColor')), kontrast(styl($('login').closest('.mb-3').querySelector('label'), 'color'), styl('karta', 'backgroundColor')), kontrast(styl('wersja', 'color'), styl(document.body, 'backgroundColor'))];
+  sprawdz('jasny: kontrast ≥ 4.5 (przycisk, link, etykieta, wersja)', kontrasty().every((k) => k >= 4.5), kontrasty().map((k) => k.toFixed(1)).join(' / ') + ` na ${tloStrony} / ${tloKarty}`);
+
+  // --- ciemny ------------------------------------------------------------------------------------
+  D.wlacz();
+  await spij(50);
+  sprawdz('ciemny: tło strony i karty', styl(document.body, 'backgroundColor') === 'rgb(12, 17, 24)' && styl('karta', 'backgroundColor') === 'rgb(20, 27, 37)', `${styl(document.body, 'backgroundColor')} / ${styl('karta', 'backgroundColor')}`);
+  sprawdz('ciemny: kontrast ≥ 4.5 (przycisk, link, etykieta, wersja)', kontrasty().every((k) => k >= 4.5), kontrasty().map((k) => k.toFixed(1)).join(' / '));
+  sprawdz('ciemny: logo PK i logo Kalasoftu rozjaśnione', /invert/.test(styl('logo', 'filter')) && /invert/.test(styl('kalasoft', 'filter')), styl('kalasoft', 'filter'));
+
+  // --- stary wygląd ------------------------------------------------------------------------------
+  W.wylacz();
+  await spij(20);
+  sprawdz('stary wygląd + ciemny: logo Kalasoftu dalej jasne', /invert/.test(styl('kalasoft', 'filter')));
+  D.wylacz();
+  sprawdz('wyłączenie wyglądu: nawiasy wracają, tekst jak na stronie', linki.every((a, i) => a.textContent === tekstyStrony[i]));
+  W.wlacz();
+  sprawdz('ponowne włączenie: nawiasy znów zdjęte', linki.every((a) => !/[[\]]/.test(a.textContent)));
+
+  log.textContent += `\nWYNIK: ${ok}/${n}${ok === n ? ' — wszystko OK' : ' — SĄ BŁĘDY'}\n`;
+}
+if (AUTO) testuj();
+</script>
