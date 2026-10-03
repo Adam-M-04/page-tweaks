@@ -1,0 +1,132 @@
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ATRAPA medium.com — tytuł tagu nad listą</title>
+<!-- Szkielet strony tagu Medium w pigułce (/tag/symfony/recommended, stan:
+     październik 2026): rząd flex z przyklejoną kolumną (okruszek, h2,
+     stopka), jej wąską wersją, pustym odstępem i listą wpisów. Klasy Feli
+     zastąpione krótkimi, przełom na wąski układ jak na stronie (904 px). -->
+<style>
+body { margin: 0; font: 16px/1.5 sohne, Helvetica, Arial, sans-serif; color: #242424; background: #fff; }
+*, ::before, ::after { box-sizing: border-box; }
+.k { display: flex; justify-content: center; max-width: 1208px; margin: 0 auto; padding: 0 24px; }
+.r { display: flex; flex-direction: row; width: 100%; }
+.s { position: sticky; flex: 0 1 auto; width: 374px; }
+.s > div { display: flex; flex-direction: column; padding: 48px 0 40px; }
+.w { display: none; padding: 48px 0 0; }
+.w > div { max-width: 400px; padding-right: 24px; }
+.o { flex: 1 1 auto; max-width: 0; }
+.l { flex: 0 1 auto; width: 603px; padding: 48px 0 40px 24px; }
+.okr { padding-bottom: 40px; display: flex; gap: 8px; }
+h2 { margin: 0; font-size: 42px; line-height: 52px; font-weight: 500; }
+.wpis { height: 160px; margin-top: 24px; background: #f2f2f2; }
+.stopka { padding-top: 32px; font-size: 13px; }
+@media (max-width: 903.98px) {
+  .r { flex-direction: column; }
+  .s { display: none; }
+  .w { display: block; padding: 32px 0 0; }
+  .w h2 { font-size: 24px; line-height: 30px; }
+  .l { width: auto; padding: 32px 0; }
+}
+#panelTestu { background: #0f172a; color: #e2e8f0; padding: 10px 14px; }
+</style>
+<link rel="stylesheet" href="../strony/medium/medium-tytul.css">
+
+<div id="panelTestu">
+  <h3 style="margin:0 0 6px">Atrapa medium.com — testy „tytuł tagu nad listą" (zero kontaktu z medium.com)</h3>
+  <button onclick="testuj()" style="cursor:pointer;padding:6px 12px">uruchom testy</button>
+  <button onclick="__lsTytul.wlacz()" style="cursor:pointer;padding:6px 12px">włącz</button>
+  <button onclick="__lsTytul.wylacz()" style="cursor:pointer;padding:6px 12px">wyłącz</button>
+  <pre id="log" style="white-space:pre-wrap;color:#7dd3fc;margin:8px 0 0"></pre>
+</div>
+
+<template id="naglowek">
+  <div><div class="okr"><span><a href="/tag/symfony">Symfony</a></span><span><svg width="18" height="18" role="img" aria-labelledby="arrow-right-title"><title id="arrow-right-title">Arrow pointing right</title></svg></span><span>Recommended stories</span></div></div>
+  <h2>Recommended stories in "Symfony"</h2>
+</template>
+
+<div class="k">
+  <div class="r" id="rzad">
+    <div class="s" style="top: 57px;" id="boczna"><div><div id="bocznaNaglowek"></div><div class="stopka">Help Status About</div></div></div>
+    <div class="w" id="waska"><div id="waskaNaglowek"></div></div>
+    <div class="o"></div>
+    <div class="l" id="lista"><div id="wpisy"></div></div>
+  </div>
+</div>
+
+<!-- artykuł: przyklejona kolumna bez okruszka nie może się złapać -->
+<div class="k">
+  <div class="r" id="artykulRzad">
+    <div class="l" id="artykul"><h2>Tytuł artykułu</h2></div>
+    <div class="s" style="top: 57px;" id="artykulBoczna"><div><h2>Autor</h2></div></div>
+  </div>
+</div>
+
+<script>
+for (const id of ['bocznaNaglowek', 'waskaNaglowek']) document.getElementById(id).append(document.getElementById('naglowek').content.cloneNode(true));
+for (let i = 0; i < 4; i++) document.getElementById('wpisy').insertAdjacentHTML('beforeend', '<article data-testid="post-preview" class="wpis"></article>');
+</script>
+<script src="../wspolne/ustawienia.js"></script>
+<script src="../strony/medium/medium-tytul.js"></script>
+<script>
+const AUTO = location.search.includes('auto');
+const $ = (id) => document.getElementById(id);
+const log = $('log');
+window.addEventListener('error', (e) => { log.textContent += `\nBŁĄD TESTU: ${e.message} (${e.filename}:${e.lineno})\n`; });
+let n = 0, ok = 0;
+const sprawdz = (nazwa, warunek, szczegol = '') => {
+  n++; if (warunek) ok++;
+  log.textContent += `${warunek ? 'PASS' : 'FAIL'}  ${nazwa}${szczegol ? '  — ' + szczegol : ''}\n`;
+};
+const spij = (ms) => new Promise((r) => setTimeout(r, ms));
+const widoczny = (el) => el.getClientRects().length > 0;
+const prost = (el) => el.getBoundingClientRect();
+// lewa krawędź i szerokość treści (bez paddingu)
+const tresc = (el) => { const r = prost(el), cs = getComputedStyle(el); const l = r.left + parseFloat(cs.paddingLeft); return { l, szer: r.right - parseFloat(cs.paddingRight) - l }; };
+
+async function testuj() {
+  log.textContent = '';
+  n = 0; ok = 0;
+  const T = __lsTytul;
+  T.wylacz();
+  await spij(20);
+
+  // --- ustawienia --------------------------------------------------------------
+  sprawdz('ustawienia: domyślnie włączony', T.czyWlaczonyWUstawieniach(null) && T.czyWlaczonyWUstawieniach({}) && T.czyWlaczonyWUstawieniach({ medium: {} }) && DOMYSLNE_USTAWIENIA.medium.tytul === true);
+  sprawdz('ustawienia: klucz medium.tytul', !T.czyWlaczonyWUstawieniach({ medium: { tytul: false } }) && T.czyWlaczonyWUstawieniach({ medium: { ciemnyMotyw: false } }));
+
+  // --- przed włączeniem ----------------------------------------------------------
+  const szeroko = innerWidth >= 904;
+  if (szeroko) sprawdz('przed włączeniem: tytuł w bocznej kolumnie obok listy', widoczny($('boczna')) && !widoczny($('waska')) && prost($('lista')).left > prost($('boczna')).right - 1);
+  const artykulPrzed = prost($('artykul')), artykulBocznaPrzed = widoczny($('artykulBoczna'));
+
+  // --- włączenie -----------------------------------------------------------------
+  T.wlacz();
+  await spij(20);
+  sprawdz('boczna kolumna schowana, wąski nagłówek widoczny', !widoczny($('boczna')) && widoczny($('waska')));
+  sprawdz('tytuł nad listą', prost($('waska')).bottom <= prost($('lista')).top + 1);
+  const t = tresc($('waska')), l = tresc($('lista'));
+  sprawdz('tytuł i lista w jednej kolumnie', Math.abs(t.l - l.l) < 1 && Math.abs(t.szer - l.szer) < 1, `${t.l}/${t.szer} vs ${l.l}/${l.szer}`);
+  const k = prost($('rzad')), oczekiwana = Math.min(680, k.width);
+  sprawdz(`lista ${oczekiwana} px, na środku`, Math.abs(l.szer - oczekiwana) < 1 && Math.abs(l.l + l.szer / 2 - (k.left + k.width / 2)) < 1, `${l.szer}px`);
+  const fs = parseFloat(getComputedStyle($('waska').querySelector('h2')).fontSize);
+  sprawdz('tytuł mniejszy (24–32 px)', fs >= 24 && fs <= 32, `${fs}px`);
+  sprawdz('artykuł bez zmian', prost($('artykul')).left === artykulPrzed.left && prost($('artykul')).width === artykulPrzed.width && widoczny($('artykulBoczna')) === artykulBocznaPrzed);
+  sprawdz('bez poziomego przewijania', document.documentElement.scrollWidth <= innerWidth);
+
+  // --- wyłączenie i ponowne włączenie -----------------------------------------------------
+  T.wylacz();
+  await spij(20);
+  sprawdz('po wyłączeniu: układ jak był', !document.documentElement.hasAttribute('data-ls-tytul') && (szeroko ? widoczny($('boczna')) && !widoczny($('waska')) : widoczny($('waska'))));
+  T.wlacz();
+  await spij(20);
+  sprawdz('ponowne włączenie: znów nad listą', !widoczny($('boczna')) && widoczny($('waska')));
+
+  // --- manifest, ustawienia -------------------------------------------------------------------
+  const manifest = await fetch('../manifest.json').then((r) => r.json());
+  const wpis = manifest.content_scripts.find((c) => c.js.includes('strony/medium/medium-tytul.js'));
+  sprawdz('manifest: content script z CSS na document_start', !!wpis && wpis.css.includes('strony/medium/medium-tytul.css') && wpis.run_at === 'document_start' && wpis.matches.includes('https://medium.com/*'));
+  const opcje = await fetch('../wspolne/options.html').then((r) => r.text());
+  sprawdz('ustawienia: przełącznik medium.tytul', opcje.includes('data-klucz="medium" data-pole="tytul"'));
+
+  log.textContent += `\nWYNIK: ${ok}/${n}${ok === n ? ' — wszystko OK' : ' — SĄ BŁĘDY'}\n`;
+}
+if (AUTO) testuj();
+</script>

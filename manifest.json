@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Page Tweaks",
-  "version": "1.5.0",
-  "description": "Poprawki cudzych stron: ciemny motyw dla medium.com i qnews.pl, czytnik bez reklam i daty wpisów dla limanowa.in, rmf24.pl bez reklam i bocznych paneli, z wpisami z X za przyciskiem, godziną na kafelkach i przygaszonymi przeczytanymi, nowy wygląd i ciemny motyw Wirtualnego Dziekanatu PK.",
+  "version": "1.6.0",
+  "description": "Poprawki cudzych stron: ciemny motyw dla medium.com i qnews.pl, tytuł tagu nad listą na medium.com, czytnik bez reklam i daty wpisów dla limanowa.in, rmf24.pl bez reklam i bocznych paneli, z wpisami z X za przyciskiem, godziną na kafelkach i przygaszonymi przeczytanymi, nowy wygląd i ciemny motyw Wirtualnego Dziekanatu PK.",
   "permissions": ["storage", "declarativeNetRequest"],
   "background": { "service_worker": "wspolne/background.js" },
   "action": {
@@ -18,8 +18,8 @@
         "https://codeburst.io/*", "https://blog.bitsrc.io/*", "https://faun.pub/*", "https://towardsdev.com/*"
       ],
       "exclude_matches": ["https://help.medium.com/*"],
-      "js": ["wspolne/ciemny-motyw.js", "strony/medium/medium-dark.js"],
-      "css": ["strony/medium/medium-dark.css"],
+      "js": ["wspolne/ciemny-motyw.js", "strony/medium/medium-dark.js", "strony/medium/medium-tytul.js"],
+      "css": ["strony/medium/medium-dark.css", "strony/medium/medium-tytul.css"],
       "run_at": "document_start",
       "all_frames": true
     },

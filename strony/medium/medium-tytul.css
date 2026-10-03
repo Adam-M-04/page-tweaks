@@ -1,0 +1,37 @@
+/* Tytuł strony tagu nad listą — pod html[data-ls-tytul] (medium-tytul.js,
+   tam opis układu). Rząd: rodzic przyklejonej kolumny z okruszkiem. */
+
+html[data-ls-tytul] div:has(> div[style*="top:"] svg[aria-labelledby="arrow-right-title"]) {
+  flex-direction: column !important;
+  align-items: center !important;
+}
+
+/* Boczna kolumna (z nią stopka Help/Status/About…) znika… */
+html[data-ls-tytul] div:has(> div[style*="top:"] svg[aria-labelledby="arrow-right-title"]) > div[style*="top:"] {
+  display: none !important;
+}
+
+/* …a jej wąska wersja staje nad listą. */
+html[data-ls-tytul] div:has(> div[style*="top:"] svg[aria-labelledby="arrow-right-title"]) > div:nth-child(2) {
+  display: block !important;
+}
+
+/* Tytuł i lista w jednej kolumnie, 680 px jak artykuły. */
+html[data-ls-tytul] div:has(> div[style*="top:"] svg[aria-labelledby="arrow-right-title"]) > div:nth-child(2),
+html[data-ls-tytul] div:has(> div[style*="top:"] svg[aria-labelledby="arrow-right-title"]) > div:last-child {
+  width: 100% !important;
+  max-width: 680px !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+html[data-ls-tytul] div:has(> div[style*="top:"] svg[aria-labelledby="arrow-right-title"]) > div:nth-child(2) > div {
+  max-width: none !important;
+  padding-right: 0 !important;
+}
+html[data-ls-tytul] div:has(> div[style*="top:"] svg[aria-labelledby="arrow-right-title"]) > div:nth-child(2) h2 {
+  font-size: clamp(24px, 4vw, 32px) !important;
+  line-height: 1.25 !important;
+}
+html[data-ls-tytul] div:has(> div[style*="top:"] svg[aria-labelledby="arrow-right-title"]) > div:last-child {
+  padding-top: 24px !important;
+}

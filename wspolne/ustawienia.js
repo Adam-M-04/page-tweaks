@@ -12,6 +12,7 @@
 const DOMYSLNE_USTAWIENIA = {
   medium: {
     ciemnyMotyw: true,  // ciemny motyw na medium.com (ciemny-motyw.js + medium-dark.js)
+    tytul: true,        // tytuł strony tagu nad listą zamiast bocznej kolumny (medium-tytul.*)
   },
   qnews: {
     ciemnyMotyw: true,  // ciemny motyw na qnews.pl (ciemny-motyw.js + qnews-dark.js)
