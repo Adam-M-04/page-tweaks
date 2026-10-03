@@ -27,6 +27,7 @@ const DOMYSLNE_USTAWIENIA = {
     panele: true,       // bez bocznych paneli „Najnowsze” i „Najpopularniejsze”, na głównej też bez nagłówka „Najważniejsze Fakty” (rmf24-panele.*)
     daty: true,         // godzina dodania wpisu na kafelkach strony głównej (rmf24-daty.*)
     przeczytane: true,  // otwarte już wpisy przygaszone na kafelkach i listach (rmf24-przeczytane.*)
+    ciemnyMotyw: true,  // ciemny motyw na rmf24.pl, żółty pasek z menu zostaje (rmf24-dark.*)
   },
   ehms: {
     wyglad: true,       // nowy wygląd Wirtualnego Dziekanatu PK: pasek z menu, boczne menu, karty, tabele, formularze (ehms-wyglad.*)

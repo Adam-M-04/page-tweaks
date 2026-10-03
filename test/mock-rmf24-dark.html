@@ -1,0 +1,244 @@
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ATRAPA rmf24.pl — ciemny motyw</title>
+<!-- rmf24.pl w pigułce (stan: październik 2026): wycinki app.css, components.css,
+     home.css, article.css, category.css i odtwarzacza ourPlayer z rmfon.pl,
+     plus te kawałki Bootstrapa 5.3, z których korzysta motyw. Klasy jak na
+     żywej stronie.
+     Arkusz motywu stoi PRZED stylami strony — tak jak CSS z content scriptu
+     w Chrome — więc testy sprawdzają, że jego reguły wygrywają samą
+     specyficznością, nie kolejnością. -->
+<link rel="stylesheet" href="../strony/rmf24/rmf24-dark.css">
+<link rel="stylesheet" href="../strony/rmf24/rmf24-daty.css">
+<link rel="stylesheet" href="../strony/rmf24/rmf24-przeczytane.css">
+<style>
+/* Bootstrap 5.3 (wycinek) */
+:root { --bs-body-bg: #fff; --bs-body-color: #212529; --bs-dark-rgb: 33, 37, 41; --bs-white-rgb: 255, 255, 255; }
+[data-bs-theme=dark] { color-scheme: dark; --bs-body-bg: #212529; --bs-body-color: #dee2e6; }
+*, ::before, ::after { box-sizing: border-box; }
+body { margin: 0; font: 16px/1.5 Roboto, Arial, sans-serif; color: var(--bs-body-color); background-color: var(--bs-body-bg); }
+.text-dark { color: rgba(var(--bs-dark-rgb), 1) !important; }
+.text-white { color: rgba(var(--bs-white-rgb), 1) !important; }
+.bg-dark { background-color: rgba(var(--bs-dark-rgb), 1) !important; }
+.dropdown-menu { --bs-dropdown-bg: var(--bs-body-bg); background-color: var(--bs-dropdown-bg); }
+.container { max-width: 960px; margin: 0 auto; padding: 0 12px; }
+
+/* app.css */
+:root { --rmf-yellow: #fddb00; --rmf-blue: #1b3380; --rmf-blue-hover: #002b54; --text-dark: #212529; --bs-dark-rgb: 47, 47, 47 !important; }
+body { color: var(--text-dark); background-color: #ffffff; }
+a { transition: color .2s ease-in-out; color: #1b3380 !important; }
+.brand-yellow-bg { background-color: #fc0 !important; }
+.bg-primary-blue { background-color: var(--rmf-blue) !important; }
+.text-primary-blue { color: var(--rmf-blue) !important; }
+.cat-heading, .podcast-heading, .category-heading, main h2.text-primary-blue { color: #1b3380; }
+
+/* components.css */
+.nav-main-link { color: #1b3380 !important; }
+.navbar-mobile-radio { color: #1b3380; }
+.navbar .dropdown-item { color: #1b3380; }
+@media (min-width: 1200px) { .dropdown-item:hover { background-color: #ffcc00 !important; color: #003366 !important; } }
+@media (max-width: 1199.98px) { .navbar-collapse { background: #fc0; } .navbar .dropdown-menu { background: transparent; } }
+.grayFooter { background-color: #2f2f2f; }
+.img-wrapper { background-color: #f8f9fa; }
+.news-card:hover h2, .news-card:hover h3, .news-card:hover h4 { color: var(--rmf-blue) !important; }
+
+/* home.css */
+.area { background-color: #ffffff !important; }
+.regiony-home-section { background-color: #f6f6f6; }
+
+/* article.css */
+.article-page { background: #fff; }
+.article-page__content { color: #1f1f1f; }
+.article-page__content h2 { color: #000; }
+.article-page__meta-item { color: #666; }
+.article-page__share-v2 .article-page__share-v2-toggle { background-image: url('/assets/icons/share/share.svg'); width: 165px; height: 34px; border: 0; background-color: transparent; }
+
+/* category.css */
+.cat-card__title-link { color: #333 !important; }
+.pagination ul li a { background-color: #ffffff; color: #333; }
+.pagination .next a { color: #348bea; background-color: #f0f0f0; }
+
+/* ourPlayer_v2.css z rmfon.pl */
+.our-player-play { background: url(../img/play.png) left bottom no-repeat; }
+.our-player-play.our-player-playing { background: url(../img/pause.png) left bottom no-repeat; color: #333; }
+.our-player-play.our-player-starting { background: url(../img/loading.gif) left bottom no-repeat; }
+.our-player-current { color: #222; text-shadow: 0px 0px 6px #fff; }
+#our-player-all { color: #333; }
+
+#panelTestu { background: #0f172a; color: #e2e8f0; padding: 10px 14px; }
+</style>
+
+<div id="panelTestu">
+  <h3 style="margin:0 0 6px">Atrapa rmf24.pl — testy ciemnego motywu (zero kontaktu z rmf24.pl)</h3>
+  <button onclick="testuj()" style="cursor:pointer;padding:6px 12px">uruchom testy</button>
+  <button onclick="__lsDark.wlacz()" style="cursor:pointer;padding:6px 12px">włącz</button>
+  <button onclick="__lsDark.wylacz()" style="cursor:pointer;padding:6px 12px">wyłącz</button>
+  <pre id="log" style="white-space:pre-wrap;color:#7dd3fc;margin:8px 0 0"></pre>
+</div>
+
+<div class="topbar bg-dark text-white py-1" id="gornyPasek"><a class="text-white" id="linkGornyPasek" href="#">RMF24</a></div>
+<nav class="navbar navbar-expand-xl brand-yellow-bg" id="pasek">
+  <a class="navbar-mobile-radio" id="sluchaj" href="#">SŁUCHAJ</a>
+  <div class="navbar-collapse">
+    <ul><li class="nav-item dropdown"><a class="nav-link nav-main-link" id="fakty" href="#">Fakty</a>
+      <ul class="dropdown-menu" id="menuDzialow"><li><a class="dropdown-item" id="polska" href="#">Polska</a></li></ul></li></ul>
+  </div>
+</nav>
+
+<main class="area container" id="glowna">
+  <article class="news-card" id="kafelek" data-ls-przeczytany>
+    <div class="img-wrapper" id="ramkaZdjecia"></div>
+    <time class="ls-data" id="godzina">14:56</time>
+    <a class="text-dark" href="/fakty/polska/news-x,nIdn,1"><h3 class="h6 text-dark" id="tytulPrzeczytany">Przeczytany wpis</h3></a>
+  </article>
+  <article class="news-card"><a class="text-dark" href="#"><h3 class="h6 text-dark" id="tytulKafelka">Kafelek</h3></a></article>
+  <article class="news-card main-hero" data-ls-przeczytany><div class="hero-title-overlay text-white" id="pasekCzolowki" style="background: #d6002d;"><time class="ls-data" id="godzinaCzolowka">12:00</time><a class="text-white" id="tytulCzolowki" href="#">Czołówka</a></div></article>
+  <h2 class="category-heading text-primary-blue" id="naglowekDzialu">Polska</h2>
+  <div class="bg-primary-blue text-white" id="niebieskiBlok">Sprawdzam!</div>
+  <a href="/radio"><img class="radio-rmf24-logo" id="logoRadia" alt=""></a>
+  <a href="#"><img class="wiecej-btn-img" id="wiecej" alt=""></a>
+</main>
+
+<section class="regiony-home-section" id="regiony">Regiony</section>
+<section class="bg-dark text-white" id="rozmowy"><article class="news-card dark-card"><a class="text-white" id="linkRozmowy" href="#">Rozmowa</a></article></section>
+
+<div class="article-page" id="artykul">
+  <span class="article-page__meta-item" id="meta">Publikacja: Dzisiaj</span>
+  <div class="article-page__share-v2"><button class="article-page__share-v2-toggle btn bg-transparent" id="udostepnij" type="button"></button></div>
+  <div id="special-audio-player">
+    <div style="background:#f9f9f9;padding:10px;margin:0;" id="ramkaOdtwarzacza">
+      <div class="our-player-podcast our-player-podcast-light">
+        <div id="our-player-all" class="our-player-sounds our-player-all-light">
+          <div class="our-player-sound our-player-sound-light our-player-play" id="graj">
+            <div class="our-player-current" id="czas">0:00</div>
+            <b id="podcast-title">Posłuchaj artykułu</b>
+            <small class="our-player-disclaimer" id="glosAI" style="color:#666;font-size:10px;">Czytane głosem AI</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="article-page__content" id="tresc">
+    <h2 id="srodtytul">Śródtytuł</h2>
+    <p id="akapit">Akapit z <a id="linkWTresci" href="#">linkiem</a>.</p>
+  </div>
+</div>
+
+<div class="cat-card"><a class="cat-card__title-link" id="tytulDzialu" href="#">Tytuł w dziale</a></div>
+<div class="pagination"><ul><li class="paginator-el"><a id="strona2" href="#"><span>2</span></a></li><li class="next"><a id="dalej" href="#">›</a></li></ul></div>
+<footer class="grayFooter" id="stopka">stopka</footer>
+
+<script src="../wspolne/ustawienia.js"></script>
+<script src="../strony/rmf24/rmf24-dark.js"></script>
+<script>
+const AUTO = location.search.includes('auto');
+const $ = (id) => document.getElementById(id);
+const log = $('log');
+const html = document.documentElement;
+window.addEventListener('error', (e) => { log.textContent += `\nBŁĄD TESTU: ${e.message} (${e.filename}:${e.lineno})\n`; });
+let n = 0, ok = 0;
+const sprawdz = (nazwa, warunek, szczegol = '') => {
+  n++; if (warunek) ok++;
+  log.textContent += `${warunek ? 'PASS' : 'FAIL'}  ${nazwa}${szczegol ? '  — ' + szczegol : ''}\n`;
+};
+const spij = (ms) => new Promise((r) => setTimeout(r, ms));
+const styl = (id, p = 'color') => getComputedStyle($(id))[p];
+const tlo = (id) => styl(id, 'backgroundColor');
+// Linki mają transition: color .2s ze strony — przed odczytem kończymy je od
+// razu (w karcie w tle przejścia stoją w miejscu, czekanie nic by nie dało).
+const poPrzejsciu = async () => { await spij(0); document.getAnimations().forEach((a) => a.finish()); };
+
+async function testuj() {
+  log.textContent = '';
+  n = 0; ok = 0;
+  const D = __lsDark;
+  D.wylacz();
+  await poPrzejsciu();
+
+  // --- ustawienia ----------------------------------------------------------------
+  sprawdz('ustawienia: domyślnie włączony', D.czyWlaczonyWUstawieniach(null) && D.czyWlaczonyWUstawieniach({}) && D.czyWlaczonyWUstawieniach({ rmf24: {} }) && DOMYSLNE_USTAWIENIA.rmf24.ciemnyMotyw === true);
+  sprawdz('ustawienia: klucz rmf24.ciemnyMotyw', !D.czyWlaczonyWUstawieniach({ rmf24: { ciemnyMotyw: false } }) && D.czyWlaczonyWUstawieniach({ rmf24: { bezReklam: false }, qnews: { ciemnyMotyw: false } }));
+
+  // --- przed włączeniem ----------------------------------------------------------
+  sprawdz('przed włączeniem: biało, granatowe linki', tlo('glowna') === 'rgb(255, 255, 255)' && styl('akapit') === 'rgb(31, 31, 31)' && styl('linkWTresci') === 'rgb(27, 51, 128)', `${tlo('glowna')} ${styl('linkWTresci')}`);
+
+  // --- włączenie -----------------------------------------------------------------
+  D.wlacz();
+  await poPrzejsciu();
+  sprawdz('atrybuty: data-ls-dark i data-bs-theme="dark", color-scheme', html.hasAttribute('data-ls-dark') && html.getAttribute('data-bs-theme') === 'dark' && getComputedStyle(html).colorScheme === 'dark');
+  sprawdz('tło strony, .area i artykułu ciemne', [document.body, $('glowna'), $('artykul')].every((e) => getComputedStyle(e).backgroundColor === 'rgb(20, 20, 20)'), tlo('glowna'));
+  sprawdz('tekst artykułu jasny, śródtytuł jaśniejszy', styl('akapit') === 'rgb(220, 220, 220)' && styl('srodtytul') === 'rgb(242, 242, 242)', `${styl('akapit')} ${styl('srodtytul')}`);
+  sprawdz('link (granat z !important) → jasny błękit', styl('linkWTresci') === 'rgb(157, 183, 245)', styl('linkWTresci'));
+  sprawdz('.text-dark (tytuły kafelków) jasne', styl('tytulKafelka') === 'rgb(242, 242, 242)', styl('tytulKafelka'));
+  sprawdz('.text-white zostaje białe (górny pasek, „Najnowsze Rozmowy")', styl('linkGornyPasek') === 'rgb(255, 255, 255)' && styl('linkRozmowy') === 'rgb(255, 255, 255)', `${styl('linkGornyPasek')} ${styl('linkRozmowy')}`);
+  sprawdz('ciemne sekcje strony bez zmian (#2f2f2f)', tlo('gornyPasek') === 'rgb(47, 47, 47)' && tlo('rozmowy') === 'rgb(47, 47, 47)' && tlo('stopka') === 'rgb(47, 47, 47)', `${tlo('rozmowy')} ${tlo('stopka')}`);
+  sprawdz('szare bloki ciemnoszare', tlo('regiony') === 'rgb(31, 31, 31)' && tlo('ramkaZdjecia') === 'rgb(31, 31, 31)', tlo('regiony'));
+  sprawdz('meta artykułu szara', styl('meta') === 'rgb(163, 163, 163)', styl('meta'));
+
+  // pasek
+  sprawdz('pasek żółty, granatowe „Fakty" i „SŁUCHAJ"', tlo('pasek') === 'rgb(255, 204, 0)' && styl('fakty') === 'rgb(27, 51, 128)' && styl('sluchaj') === 'rgb(27, 51, 128)', `${styl('fakty')} ${styl('sluchaj')}`);
+  if (innerWidth >= 1200) {
+    sprawdz('menu działów nad stroną: ciemne, jasne pozycje', tlo('menuDzialow') === 'rgb(31, 31, 31)' && styl('polska') === 'rgb(220, 220, 220)', `${tlo('menuDzialow')} ${styl('polska')}`);
+  } else {
+    sprawdz(`menu na telefonie (${innerWidth} px): podmenu przezroczyste na żółtym, granat`, tlo('menuDzialow') === 'rgba(0, 0, 0, 0)' && styl('polska') === 'rgb(27, 51, 128)', `${tlo('menuDzialow')} ${styl('polska')}`);
+  }
+
+  // granat strony
+  sprawdz('nagłówek działu (.text-primary-blue) jasnoniebieski', styl('naglowekDzialu') === 'rgb(157, 183, 245)', styl('naglowekDzialu'));
+  sprawdz('.bg-primary-blue zostaje granatowe z białym tekstem', tlo('niebieskiBlok') === 'rgb(27, 51, 128)' && styl('niebieskiBlok') === 'rgb(255, 255, 255)', tlo('niebieskiBlok'));
+  sprawdz('logo „Radio RMF24" i „więcej" odwrócone', /invert/.test(styl('logoRadia', 'filter')) && /invert/.test(styl('wiecej', 'filter')));
+
+  // inne poprawki rmf24
+  html.setAttribute('data-ls-przeczytane', '');
+  sprawdz('przeczytany tytuł zostaje szary (rmf24-przeczytane)', styl('tytulPrzeczytany') === 'rgb(138, 144, 151)', styl('tytulPrzeczytany'));
+  sprawdz('przeczytana czołówka: pasek blednie ku ciemnemu tłu, nieprzezroczysty, tytuł biały',
+    styl('pasekCzolowki', 'opacity') === '1' && /^rgba\(20, 20, 20, 0\.25\) .*inset/.test(styl('pasekCzolowki', 'boxShadow')) && styl('tytulCzolowki') === 'rgb(255, 255, 255)',
+    styl('pasekCzolowki', 'boxShadow'));
+  html.removeAttribute('data-ls-przeczytane');
+  html.setAttribute('data-ls-daty', '');
+  sprawdz('godzina na kafelku szara, w czołówce biała', styl('godzina') === 'rgb(163, 163, 163)' && styl('godzinaCzolowka') === 'rgba(255, 255, 255, 0.8)', `${styl('godzina')} ${styl('godzinaCzolowka')}`);
+  html.removeAttribute('data-ls-daty');
+
+  // artykuł: odtwarzacz i udostępnianie
+  sprawdz('odtwarzacz: tło z style="" ciemne', tlo('ramkaOdtwarzacza') === 'rgb(31, 31, 31)', tlo('ramkaOdtwarzacza'));
+  sprawdz('odtwarzacz: czas, tytuł i „Czytane głosem AI" jasne', styl('czas') === 'rgb(220, 220, 220)' && styl('podcast-title') === 'rgb(242, 242, 242)' && styl('glosAI') === 'rgb(163, 163, 163)', `${styl('czas')} ${styl('podcast-title')} ${styl('glosAI')}`);
+  sprawdz('odtwarzacz: jasna ikona play (SVG)', /^url\("data:image\/svg\+xml/.test(styl('graj', 'backgroundImage')), styl('graj', 'backgroundImage').slice(0, 40));
+  $('graj').classList.add('our-player-playing');
+  const pauza = styl('graj', 'backgroundImage');
+  $('graj').classList.replace('our-player-playing', 'our-player-starting');
+  const wczytywanie = styl('graj', 'backgroundImage');
+  $('graj').classList.remove('our-player-starting');
+  sprawdz('odtwarzacz: jasna pauza (SVG), wczytywanie zostaje stronie', /data:image\/svg\+xml.*rect/.test(pauza) && /loading\.gif/.test(wczytywanie), wczytywanie.slice(-30));
+  sprawdz('„Udostępnij" (SVG w tle) odwrócone', /invert/.test(styl('udostepnij', 'filter')));
+
+  // dział
+  sprawdz('tytuł w dziale (#333 !important) jasny', styl('tytulDzialu') === 'rgb(242, 242, 242)', styl('tytulDzialu'));
+  sprawdz('stronicowanie: numer na tle strony, strzałka w szarym kółku', tlo('strona2') === 'rgb(20, 20, 20)' && tlo('dalej') === 'rgb(31, 31, 31)', `${tlo('strona2')} ${tlo('dalej')}`);
+
+  // --- druk ----------------------------------------------------------------------
+  window.dispatchEvent(new Event('beforeprint'));
+  const wDruku = html.hasAttribute('data-ls-dark');
+  window.dispatchEvent(new Event('afterprint'));
+  sprawdz('druk: motyw schodzi na czas drukowania i wraca', !wDruku && html.hasAttribute('data-ls-dark'));
+
+  // --- wyłączenie ----------------------------------------------------------------
+  D.wylacz();
+  await poPrzejsciu();
+  sprawdz('po wyłączeniu: bez atrybutów, biało, granat', !html.hasAttribute('data-ls-dark') && !html.hasAttribute('data-bs-theme') && tlo('glowna') === 'rgb(255, 255, 255)' && styl('linkWTresci') === 'rgb(27, 51, 128)');
+  html.setAttribute('data-bs-theme', 'light');
+  D.wlacz();
+  const wlaczony = html.getAttribute('data-bs-theme');
+  D.wylacz();
+  sprawdz('data-bs-theme strony wraca po wyłączeniu', wlaczony === 'dark' && html.getAttribute('data-bs-theme') === 'light', html.getAttribute('data-bs-theme'));
+  html.removeAttribute('data-bs-theme');
+  D.wlacz();
+
+  // --- manifest, ustawienia ------------------------------------------------------
+  const manifest = await fetch('../manifest.json').then((r) => r.json());
+  const wpis = manifest.content_scripts.find((c) => c.js.includes('strony/rmf24/rmf24-dark.js'));
+  sprawdz('manifest: content script z CSS na document_start', !!wpis && wpis.css.includes('strony/rmf24/rmf24-dark.css') && wpis.run_at === 'document_start' && ['https://rmf24.pl/*', 'https://www.rmf24.pl/*'].every((m) => wpis.matches.includes(m)));
+  const opcje = await fetch('../wspolne/options.html').then((r) => r.text());
+  sprawdz('ustawienia: przełącznik rmf24.ciemnyMotyw', opcje.includes('data-klucz="rmf24" data-pole="ciemnyMotyw"'));
+
+  log.textContent += `\nWYNIK: ${ok}/${n}${ok === n ? ' — wszystko OK' : ' — SĄ BŁĘDY'}\n`;
+}
+if (AUTO) testuj();
+</script>

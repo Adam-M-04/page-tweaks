@@ -1,0 +1,297 @@
+/* Ciemny motyw rmf24.pl — wszystko pod html[data-ls-dark] (atrybut i
+   data-bs-theme="dark" stawia rmf24-dark.js, tam opis podejścia).
+
+   Specyficzność: reguła strony z tym samym selektorem plus
+   `html[data-ls-dark]` wygrywa niezależnie od kolejności arkuszy. Utility
+   Bootstrapa (jedna klasa z !important) i ogólne `a` ze strony przykrywa
+   `:where(html[data-ls-dark]) body …` — o jeden element mocniej niż one,
+   ale słabiej niż własne reguły strony (hover kafelków) i „przeczytane". */
+
+html[data-ls-dark] {
+  /* paleta */
+  --ls-tlo: #141414;          /* tło strony (#fff) */
+  --ls-tlo-2: #1f1f1f;        /* szare bloki (#f0f0f0, #f5f5f5, #f6f6f6, #f8f9fa) */
+  --ls-tlo-3: #2a2a2a;        /* ciemniejsze szarości (#e9ecef, #e0e0e0), hover */
+  --ls-ramka: #333333;        /* linie (#dee2e6, #e9e9e9, #efefef) */
+  --ls-tekst: #dcdcdc;        /* tekst (#212529, #1f1f1f, #222) */
+  --ls-naglowek: #f2f2f2;     /* tytuły (#000, #1a1a2e, #333 w tytułach) */
+  --ls-tekst-2: #a3a3a3;      /* daty, podpisy, meta (#666, #777, #585858) */
+  --ls-link: #9db7f5;         /* granat RMF #1b3380, #003f8a, #0b4f99 */
+  --ls-link-hover: #c9d7fb;
+  --ls-czerwony: #ff6a4a;     /* czerwień tagów #e73910 */
+
+  /* zmienne strony (app.css): granat jako tekst jaśnieje, tło —
+     .bg-primary-blue — zostaje granatowe niżej */
+  --rmf-blue: var(--ls-link);
+  --rmf-blue-hover: var(--ls-link-hover);
+  --text-dark: var(--ls-tekst);
+
+  /* tokeny Bootstrapa 5.3 — data-bs-theme="dark" ma swoje (#212529),
+     tu ta sama neutralna szarość co ciemne sekcje strony */
+  --bs-body-bg: #141414;
+  --bs-body-bg-rgb: 20, 20, 20;
+  --bs-body-color: #dcdcdc;
+  --bs-body-color-rgb: 220, 220, 220;
+  --bs-emphasis-color: #ffffff;
+  --bs-secondary-color: rgba(220, 220, 220, .7);
+  --bs-secondary-bg: #2a2a2a;
+  --bs-tertiary-bg: #1f1f1f;
+  --bs-border-color: #333333;
+  --bs-border-color-translucent: rgba(255, 255, 255, .12);
+
+  color-scheme: dark;
+  background-color: var(--ls-tlo);   /* zanim wczyta się body */
+}
+
+/* ---------- podstawa (app.css) ---------- */
+
+html[data-ls-dark] body,
+html[data-ls-dark] .area,
+html[data-ls-dark] .article-page,
+html[data-ls-dark] .regiony-page-hero-full,
+html[data-ls-dark] .regiony-main-fact-mobile-copy {
+  background-color: var(--ls-tlo) !important;
+}
+
+/* Strona maluje każdy link granatem z !important. */
+:where(html[data-ls-dark]) body a {
+  color: var(--ls-link) !important;
+}
+:where(html[data-ls-dark]) body .text-dark {
+  color: var(--ls-naglowek) !important;
+}
+:where(html[data-ls-dark]) body .bg-light {
+  background-color: var(--ls-tlo-2) !important;
+}
+:where(html[data-ls-dark]) body .bg-primary-blue {
+  background-color: #1b3380 !important;
+}
+:where(html[data-ls-dark]) body .play-btn-hover:hover {
+  background-color: #002b54 !important;
+}
+
+html[data-ls-dark] :is(.cat-heading, .podcast-heading, .category-heading, .top-stories-heading, .regiony-facts-heading, .regiony-micro-title) {
+  color: var(--ls-link);
+}
+
+@media (min-width: 768px) {
+  html[data-ls-dark] .border-start-md { border-left-color: var(--ls-ramka) !important; }
+  html[data-ls-dark] .border-end-md { border-right-color: var(--ls-ramka) !important; }
+}
+
+/* „więcej ›" to PNG z białym tłem, logo „Radio RMF24" — granatowy napis
+   na przezroczystym. Odwrócone; obrót odcienia przywraca błękit i żółć. */
+html[data-ls-dark] img.wiecej-btn-img {
+  filter: invert(.92) hue-rotate(180deg);
+}
+html[data-ls-dark] img.radio-rmf24-logo {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* ---------- pasek i menu (components.css) ----------
+   Żółty pasek zostaje, jaki był — logo to PNG z żółtym tłem. Granat na nim
+   też, łącznie z menu na telefonie (poniżej 1200 px rozwija się w pasku,
+   podmenu przezroczyste na żółtym). */
+
+html[data-ls-dark] .navbar a {
+  color: #1b3380 !important;
+}
+
+/* Menu nad stroną — działy od 1200 px, „Wybierz region": ciemne,
+   najechana pozycja jak na stronie, żółta z granatem. */
+html[data-ls-dark] .dropdown-menu {
+  --bs-dropdown-bg: var(--ls-tlo-2);
+  --bs-dropdown-border-color: var(--ls-ramka);
+}
+html[data-ls-dark] .dropdown-item {
+  color: var(--ls-tekst) !important;
+}
+html[data-ls-dark] .dropdown-item:is(:hover, :focus) {
+  background-color: #ffcc00;
+  color: #1b3380 !important;
+}
+@media (min-width: 1200px) {
+  html[data-ls-dark] .navbar .dropdown-item:not(:hover, :focus) {
+    color: var(--ls-tekst) !important;
+  }
+}
+
+/* ---------- okruszki, kafelki ---------- */
+
+html[data-ls-dark] .cat-breadcrumb__item,
+html[data-ls-dark] .cat-breadcrumb__item--active { color: var(--ls-tekst-2); }
+html[data-ls-dark] .cat-breadcrumb__item + .cat-breadcrumb__item::before { color: #5c5c5c; }
+html[data-ls-dark] .cat-breadcrumb__link:hover { color: var(--ls-naglowek) !important; }
+
+html[data-ls-dark] :is(.img-wrapper, .cat-card__img-placeholder, .article-embed-image) {
+  background-color: var(--ls-tlo-2);
+}
+html[data-ls-dark] :is(.news-card.sponsored, .cat-card.sponsored, .article-related__card.sponsored, .article-sponsored, .cat-card__img-wrap--sponsored, .img-wrapper--sponsored, .sponsored .cont) {
+  background: var(--ls-tlo);
+  border-color: var(--ls-ramka);
+  color: var(--ls-tekst);
+}
+
+/* ---------- strona główna (home.css) ---------- */
+
+html[data-ls-dark] .top-stories-mobile-meta__category { color: var(--ls-tekst-2); }
+html[data-ls-dark] .podcast-item::before { background: var(--ls-tlo-3); }
+html[data-ls-dark] .category-links,
+html[data-ls-dark] .category-links li { border-color: var(--ls-ramka); }
+html[data-ls-dark] .regiony-home-section { background-color: var(--ls-tlo-2); }
+html[data-ls-dark] .region-select-btn { color: var(--ls-link) !important; }
+html[data-ls-dark] #regionySection .select-selected { color: var(--ls-link); border-bottom-color: rgba(255, 255, 255, .12); }
+html[data-ls-dark] #regionySection .select-selected::after { border-top-color: var(--ls-link); }
+html[data-ls-dark] #regionySection .select-items .dropdown-item { border-bottom-color: rgba(255, 255, 255, .08); }
+html[data-ls-dark] .zdrowie-section-fullwidth { background-image: linear-gradient(to bottom, transparent 0, var(--ls-tlo-2) 100%); }
+
+/* ---------- artykuł (article.css) ---------- */
+
+html[data-ls-dark] .article-page__content { color: var(--ls-tekst); }
+html[data-ls-dark] :is(.article-page__lead, .article-page__content h2, .article-page__content h3, .article-page__content h4, .article-page__title) {
+  color: var(--ls-naglowek);
+}
+html[data-ls-dark] .article-page__content blockquote { color: var(--ls-tekst); }
+html[data-ls-dark] .article-page__content a { text-decoration-color: rgba(157, 183, 245, .4); }
+html[data-ls-dark] .article-page__content a:hover { text-decoration-color: rgba(157, 183, 245, .9); }
+html[data-ls-dark] :is(.article-page__date, .article-page__meta-item, .article-page__footer-meta, .elementTagsListTitle,
+  .embed-work-detail, .embed-work-detail-title, .embed-work-detail-file-title, .embed-work-detail-author, .embed-work-detail-source) {
+  color: var(--ls-tekst-2);
+}
+html[data-ls-dark] .article-page__content :is(.embed-work-detail, .embed-work-detail-title, .embed-work-detail-file-title, .embed-work-detail-author, .embed-work-detail-title a, .embed-work-detail-source a) {
+  color: var(--ls-tekst-2) !important;
+}
+html[data-ls-dark] .article-page__share-link { border-color: var(--ls-ramka); }
+html[data-ls-dark] .article-page__share-link:hover { background: #1b3380; border-color: #1b3380; color: #ffffff !important; }
+html[data-ls-dark] .article-page__google-plus-icon { border-color: #5c5c5c; }
+html[data-ls-dark] :is(.article-page__footer-meta, .embed-articlelist, .article-page--timeline .embed-subheader) { border-color: var(--ls-ramka); }
+html[data-ls-dark] .containerSponsored { border-top-color: var(--ls-ramka); }
+
+/* listy pod artykułem i wstawki z innymi artykułami */
+html[data-ls-dark] :is(.article-related__title, .embed-articlelist__title, .article-related__card-title) { color: var(--ls-naglowek); }
+html[data-ls-dark] :is(.article-related__card-link:hover .article-related__card-title) { color: var(--ls-link); }
+html[data-ls-dark] .embed-articlelist__item::before { color: var(--ls-link); }
+html[data-ls-dark] .article-embed { background: var(--ls-tlo-2); border-color: var(--ls-ramka); }
+html[data-ls-dark] .article-embed-lead { color: var(--ls-tekst-2); }
+
+/* zaślepki wpisów z X, Facebooka, Instagrama, TikToka */
+html[data-ls-dark] .article-page__content :is(.x-embed-placeholder, .fb-embed-placeholder, .ig-embed-placeholder, .embed-tiktok-inpl, .embed-tiktok) {
+  background: var(--ls-tlo-2);
+  border-color: var(--ls-ramka);
+  color: var(--ls-tekst);
+}
+html[data-ls-dark] .article-page__content :is(.x-embed-placeholder__text, .fb-embed-placeholder__text, .ig-embed-placeholder__text) { color: var(--ls-naglowek); }
+
+/* relacja na żywo */
+html[data-ls-dark] .article-page--timeline .article-title { color: var(--ls-naglowek); }
+html[data-ls-dark] .article-page--timeline .article-date { color: var(--ls-tekst-2); }
+html[data-ls-dark] .article-page--timeline :is(.embed-subheader-text, h2.embed-subheader-text, h3.embed-subheader-text) { color: #7fc3dc; }
+html[data-ls-dark] .article-page--timeline .articleEmbedArticle :is(.boxHeader, .boxBody) { background: var(--ls-tlo-2); }
+
+/* „Udostępnij": SVG z jasną ramką i ciemnym napisem na przezroczystym tle */
+html[data-ls-dark] .article-page__share-v2-toggle {
+  filter: invert(.88);
+}
+html[data-ls-dark] .article-page__google-promo { border-color: var(--ls-ramka); }
+html[data-ls-dark] .article-page__google-promo .article-page__google-promo-content { color: var(--ls-naglowek); }
+
+/* „Posłuchaj artykułu" — ourPlayer z rmfon.pl: tło i szarości w style="",
+   reszta w arkuszu z innej domeny; ikony play/pauza to ciemne PNG,
+   tu jasne SVG tego samego kształtu */
+html[data-ls-dark] #special-audio-player > div[style*="background"] {
+  background: var(--ls-tlo-2) !important;
+}
+html[data-ls-dark] :is(.our-player-current, .our-player-duration) {
+  color: var(--ls-tekst);
+  text-shadow: 0 0 4px #1f1f1f, 0 0 8px #1f1f1f;   /* jak biała poświata na jasnym: odcina od fali */
+}
+html[data-ls-dark] .our-player-ruler { opacity: .6; }   /* jasnoszara fala nie świeci */
+html[data-ls-dark] :is(#our-player-all, #our-player-end, .our-player-play.our-player-playing) { color: var(--ls-naglowek); }
+html[data-ls-dark] .our-player-podcast [style*="color:#666"] { color: var(--ls-tekst-2) !important; }
+html[data-ls-dark] .our-player-podcast [style*="border-left:1px solid #ccc"] { border-left-color: #4a4a4a !important; }
+html[data-ls-dark] .our-player-play:not(.our-player-playing, .our-player-starting) {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 74 74'%3E%3Ccircle cx='37' cy='37' r='34' fill='none' stroke='%23dcdcdc' stroke-width='4'/%3E%3Cpath d='M29 22.5v29l23-14.5z' fill='%23dcdcdc'/%3E%3C/svg%3E");
+}
+html[data-ls-dark] .our-player-play.our-player-playing {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 74 74'%3E%3Ccircle cx='37' cy='37' r='34' fill='none' stroke='%23dcdcdc' stroke-width='4'/%3E%3Crect x='26' y='24' width='7' height='26' rx='1.5' fill='%23dcdcdc'/%3E%3Crect x='41' y='24' width='7' height='26' rx='1.5' fill='%23dcdcdc'/%3E%3C/svg%3E");
+}
+
+/* odtwarzacz audio w treści (video.js) i rozmowy */
+html[data-ls-dark] .article-page__content :is(.embed-audio-rmf, .embed-audio-detils, .embed-audio-rmf .ima-controls-div, .embed-audio-rmf .ima-ad-container video),
+html[data-ls-dark] .embedRozmowy {
+  background: var(--ls-tlo-2) !important;
+}
+html[data-ls-dark] .article-page__content .embed-audio-detils-title { border-bottom-color: var(--ls-ramka); color: var(--ls-tekst); }
+html[data-ls-dark] .article-page__content .embed-audio-detils-title .pos { color: #7fc3dc; }
+html[data-ls-dark] .article-page__content .embed-audio-rmf :is(.video-js.vjs-audio, .video-js-ad.vjs-audio) { background: var(--ls-tlo-2); }
+html[data-ls-dark] .article-page__content .embed-audio-rmf .vjs-control-bar { background-color: var(--ls-tlo-2) !important; color: #b5c0cc; }
+html[data-ls-dark] .article-page__content .embed-audio-rmf :is(.vjs-button > .vjs-icon-placeholder, .vjs-control, .vjs-time-control, .ima-play-pause-div, .ima-mute-div, .ima-slider-div, .ima-fullscreen-div) { color: #b5c0cc; }
+html[data-ls-dark] .article-page__content .embed-audio-rmf .vjs-button > .vjs-icon-placeholder::before,
+html[data-ls-dark] .article-page__content .embed-audio-rmf .vjs-control::before { color: #b5c0cc; }
+html[data-ls-dark] .article-page__content .embed-audio-rmf :is(.vjs-load-progress, .vjs-load-progress div, .vjs-slider, .ima-slider-div) { background-color: #3a3f45; }
+
+/* autor */
+html[data-ls-dark] :is(.author-profile__name, .author-profile__role, .article-page--timeline .article-author-name) { color: var(--ls-link); }
+html[data-ls-dark] .author-profile__description { color: var(--ls-tekst); }
+
+/* wersja na telefon (article.css: .mobile-page, .article-page--mobile) */
+html[data-ls-dark] :is(.mobile-page, .mobile-header, .mobile-footer, .article-mobile-timeline) { background: var(--ls-tlo); color: var(--ls-tekst); border-color: var(--ls-ramka); }
+html[data-ls-dark] :is(.mobile-header__brand, .mobile-header__radio, .mobile-footer__brand, .mobile-footer__radio, .article-related--mobile .article-related__title, .article-mobile-latest .article-related__title) { color: var(--ls-link); }
+html[data-ls-dark] :is(.article-page--mobile .article-page__title, .article-page--mobile .article-page__lead, .article-page--mobile .article-page__content h2, .article-page--mobile .article-page__content h3, .article-page--mobile .article-page__content h4, .article-page--mobile-timeline .title, .article-page--mobile-timeline .lead) { color: var(--ls-naglowek); }
+html[data-ls-dark] .article-page--mobile .article-page__content { color: var(--ls-tekst); }
+html[data-ls-dark] :is(.article-page--mobile .article-page__meta-item, .article-page--mobile-timeline .date, .article-page--mobile .article-source span, .mobile-footer__legal, .mobile-footer__copy) { color: var(--ls-tekst-2); }
+html[data-ls-dark] :is(.article-related--mobile, .article-page--mobile .article-footer, .mobile-footer__top, .article-page--mobile-timeline .articleContent .subTitle) { border-color: var(--ls-ramka); }
+
+/* ---------- działy, tagi, autorzy (category.css) ---------- */
+
+html[data-ls-dark] :is(.category-description, .author-profile) { background: var(--ls-tlo-2); color: var(--ls-tekst); }
+html[data-ls-dark] .cat-card__date { color: var(--ls-tekst-2); }
+html[data-ls-dark] .cat-card__title-link { color: var(--ls-naglowek) !important; }
+html[data-ls-dark] .cat-ad-placeholder { background-color: var(--ls-tlo-2) !important; border-color: var(--ls-ramka); color: var(--ls-tekst-2); }
+
+/* stronicowanie: numery na tle strony, strzałki w szarym kółku */
+html[data-ls-dark] :is(.pagination ul li a, .pagination a) { background-color: var(--ls-tlo); }
+html[data-ls-dark] .pagination a:hover { background-color: var(--ls-tlo); color: var(--ls-link-hover) !important; }
+html[data-ls-dark] :is(.pagination .next a, .pagination .prev a, .pagination .next a:hover, .pagination .prev a:hover) { background-color: var(--ls-tlo-2); }
+html[data-ls-dark] .pagination li span { color: var(--ls-link); }
+html[data-ls-dark] :is(.pagination .current, .pagination .inactive) { border-color: var(--ls-tlo); }
+
+html[data-ls-dark] .tags-page .letters-menu .base-title { color: var(--ls-link); border-bottom-color: var(--ls-ramka); }
+html[data-ls-dark] .tags-page .letters-menu .letters-menu-list { background-color: var(--ls-tlo-2); }
+html[data-ls-dark] :is(.tags-page .letters-menu .letters-menu-list-el > a, .tags-page .tags .tags-cloud-list .tags-cloud-el, .tags-page .letter-tags li > a, .tag-detail-page .tags-menu > li, .tag-detail-page .tags .list-box .element .description, .tag-detail-page .tags .list-box .element .elementTagsList .elementTagListCurrentTag) { color: var(--ls-tekst) !important; }
+html[data-ls-dark] .tag-detail-page .tags .list-box .element .title > a { color: var(--ls-naglowek) !important; }
+html[data-ls-dark] :is(.tags-page .letters-menu .letters-menu-list-el > a:hover, .tags-page .letters-menu .letters-menu-list-el.selected > a, .tags-page .tags .tags-cloud-list .tags-cloud-el:hover, .tags-page .letter-tags li > a:hover, .tag-show-more__link,
+  .tag-detail-page .tags-menu > li.selected, .tag-detail-page .tags-menu > li.selected > a, .tag-detail-page .tags-menu > li > a:hover, .tag-detail-page .tags .list-box .element .title > a:hover, .tag-detail-page .tags .list-box .element .elementTagsList a:hover, .tag-detail-page .tags .list-box > .see-more a) {
+  color: var(--ls-czerwony) !important;
+  border-color: var(--ls-czerwony);
+}
+html[data-ls-dark] :is(.tags-page .tags .tags-clouds, .tags-page .tags .tags-cloud-popular, .tag-detail-page .tags-menu::before, .tag-detail-page .tags .list-box) { border-color: var(--ls-ramka); }
+html[data-ls-dark] .tags-page .tags .tags-cloud-list .tags-cloud-el::after { background-color: var(--ls-ramka); }
+html[data-ls-dark] .tags-page .tag-list__empty { background: var(--ls-tlo-2); border-color: var(--ls-ramka); }
+html[data-ls-dark] .tag-detail-page .tags .list-box.is-article .elementTagsList::before { background-color: #5c5c5c; }
+
+/* ---------- regiony (regiony.css) ---------- */
+
+html[data-ls-dark] .regiony-main-fact-lead-mobile { color: var(--ls-tekst-2); }
+html[data-ls-dark] .regiony-ad-placeholder { background: var(--ls-tlo-3); color: var(--ls-tekst-2); }
+html[data-ls-dark] .regiony-micro-header { border-top-color: var(--ls-ramka); }
+html[data-ls-dark] .regiony-fact-date { color: var(--ls-tekst-2); }
+html[data-ls-dark] .regiony-show-more-btn { background: var(--ls-tlo-2); color: var(--ls-link) !important; }
+
+/* ---------- inne poprawki rmf24 ---------- */
+
+/* godzina na kafelkach (rmf24-daty.css); w czołówce zostaje biała */
+html[data-ls-dark][data-ls-daty] .ls-data { color: var(--ls-tekst-2); }
+html[data-ls-dark][data-ls-daty] .hero-title-overlay .ls-data { color: rgba(255, 255, 255, .8); }
+
+/* przeczytana czołówka (rmf24-przeczytane.css): pasek blednie w stronę
+   ciemnego tła zamiast białego */
+html[data-ls-dark][data-ls-przeczytane] .main-hero[data-ls-przeczytany] .hero-title-overlay {
+  box-shadow: inset 0 0 0 100vmax rgba(20, 20, 20, .25);
+}
+
+/* przycisk „Zobacz wpis" (rmf24-wpisy.css) */
+html[data-ls-dark][data-ls-wpisy] .ls-wpis { background: var(--ls-tlo-2); border-color: var(--ls-ramka); color: var(--ls-link) !important; }
+html[data-ls-dark][data-ls-wpisy] .ls-wpis:hover { background: var(--ls-tlo-3); border-color: #4a4a4a; }
+html[data-ls-dark][data-ls-wpisy] .ls-wpis:focus-visible { outline-color: var(--ls-link); }
+html[data-ls-dark][data-ls-wpisy] .ls-wpis::before { color: var(--ls-tekst-2); }

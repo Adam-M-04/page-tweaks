@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Page Tweaks",
-  "version": "1.6.0",
-  "description": "Poprawki cudzych stron: ciemny motyw dla medium.com i qnews.pl, tytuł tagu nad listą na medium.com, czytnik bez reklam i daty wpisów dla limanowa.in, rmf24.pl bez reklam i bocznych paneli, z wpisami z X za przyciskiem, godziną na kafelkach i przygaszonymi przeczytanymi, nowy wygląd i ciemny motyw Wirtualnego Dziekanatu PK.",
+  "version": "1.7.0",
+  "description": "Poprawki cudzych stron: ciemny motyw dla medium.com i qnews.pl, tytuł tagu nad listą na medium.com, czytnik bez reklam i daty wpisów dla limanowa.in, rmf24.pl bez reklam i bocznych paneli, z wpisami z X za przyciskiem, godziną na kafelkach, przygaszonymi przeczytanymi i ciemnym motywem, nowy wygląd i ciemny motyw Wirtualnego Dziekanatu PK.",
   "permissions": ["storage", "declarativeNetRequest"],
   "background": { "service_worker": "wspolne/background.js" },
   "action": {
@@ -37,8 +37,8 @@
     },
     {
       "matches": ["https://rmf24.pl/*", "https://www.rmf24.pl/*"],
-      "js": ["strony/rmf24/rmf24-bez-reklam.js", "strony/rmf24/rmf24-wpisy.js", "strony/rmf24/rmf24-panele.js", "strony/rmf24/rmf24-daty.js", "strony/rmf24/rmf24-przeczytane.js"],
-      "css": ["strony/rmf24/rmf24-bez-reklam.css", "strony/rmf24/rmf24-wpisy.css", "strony/rmf24/rmf24-panele.css", "strony/rmf24/rmf24-daty.css", "strony/rmf24/rmf24-przeczytane.css"],
+      "js": ["strony/rmf24/rmf24-bez-reklam.js", "strony/rmf24/rmf24-wpisy.js", "strony/rmf24/rmf24-panele.js", "strony/rmf24/rmf24-daty.js", "strony/rmf24/rmf24-przeczytane.js", "strony/rmf24/rmf24-dark.js"],
+      "css": ["strony/rmf24/rmf24-bez-reklam.css", "strony/rmf24/rmf24-wpisy.css", "strony/rmf24/rmf24-panele.css", "strony/rmf24/rmf24-daty.css", "strony/rmf24/rmf24-przeczytane.css", "strony/rmf24/rmf24-dark.css"],
       "run_at": "document_start"
     },
     {
