@@ -152,7 +152,9 @@ async function testuj() {
   sprawdz('tytuł szary mimo .text-dark / .text-white (!important)', kolor('tytul1002') === SZARY && kolor('tytul1004') === SZARY && kolor('tytul1005') === SZARY && kolor('tytul1008') === SZARY,
     `${kolor('tytul1002')}, ${kolor('tytul1004')}`);
   sprawdz('linki działu i listy pod artykułem szare, nieprzeczytany link nie', kolor('link1006') === SZARY && kolor('tytul1009') === SZARY && kolor('tytul1010') === SZARY && kolor('link1007') !== SZARY);
-  sprawdz('czołówka: pasek blednie, biały tytuł zostaje', getComputedStyle($('pasek1001')).opacity === '0.75' && getComputedStyle($('pasek1001').querySelector('a')).color === 'rgb(255, 255, 255)');
+  const pasek = getComputedStyle($('pasek1001'));
+  sprawdz('czołówka: pasek blednie warstwą, nie przezroczystością; biały tytuł zostaje', pasek.opacity === '1' && /^rgba\(255, 255, 255, 0\.25\) .*inset/.test(pasek.boxShadow) && getComputedStyle($('pasek1001').querySelector('a')).color === 'rgb(255, 255, 255)',
+    `${pasek.opacity} ${pasek.boxShadow}`);
 
   // --- zmiany w trakcie ------------------------------------------------------------------
   const li = document.createElement('li');

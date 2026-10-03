@@ -16,7 +16,11 @@ html[data-ls-przeczytane] .category-links > li[data-ls-przeczytany] > a {
   color: #8a9097 !important;
 }
 
-/* Czołówka: biały tytuł na kolorowym pasku zostaje, pasek tylko blednie. */
+/* Czołówka: biały tytuł na kolorowym pasku zostaje, pasek tylko blednie —
+   warstwą w kolorze strony nad jego tłem (cień wewnętrzny leży pod tekstem).
+   Nie opacity: od 992 px pasek zachodzi na dół zdjęcia (ono ma 88% wysokości)
+   i przez półprzezroczysty pasek prześwitywało zdjęcie u góry, a tło strony
+   u dołu — ze szwem w połowie paska. */
 html[data-ls-przeczytane] .main-hero[data-ls-przeczytany] .hero-title-overlay {
-  opacity: .75;
+  box-shadow: inset 0 0 0 100vmax rgba(255, 255, 255, .25);
 }
