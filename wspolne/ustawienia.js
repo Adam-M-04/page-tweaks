@@ -10,6 +10,9 @@
 // http://localhost:8000/test/mock-<strona>.html?auto=1.
 
 const DOMYSLNE_USTAWIENIA = {
+  ogolne: {
+    kopiujLink: true,   // ⌘⇧C kopiuje adres bieżącej karty, jak w Arc (kopiuj-link/*, komenda w manifeście)
+  },
   medium: {
     ciemnyMotyw: true,  // ciemny motyw na medium.com (ciemny-motyw.js + medium-dark.js)
     tytul: true,        // tytuł strony tagu nad listą zamiast bocznej kolumny (medium-tytul.*)

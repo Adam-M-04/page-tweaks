@@ -25,7 +25,19 @@ for (const p of przelaczniki) {
   });
 }
 
+// Skrót kopiowania linku ustawia użytkownik w Chrome, nie tutaj — pokazujemy
+// aktualny i odsyłamy do chrome://extensions/shortcuts (zwykły link tam nie
+// otworzy, tabs.create tak).
+async function pokazSkrot() {
+  const komenda = (await chrome.commands.getAll()).find((k) => k.name === 'kopiuj-link');
+  document.getElementById('skrot-kopiuj-link').textContent = komenda?.shortcut || 'brak skrótu';
+}
+document.getElementById('zmien-skrot').addEventListener('click', () => chrome.tabs.create({ url: 'chrome://extensions/shortcuts' }));
+// Po powrocie z ustawień skrótów.
+document.addEventListener('visibilitychange', () => document.visibilityState === 'visible' && pokazSkrot());
+
 (async () => {
   ustawienia = await wczytajUstawienia();
   wypelnij();
+  pokazSkrot();
 })();

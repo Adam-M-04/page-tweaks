@@ -1,6 +1,7 @@
-// Service worker: przełącza zestawy reguł sieciowych i otwiera ustawienia
-// po kliknięciu ikony. Cała reszta dzieje się w content scriptach.
-importScripts('ustawienia.js');
+// Service worker: przełącza zestawy reguł sieciowych, otwiera ustawienia
+// po kliknięciu ikony i obsługuje skrót kopiowania linku (kopiuj-link.js).
+// Cała reszta dzieje się w content scriptach.
+importScripts('ustawienia.js', '../kopiuj-link/kopiuj-link.js');
 
 // Zestaw reguł (id z manifestu → declarative_net_request) idzie za tym samym
 // włącznikiem co CSS danej poprawki.

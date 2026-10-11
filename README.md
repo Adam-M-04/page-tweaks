@@ -20,6 +20,8 @@ curl -fsSL https://raw.githubusercontent.com/Adam-M-04/page-tweaks/master/instal
 
 Gotowe. Ustawienia otwiera klik w ikonę rozszerzenia.
 
+**⌘⇧C** (Ctrl+Shift+C na Linuksie) kopiuje link bieżącej karty, jak w Arc. Skrót zmienisz w `chrome://extensions/shortcuts`, a wyłączysz w ustawieniach.
+
 ## Aktualizacja
 
 Uruchom to samo polecenie z kroku 1, potem w `chrome://extensions` kliknij **⟳** przy Page Tweaks.

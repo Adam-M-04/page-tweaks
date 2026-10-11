@@ -1,0 +1,132 @@
+<!doctype html><meta charset="utf-8"><title>ATRAPA — kopiowanie linku skrótem</title>
+<!-- kopiuj-link.js z atrapą API chrome: komenda, ustawienia, offscreen,
+     scripting (dymek wstrzykiwany w tę stronę) i odznaka na ikonie. -->
+<style>
+body { margin: 0; padding: 20px; font: 14px system-ui, sans-serif; background: #fff; color: #111; }
+</style>
+
+<body>
+<h3>Atrapa — kopiowanie linku skrótem ⌘⇧C</h3>
+<button onclick="testuj()" style="cursor:pointer;padding:6px 12px;margin-bottom:10px">uruchom testy</button>
+<button onclick="naciśnij()" style="cursor:pointer;padding:6px 12px;margin-bottom:10px">naciśnij ⌘⇧C</button>
+<pre id="log" style="white-space:pre-wrap;color:#0369a1"></pre>
+
+<script>
+// --- atrapa chrome -----------------------------------------------------------
+const A = {
+  ustawienia: {},
+  wiadomosci: [],
+  utworzone: 0,
+  maDokument: false,
+  wstrzykiwanieDziala: true,
+  schowekDziala: true,
+  odznaki: [],
+  sluchacz: null,
+};
+window.chrome = {
+  storage: { sync: { get: async () => ({ ustawienia: A.ustawienia }), set: async () => {} } },
+  commands: { onCommand: { addListener: (f) => (A.sluchacz = f) } },
+  tabs: { query: async () => [{ id: 7, url: 'https://zapytana.example/' }] },
+  offscreen: {
+    hasDocument: async () => A.maDokument,
+    createDocument: async () => { A.utworzone++; await new Promise((r) => setTimeout(r, 20)); A.maDokument = true; },
+  },
+  runtime: {
+    sendMessage: async (w) => {
+      A.wiadomosci.push(w);
+      if (!A.schowekDziala) throw new Error('brak odbiorcy');
+      return true;
+    },
+  },
+  scripting: {
+    executeScript: async ({ func, args }) => {
+      if (!A.wstrzykiwanieDziala) throw new Error('Cannot access a chrome:// URL');
+      func(...args);
+    },
+  },
+  action: {
+    setBadgeBackgroundColor: async () => {},
+    setBadgeText: async ({ text }) => A.odznaki.push(text),
+  },
+};
+</script>
+<script src="../wspolne/ustawienia.js"></script>
+<script src="../kopiuj-link/kopiuj-link.js"></script>
+<script>
+const AUTO = location.search.includes('auto');
+const log = document.getElementById('log');
+window.addEventListener('error', (e) => { log.textContent += `\nBŁĄD TESTU: ${e.message} (${e.filename}:${e.lineno})\n`; });
+let n = 0, ok = 0;
+const sprawdz = (nazwa, warunek, szczegol = '') => {
+  n++; if (warunek) ok++;
+  log.textContent += `${warunek ? 'PASS' : 'FAIL'}  ${nazwa}${szczegol ? '  — ' + szczegol : ''}\n`;
+};
+const spij = (ms) => new Promise((r) => setTimeout(r, ms));
+const dymekNaStronie = () => document.getElementById('page-tweaks-dymek');
+const naciśnij = (karta = { id: 1, url: location.href }) => A.sluchacz('kopiuj-link', karta);
+
+function reset() {
+  Object.assign(A, { ustawienia: {}, wiadomosci: [], utworzone: 0, maDokument: false, wstrzykiwanieDziala: true, schowekDziala: true, odznaki: [] });
+  dymekNaStronie()?.remove();
+}
+
+async function testuj() {
+  log.textContent = '';
+  n = 0; ok = 0;
+
+  reset();
+  await naciśnij({ id: 1, url: 'https://medium.com/artykul?x=1#a' });
+  sprawdz('adres karty idzie do schowka', A.wiadomosci.length === 1 && A.wiadomosci[0].schowek === 'https://medium.com/artykul?x=1#a', JSON.stringify(A.wiadomosci));
+  sprawdz('dymek „Skopiowano link" na stronie', !!dymekNaStronie(), dymekNaStronie()?.id);
+  sprawdz('dymek sam znika', await spij(1800).then(() => !dymekNaStronie()));
+
+  reset();
+  await naciśnij({ id: 2, url: '', pendingUrl: 'https://wczytywana.example/' });
+  sprawdz('karta w trakcie wczytywania: pendingUrl', A.wiadomosci[0]?.schowek === 'https://wczytywana.example/', JSON.stringify(A.wiadomosci));
+
+  reset();
+  await A.sluchacz('kopiuj-link', undefined);
+  sprawdz('bez karty w zdarzeniu: aktywna karta z tabs.query', A.wiadomosci[0]?.schowek === 'https://zapytana.example/', JSON.stringify(A.wiadomosci));
+
+  reset();
+  A.ustawienia = { ogolne: { kopiujLink: false } };
+  await naciśnij();
+  sprawdz('wyłączone w ustawieniach: nic nie kopiuje', A.wiadomosci.length === 0 && !dymekNaStronie() && A.utworzone === 0);
+
+  reset();
+  A.ustawienia = { medium: { ciemnyMotyw: false } };
+  await naciśnij();
+  sprawdz('brak klucza ogolne w storage = włączone', A.wiadomosci.length === 1);
+
+  reset();
+  await A.sluchacz('inna-komenda', { id: 1, url: 'https://x.example/' });
+  sprawdz('inna komenda ignorowana', A.wiadomosci.length === 0);
+
+  reset();
+  await Promise.all([naciśnij(), naciśnij(), naciśnij()]);
+  sprawdz('trzy szybkie naciśnięcia: jeden dokument offscreen', A.utworzone === 1 && A.wiadomosci.length === 3, `utworzone=${A.utworzone}, wiadomości=${A.wiadomosci.length}`);
+  sprawdz('jeden dymek naraz', document.querySelectorAll('#page-tweaks-dymek').length === 1);
+
+  reset();
+  A.maDokument = true;
+  await naciśnij();
+  sprawdz('istniejący dokument offscreen nie jest tworzony drugi raz', A.utworzone === 0 && A.wiadomosci.length === 1);
+
+  reset();
+  A.wstrzykiwanieDziala = false;
+  await naciśnij({ id: 3, url: 'chrome://settings/' });
+  sprawdz('chrome://: kopiuje mimo to', A.wiadomosci[0]?.schowek === 'chrome://settings/');
+  sprawdz('chrome://: ✓ na ikonie zamiast dymka, potem znika', A.odznaki[0] === '✓' && !dymekNaStronie() && (await spij(1600).then(() => A.odznaki.at(-1) === '')), JSON.stringify(A.odznaki));
+
+  reset();
+  A.schowekDziala = false;
+  const ostrzez = console.warn; console.warn = () => {};
+  await naciśnij();
+  console.warn = ostrzez;
+  sprawdz('nieudane kopiowanie: dymek z błędem', dymekNaStronie() !== null);
+
+  reset();
+  log.textContent += `\nWYNIK: ${ok}/${n}${ok === n ? ' — wszystko OK' : ' — SĄ BŁĘDY'}\n`;
+}
+if (AUTO) testuj();
+</script>

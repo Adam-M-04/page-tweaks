@@ -31,6 +31,15 @@
   input:checked { background: #2563eb; }
   input:checked::before { transform: translateX(14px); }
   input:focus-visible { outline: 2px solid #60a5fa; outline-offset: 2px; }
+  kbd {
+    margin-left: 6px; padding: 1px 6px; border: 1px solid #334155; border-radius: 5px;
+    background: #0b1220; color: #e5e7eb; font-size: 12px; line-height: 1.4; font-family: inherit;
+  }
+  .uwaga { margin: 0; padding: 0 16px 10px; color: #64748b; font-size: 12px; }
+  .uwaga button {
+    padding: 0; border: 0; background: none; color: #60a5fa; font: inherit; cursor: pointer;
+  }
+  .uwaga button:hover { text-decoration: underline; }
 </style>
 
 <main>
@@ -38,6 +47,12 @@
     <h1>Page Tweaks</h1>
     <span id="zapisano"></span>
   </header>
+
+  <section>
+    <h2>Wszystkie strony</h2>
+    <label><span>Kopiowanie linku skrótem <kbd id="skrot-kopiuj-link"></kbd></span> <input type="checkbox" role="switch" data-klucz="ogolne" data-pole="kopiujLink"></label>
+    <p class="uwaga">Wyłączony skrót dalej jest zajęty przez rozszerzenie. Żeby go zmienić albo zwolnić, otwórz <button type="button" id="zmien-skrot">ustawienia skrótów</button>.</p>
+  </section>
 
   <section>
     <h2>medium.com <small>i publikacje na własnych domenach</small></h2>
