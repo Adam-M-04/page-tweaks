@@ -1,0 +1,63 @@
+/* Ciemny motyw limanowa.in — część statyczna. Kolory z arkusza strony
+   przemapowuje ciemny-motyw.js (paleta w limanowa-dark.js); tu jest to,
+   czego z arkusza nie da się wyczytać: logo, tło przed pierwszym skanem
+   i kolory czytnika i dat (limanowa-czytnik.css, limanowa-daty.css), których
+   lustro nie widzi. Wszystko pod html[data-ls-dark]. */
+
+html[data-ls-dark] {
+  color-scheme: dark;              /* formularze, paski przewijania */
+  background-color: #13181b;       /* tło, zanim JS przemapuje arkusz */
+  color: #d5e3ea;
+}
+
+/* Logo: granatowy napis „limanowa" i błękitne kółko „IN" na przezroczystym
+   PNG — jasność odwrócona, odcień obrócony z powrotem. */
+html[data-ls-dark] a.logo img {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Lupa szukania: ścieżka SVG bez fill (czarna) w jasnym kółku. */
+html[data-ls-dark] .search .circle .icon svg {
+  fill: #d5e3ea;
+}
+
+/* ---------- czytnik (limanowa-czytnik.css) ---------- */
+
+html[data-ls-dark][data-ls-czytnik] :is(h1.newsDetails__title, .newsDetails__text :is(h2, h3, h4)) {
+  color: #eef3f5 !important;
+}
+html[data-ls-dark][data-ls-czytnik] .newsDetails__date {
+  color: #95a3ab !important;
+}
+html[data-ls-dark][data-ls-czytnik] .newsDetails__text {
+  color: #d3dce1 !important;
+}
+html[data-ls-dark][data-ls-czytnik] .newsDetails__text blockquote {
+  color: #aebbc2 !important;
+  border-left-color: #3b8bab !important;
+}
+html[data-ls-dark][data-ls-czytnik] .newsDetails__text a {
+  color: #6cc6ec !important;
+}
+html[data-ls-dark][data-ls-czytnik] .ls-komentarze {
+  border-color: #34424b;
+  background: #1b2125;
+  color: #d5e3ea;
+}
+html[data-ls-dark][data-ls-czytnik] .ls-komentarze:hover {
+  background: #232b30;
+  border-color: #4c5d68;
+}
+
+/* ---------- daty (limanowa-daty.css) ---------- */
+
+html[data-ls-dark][data-ls-daty] .ls-data { background: #56626a; }
+html[data-ls-dark][data-ls-daty] .ls-data--dzis { background: #1d7a44; }
+html[data-ls-dark][data-ls-daty] .ls-data--wczoraj { background: #1c5873; }
+html[data-ls-dark][data-ls-daty] .ls-lista a {
+  border-bottom-color: #262f35;
+  color: #eef3f5;
+}
+html[data-ls-dark][data-ls-daty] .ls-lista a:visited { color: #87949b; }
+html[data-ls-dark][data-ls-daty] .ls-lista__zdjecie { background: #242b30; }
+html[data-ls-dark][data-ls-daty] .ls-lista__komentarze { color: #87949b; }

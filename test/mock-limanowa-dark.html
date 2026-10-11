@@ -1,0 +1,165 @@
+<!doctype html><meta charset="utf-8"><title>ATRAPA limanowa.in — ciemny motyw</title>
+<!-- home.css limanowa.in w pigułce (stan: październik 2026): białe tło,
+     granatowy tekst, `a` najpierw niebieskie, potem `inherit`, granatowy pasek
+     z białym menu, kafelki z czarną półprzezroczystą nakładką i białym
+     tytułem na zdjęciu, granatowe guziki, błękitne znaczki, lupa w SVG bez
+     fill. CSS rozszerzenia (czytnik, daty, motyw) idzie do
+     document.adoptedStyleSheets — jak CSS content scriptu jest poza
+     document.styleSheets, więc lustro go nie widzi. -->
+<style>
+body { background-color: rgb(254, 254, 254); color: rgb(2, 54, 75); margin: 0; padding: 20px; font: 14px Poppins, Arial, sans-serif; }
+a { color: rgb(23, 121, 186); }
+a { color: inherit; }
+header { background-color: rgb(2, 54, 75); color: rgb(255, 255, 255); padding: 6px 12px; }
+header ul.menu li > ul { background-color: rgba(2, 54, 75, 0.97); }
+.heading { color: rgb(2, 54, 75); }
+.heading--border { border-bottom: 1px solid rgb(238, 238, 238); }
+.search .circle { border: 1px solid rgb(238, 238, 238); display: inline-block; width: 40px; height: 40px; border-radius: 50%; }
+.search .circle .icon { color: rgb(0, 157, 213); }
+.mainContent.gray { background-color: rgb(244, 245, 246); }
+.news-item { position: relative; width: 300px; height: 120px; background: #8a7 linear-gradient(#9b8, #564); }
+.news-item .content { position: absolute; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.4); }
+.news-item .title { color: rgb(255, 255, 255); }
+.news-item .mask { box-shadow: rgba(0, 0, 0, 0.6) 0px 0px 80px 80px; }
+.news-item--static { background: none; height: auto; }
+.news-item--static .title { color: inherit; }
+.btn, .btn:focus, .btn:hover { background: rgb(2, 54, 75); color: rgb(255, 255, 255); }
+.btn-secondary { background-color: rgb(255, 174, 0); }
+.galleries .item .count { background: rgb(2, 54, 75); color: rgb(255, 255, 255); }
+.badge { background: rgb(0, 157, 213); color: rgb(255, 255, 255); }
+.ikonka { background: rgb(255, 255, 255); display: inline-block; width: 20px; height: 20px; }
+.pudelko .ikonka { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E"); }
+</style>
+
+<body>
+<h3>Atrapa limanowa.in — testy ciemnego motywu (zero kontaktu z limanowa.in)</h3>
+<p>Silnik jest wspólny z Medium i testowany w <code>mock-medium.html</code>; tu paleta limanowa,
+<code>pomijane</code>, bliźniaki słów kluczowych (<code>inherit</code>) i statyczny <code>limanowa-dark.css</code>
+nad czytnikiem i datami.</p>
+<button onclick="testuj()" style="cursor:pointer;padding:6px 12px;margin-bottom:10px">uruchom testy</button>
+<button onclick="__lsDark.wlacz()" style="cursor:pointer;padding:6px 12px;margin-bottom:10px">włącz</button>
+<button onclick="__lsDark.wylacz()" style="cursor:pointer;padding:6px 12px;margin-bottom:10px">wyłącz</button>
+
+<div id="scena">
+  <header id="pasek"><ul class="menu"><li class="parent"><a id="menuLink" href="#">Aktualności</a><ul id="podmenu"><li><a href="#">Newsroom</a></li></ul></li></ul></header>
+  <section class="quickNavigation">
+    <a href="/" class="logo"><img id="logo" alt="Logo Limanowa.in" width="89" height="18"></a>
+    <div class="search"><span class="circle search-trigger"><i class="icon"><svg id="lupa" viewBox="0 0 10 10" width="16" height="16"><path d="M1 1h8v8H1z"/></svg></i></span></div>
+  </section>
+  <h2 class="heading heading--border" id="naglowek"><a id="naglowekLink" href="#">Gmina Limanowa</a></h2>
+  <div class="news-item news-item--big" id="kafelek"><a href="#" class="post"><span class="mask" id="maska"></span><span class="content" id="nakladka"><span class="title" id="tytulKafelka">Tytuł na zdjęciu</span></span></a></div>
+  <div class="news-item news-item--static" id="kafelekStatyczny"><a href="#" class="post"><span class="content"><span class="title" id="tytulStatyczny">Tytuł pod zdjęciem</span></span></a></div>
+  <a href="#" class="btn" id="wiecej">Przeczytaj więcej</a>
+  <a href="#" class="btn btn-secondary" id="dodaj">Dodaj ogłoszenie</a>
+  <div class="galleries"><div class="item"><span class="count" id="licznik">14</span></div></div>
+  <span class="badge" id="znaczek">PAP</span>
+  <div class="mainContent gray" id="szaraSekcja">szara sekcja</div>
+  <div class="pudelko"><span class="ikonka" id="ikonka"></span></div>
+
+  <div class="newsDetails__top"><div class="newsDetails__left">
+    <div class="newsDetails__title-row"><h1 class="newsDetails__title" id="tytul">Tytuł artykułu</h1></div>
+    <div class="newsDetails__date" id="data">Opublikowano 03.10.2026</div>
+    <div class="newsDetails__text" id="tresc">
+      <p id="akapit">Akapit z <a id="linkWTresci" href="#">linkiem</a>.</p>
+      <h2 id="srodtytul">Śródtytuł</h2>
+      <blockquote id="cytat">Cytat</blockquote>
+    </div>
+    <button type="button" class="ls-komentarze" id="komentarze">Pokaż komentarze (3)</button>
+  </div></div>
+
+  <ol class="ls-lista">
+    <li><a href="/aktualnosci/a/1" id="wpis"><img class="ls-lista__zdjecie" id="miniatura" alt=""><span class="ls-lista__tekst"><span class="ls-data ls-data--dzis" id="dzis">dziś 18:00</span><span class="ls-lista__tytul">Wpis</span><span class="ls-lista__komentarze" id="liczbaKomentarzy">6 komentarzy</span></span></a></li>
+    <li><a href="/aktualnosci/a/2"><span class="ls-lista__tekst"><span class="ls-data ls-data--wczoraj" id="wczoraj">wczoraj 16:25</span></span></a></li>
+  </ol>
+</div>
+<pre id="log" style="white-space:pre-wrap;color:#7dd3fc"></pre>
+
+<script src="../wspolne/ustawienia.js"></script>
+<script src="../wspolne/ciemny-motyw.js"></script>
+<script src="../strony/limanowa/limanowa-dark.js"></script>
+<script>
+const AUTO = location.search.includes('auto');
+const $ = (id) => document.getElementById(id);
+const log = $('log');
+const html = document.documentElement;
+window.addEventListener('error', (e) => { log.textContent += `\nBŁĄD TESTU: ${e.message} (${e.filename}:${e.lineno})\n`; });
+let n = 0, ok = 0;
+const sprawdz = (nazwa, warunek, szczegol = '') => {
+  n++; if (warunek) ok++;
+  log.textContent += `${warunek ? 'PASS' : 'FAIL'}  ${nazwa}${szczegol ? '  — ' + szczegol : ''}\n`;
+};
+const kolor = (id, p = 'color') => getComputedStyle($(id))[p];
+const spij = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// Czytnik i daty włączone, jak domyślnie w rozszerzeniu (atrybuty bez skryptów).
+html.setAttribute('data-ls-czytnik', '');
+html.setAttribute('data-ls-daty', '');
+const arkuszeRozszerzenia = Promise.all(['czytnik', 'daty', 'dark'].map(async (p) => {
+  const s = new CSSStyleSheet();
+  s.replaceSync(await fetch(`../strony/limanowa/limanowa-${p}.css`).then((r) => r.text()));
+  return s;
+})).then((arkusze) => { document.adoptedStyleSheets = arkusze; });
+
+async function testuj() {
+  log.textContent = '';
+  n = 0; ok = 0;
+  await arkuszeRozszerzenia;
+  const D = __lsDark;
+  const P = __lsLimanowaMotyw.POMIJANE;
+  D.wylacz();
+
+  // --- paleta i ustawienia ---------------------------------------------------
+  sprawdz('biel → #13181b, granat tekstu → #d5e3ea', D.mapujKolor('rgb(255, 255, 255)') === 'rgb(19, 24, 27)' && D.mapujKolor('#02364b') === 'rgb(213, 227, 234)', D.mapujKolor('#02364b'));
+  sprawdz('ustawienia: klucz limanowa.ciemnyMotyw, domyślnie włączony', DOMYSLNE_USTAWIENIA.limanowa.ciemnyMotyw === true && D.czyWlaczonyWUstawieniach({}) && !D.czyWlaczonyWUstawieniach({ limanowa: { ciemnyMotyw: false } }) && D.czyWlaczonyWUstawieniach({ limanowa: { czytnik: false }, qnews: { ciemnyMotyw: false } }));
+  const tak = ['header ul.menu li a', 'header ul.menu li > ul', '.btn', '.btn:hover', '.btn-dark:hover', '.news-item .title', '.news-item .content', '.homeTopGrid .news-item.tile-big .title', '.homeTopGrid .news-item.tile-big .post > .title', '.galleries .photoWrap .title', '.galleries .item .count', '.announcement-item .mask'];
+  const nie = ['a', '.heading', '.btn-secondary', '.btn-grey', '.quickNavigation .hamburger span', '.homeTopGrid .news-item.standard-item .post .content', '.homeTopGrid .news-item.standard-item .post .content .title', '.news-item:not(.item--ad) .photo'];
+  sprawdz('pomijane: pasek, guziki, napisy na zdjęciach tak; tekst pod zdjęciem i reszta nie', tak.every((s) => P.test(s)) && nie.every((s) => !P.test(s)),
+    [...tak.filter((s) => !P.test(s)), ...nie.filter((s) => P.test(s))].join(', '));
+  sprawdz('przed włączeniem: białe tło, granatowy tekst, link nagłówka dziedziczy', getComputedStyle(document.body).backgroundColor === 'rgb(254, 254, 254)' && kolor('naglowekLink') === 'rgb(2, 54, 75)');
+
+  // --- włączenie ---------------------------------------------------------------
+  D.wlacz();
+  await spij(50);
+  sprawdz('tło i tekst strony ciemne/jasne, color-scheme dark', getComputedStyle(document.body).backgroundColor === 'rgb(19, 24, 27)' && getComputedStyle(document.body).color === 'rgb(213, 227, 234)' && getComputedStyle(html).colorScheme === 'dark', getComputedStyle(document.body).backgroundColor);
+  sprawdz('`a { color: inherit }` wygrywa z bliźniakiem niebieskiego `a` (słowa kluczowe)', kolor('naglowekLink') === 'rgb(213, 227, 234)' && kolor('naglowek') === 'rgb(213, 227, 234)', kolor('naglowekLink'));
+  sprawdz('słowa kluczowe tylko w kolorach: obrazek tła z reguły pośrodku zostaje', /^url\(/.test(kolor('ikonka', 'backgroundImage')) && kolor('ikonka', 'backgroundColor') === 'rgb(19, 24, 27)', kolor('ikonka', 'backgroundImage').slice(0, 30));
+  sprawdz('granatowy pasek z białym menu zostaje (bliźniak `a` go nie przebija)', kolor('pasek', 'backgroundColor') === 'rgb(2, 54, 75)' && kolor('menuLink') === 'rgb(255, 255, 255)' && kolor('podmenu', 'backgroundColor') === 'rgba(2, 54, 75, 0.97)', kolor('menuLink'));
+  sprawdz('kafelek: czarna nakładka, biały tytuł, ciemna maska zostają', kolor('nakladka', 'backgroundColor') === 'rgba(0, 0, 0, 0.4)' && kolor('tytulKafelka') === 'rgb(255, 255, 255)' && /^rgba\(0, 0, 0, 0\.6\)/.test(kolor('maska', 'boxShadow')), kolor('nakladka', 'backgroundColor'));
+  sprawdz('kafelek statyczny: tytuł dziedziczy jasny tekst', kolor('tytulStatyczny') === 'rgb(213, 227, 234)', kolor('tytulStatyczny'));
+  sprawdz('„Przeczytaj więcej" i licznik galerii: granat z białym tekstem', kolor('wiecej', 'backgroundColor') === 'rgb(2, 54, 75)' && kolor('wiecej') === 'rgb(255, 255, 255)' && kolor('licznik', 'backgroundColor') === 'rgb(2, 54, 75)' && kolor('licznik') === 'rgb(255, 255, 255)');
+  sprawdz('pomarańczowy guzik i błękitny znaczek przez lustro', kolor('dodaj', 'backgroundColor') === D.mapujKolor('rgb(255, 174, 0)') && kolor('znaczek', 'backgroundColor') === D.mapujKolor('rgb(0, 157, 213)') && kolor('znaczek') === 'rgb(19, 24, 27)', kolor('znaczek', 'backgroundColor'));
+  sprawdz('szara sekcja ciemnoszara', kolor('szaraSekcja', 'backgroundColor') === 'rgb(27, 33, 37)', kolor('szaraSekcja', 'backgroundColor'));
+  sprawdz('logo odwrócone, lupa jasna', /invert/.test(kolor('logo', 'filter')) && getComputedStyle($('lupa')).fill === 'rgb(213, 227, 234)', getComputedStyle($('lupa')).fill);
+
+  // czytnik i daty — ich CSS lustro nie widzi, kolory daje limanowa-dark.css
+  sprawdz('czytnik: tytuł, śródtytuł, tekst, data', kolor('tytul') === 'rgb(238, 243, 245)' && kolor('srodtytul') === 'rgb(238, 243, 245)' && kolor('akapit') === 'rgb(211, 220, 225)' && kolor('data') === 'rgb(149, 163, 171)', `${kolor('tytul')} ${kolor('akapit')} ${kolor('data')}`);
+  sprawdz('czytnik: link w treści i kreska cytatu', kolor('linkWTresci') === 'rgb(108, 198, 236)' && kolor('cytat', 'borderLeftColor') === 'rgb(59, 139, 171)', `${kolor('linkWTresci')} ${kolor('cytat', 'borderLeftColor')}`);
+  sprawdz('czytnik: przycisk komentarzy ciemny', kolor('komentarze', 'backgroundColor') === 'rgb(27, 33, 37)' && kolor('komentarze') === 'rgb(213, 227, 234)', kolor('komentarze', 'backgroundColor'));
+  sprawdz('daty: lista jasna z ciemnymi kreskami, znaczki ciemniejsze', kolor('wpis') === 'rgb(238, 243, 245)' && kolor('wpis', 'borderBottomColor') === 'rgb(38, 47, 53)' && kolor('dzis', 'backgroundColor') === 'rgb(29, 122, 68)' && kolor('wczoraj', 'backgroundColor') === 'rgb(28, 88, 115)' && kolor('liczbaKomentarzy') === 'rgb(135, 148, 155)',
+    `${kolor('wpis')} ${kolor('dzis', 'backgroundColor')}`);
+  sprawdz('CSS rozszerzenia poza lustrem (brak bliźniaków .ls-data)', ![...$('ls-dark-lustro').sheet.cssRules].some((r) => /ls-data|newsDetails__text/.test(r.cssText)));
+
+  // --- druk ----------------------------------------------------------------------
+  window.dispatchEvent(new Event('beforeprint'));
+  const wDruku = html.hasAttribute('data-ls-dark');
+  window.dispatchEvent(new Event('afterprint'));
+  sprawdz('druk: motyw schodzi na czas drukowania i wraca', !wDruku && html.hasAttribute('data-ls-dark'));
+
+  // --- wyłączenie ----------------------------------------------------------------
+  D.wylacz();
+  await spij(20);
+  sprawdz('po wyłączeniu: jasno, logo bez filtra, czytnik w swoich kolorach', getComputedStyle(document.body).backgroundColor === 'rgb(254, 254, 254)' && kolor('logo', 'filter') === 'none' && kolor('tytul') === 'rgb(22, 24, 26)' && kolor('dzis', 'backgroundColor') === 'rgb(29, 131, 72)');
+  D.wlacz();
+
+  // --- manifest, ustawienia ------------------------------------------------------
+  const manifest = await fetch('../manifest.json').then((r) => r.json());
+  const wpis = manifest.content_scripts.find((c) => c.js.includes('strony/limanowa/limanowa-dark.js'));
+  sprawdz('manifest: silnik przed adapterem, CSS, document_start, obie domeny', !!wpis && wpis.js.indexOf('wspolne/ciemny-motyw.js') > -1 && wpis.js.indexOf('wspolne/ciemny-motyw.js') < wpis.js.indexOf('strony/limanowa/limanowa-dark.js')
+    && wpis.css.includes('strony/limanowa/limanowa-dark.css') && wpis.run_at === 'document_start' && ['https://limanowa.in/*', 'https://www.limanowa.in/*'].every((m) => wpis.matches.includes(m)));
+  const opcje = await fetch('../wspolne/options.html').then((r) => r.text());
+  sprawdz('ustawienia: przełącznik limanowa.ciemnyMotyw', opcje.includes('data-klucz="limanowa" data-pole="ciemnyMotyw"'));
+
+  log.textContent += `\nWYNIK: ${ok}/${n}${ok === n ? ' — wszystko OK' : ' — SĄ BŁĘDY'}\n`;
+}
+if (AUTO) testuj();
+</script>

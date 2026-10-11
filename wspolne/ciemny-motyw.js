@@ -1,6 +1,7 @@
-// Silnik ciemnego motywu „lustro arkuszy" — wspólny dla medium-dark.js
-// i qnews-dark.js. Ładowany jako pierwszy skrypt content scriptu; wystawia
-// `lsCiemnyMotyw(konfig)`, a plik strony dokłada paletę i włącznik.
+// Silnik ciemnego motywu „lustro arkuszy" — wspólny dla medium-dark.js,
+// qnews-dark.js, ehms-dark.js i limanowa-dark.js. Ładowany jako pierwszy
+// skrypt content scriptu; wystawia `lsCiemnyMotyw(konfig)`, a plik strony
+// dokłada paletę i włącznik.
 // Nic nie klika, nic nie wysyła; czyta arkusze stylów strony i dokłada własny.
 //
 // Zamiast filtra invert() na całej stronie (rozmyte kolory, zdjęcia do
@@ -33,6 +34,14 @@
 //                         ustawień, a wyłączony zdejmuje chwilę później
 //                         (strony, które przy każdym kliknięciu wczytują się
 //                         od nowa, nie mrugają bielą)
+//   zachowajSlowaKluczowe — true: deklaracje bez koloru (inherit,
+//                         currentColor, transparent, none…) też dostają
+//                         bliźniaka; inaczej bliźniak wcześniejszej, ogólniejszej
+//                         reguły przebija je specyficznością (`a { color:
+//                         inherit }` po `a { color: #1779ba }` na limanowa.in)
+//   pomijane            — RegExp; selektory (z listy po przecinkach — każdy
+//                         osobno), które pasują, zostają w kolorach strony:
+//                         ciemne paski z białym tekstem, napisy na zdjęciach
 //   atrybut, idArkusza  — domyślnie data-ls-dark / ls-dark-lustro
 
 globalThis.lsCiemnyMotyw = function utworzCiemnyMotyw(konfig = {}) {
@@ -43,6 +52,8 @@ globalThis.lsCiemnyMotyw = function utworzCiemnyMotyw(konfig = {}) {
   const czyStrona = konfig.czyStrona || (() => true);
   const zachowajCiemneCienie = !!konfig.zachowajCiemneCienie;
   const odRazu = !!konfig.odRazu;
+  const zachowajSlowaKluczowe = !!konfig.zachowajSlowaKluczowe;
+  const pomijane = konfig.pomijane || null;
 
   // ---------- kolory ----------
 
@@ -196,6 +207,11 @@ globalThis.lsCiemnyMotyw = function utworzCiemnyMotyw(konfig = {}) {
     return arkusz.sheet;
   }
 
+  const RE_SLOWO_KLUCZOWE = /^\s*(inherit|initial|unset|revert|revert-layer|currentcolor|transparent|none)\s*$/i;
+  // Tylko same kolory: skrót `background` rozwija się w CSSOM także na
+  // `background-image: initial`, a ten zdjąłby obrazek z reguły pośrodku.
+  const RE_SAM_KOLOR = /color$|^fill$|^stroke$|shadow$/;
+
   function czyWlasciwoscKolorowa(nazwa) {
     return nazwa.startsWith('--') || /color|background|border|outline|shadow|fill|stroke/.test(nazwa);
   }
@@ -203,20 +219,31 @@ globalThis.lsCiemnyMotyw = function utworzCiemnyMotyw(konfig = {}) {
   // Bliźniak reguły stylu: tylko deklaracje z kolorem, priorytet zachowany.
   // Reguły już pod html[data-ls-dark] (statyczny CSS strony, własne lustro)
   // nie dostają bliźniaka — inaczej tło #191919 wróciłoby odwrócone do jasnego.
-  function bliznak(regula) {
-    if (!regula.selectorText || regula.selectorText.includes(`[${ATRYBUT}]`)) return null;
+  // Selektory z `pomijane` dostają osobnego bliźniaka z kolorami strony: sam
+  // brak bliźniaka nie wystarczy, bo bliźniak ogólniejszej reguły
+  // (`html[data-ls-dark] a`) przebiłby oryginał (`header a`) specyficznością.
+  function blizniaki(regula) {
+    if (!regula.selectorText || regula.selectorText.includes(`[${ATRYBUT}]`)) return [];
     const st = regula.style;
-    const deklaracje = [];
+    const nowe = [], stare = [];
     for (let i = 0; i < st.length; i++) {
       const p = st[i];
       if (!czyWlasciwoscKolorowa(p)) continue;
-      const nowa = przemapujWartosc(st.getPropertyValue(p), p);
-      if (nowa === null) continue;
-      const pri = st.getPropertyPriority(p);
-      deklaracje.push(`${p}: ${nowa}${pri ? ` !${pri}` : ''}`);
+      const wartosc = st.getPropertyValue(p);
+      const nowa = przemapujWartosc(wartosc, p);
+      if (nowa === null && !(zachowajSlowaKluczowe && RE_SAM_KOLOR.test(p) && RE_SLOWO_KLUCZOWE.test(wartosc))) continue;
+      const pri = st.getPropertyPriority(p) ? ' !important' : '';
+      nowe.push(`${p}: ${nowa === null ? wartosc : nowa}${pri}`);
+      stare.push(`${p}: ${wartosc}${pri}`);
     }
-    if (!deklaracje.length) return null;
-    return `${prefiksujSelektor(regula.selectorText)} { ${deklaracje.join('; ')} }`;
+    if (!nowe.length) return [];
+    const czesci = podzielSelektory(regula.selectorText);
+    const zostaja = pomijane ? czesci.filter((s) => pomijane.test(s)) : [];
+    const reszta = zostaja.length ? czesci.filter((s) => !zostaja.includes(s)) : czesci;
+    const wynik = [];
+    if (reszta.length) wynik.push(`${prefiksujSelektor(reszta.join(', '))} { ${nowe.join('; ')} }`);
+    if (zostaja.length) wynik.push(`${prefiksujSelektor(zostaja.join(', '))} { ${stare.join('; ')} }`);
+    return wynik;
   }
 
   function dodajRegule(tekst, opakowania) {
@@ -233,8 +260,7 @@ globalThis.lsCiemnyMotyw = function utworzCiemnyMotyw(konfig = {}) {
       if (r.type === CSSRule.STYLE_RULE) {
         if (przetworzone.has(r)) continue;
         przetworzone.add(r);
-        const t = bliznak(r);
-        if (t) dodajRegule(t, opakowania);
+        for (const t of blizniaki(r)) dodajRegule(t, opakowania);
       } else if (r.type === CSSRule.MEDIA_RULE) {
         przetworzReguly(r.cssRules, [...opakowania, `@media ${r.conditionText || r.media.mediaText}`]);
       } else if (r.type === CSSRule.SUPPORTS_RULE) {

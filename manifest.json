@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Page Tweaks",
-  "version": "1.7.0",
-  "description": "Poprawki cudzych stron: ciemny motyw dla medium.com i qnews.pl, tytuł tagu nad listą na medium.com, czytnik bez reklam i daty wpisów dla limanowa.in, rmf24.pl bez reklam i bocznych paneli, z wpisami z X za przyciskiem, godziną na kafelkach, przygaszonymi przeczytanymi i ciemnym motywem, nowy wygląd i ciemny motyw Wirtualnego Dziekanatu PK.",
+  "version": "1.8.0",
+  "description": "Poprawki wyglądu i czytelności ulubionych stron.",
   "permissions": ["storage", "declarativeNetRequest", "activeTab", "scripting", "offscreen", "clipboardWrite"],
   "background": { "service_worker": "wspolne/background.js" },
   "commands": {
@@ -37,8 +37,8 @@
     },
     {
       "matches": ["https://limanowa.in/*", "https://www.limanowa.in/*"],
-      "js": ["strony/limanowa/limanowa-czytnik.js", "strony/limanowa/limanowa-daty.js"],
-      "css": ["strony/limanowa/limanowa-czytnik.css", "strony/limanowa/limanowa-daty.css"],
+      "js": ["strony/limanowa/limanowa-czytnik.js", "strony/limanowa/limanowa-daty.js", "wspolne/ciemny-motyw.js", "strony/limanowa/limanowa-dark.js"],
+      "css": ["strony/limanowa/limanowa-czytnik.css", "strony/limanowa/limanowa-daty.css", "strony/limanowa/limanowa-dark.css"],
       "run_at": "document_start"
     },
     {

@@ -23,6 +23,7 @@ const DOMYSLNE_USTAWIENIA = {
   limanowa: {
     czytnik: true,      // czytnik bez reklam na limanowa.in (limanowa-czytnik.* + limanowa-reguly.json)
     daty: true,         // główna sekcja jako lista od najnowszego, daty na kafelkach (limanowa-daty.*)
+    ciemnyMotyw: true,  // ciemny motyw na limanowa.in, granatowy pasek z menu zostaje (ciemny-motyw.js + limanowa-dark.*)
   },
   rmf24: {
     bezReklam: true,    // bez reklam, okna zgody, wstawek wideo i autopromocji na rmf24.pl (rmf24-bez-reklam.* + rmf24-reguly.json)
