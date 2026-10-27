@@ -13,6 +13,7 @@ const DOMYSLNE_USTAWIENIA = {
   ogolne: {
     kopiujLink: true,   // ⌘⇧C kopiuje adres bieżącej karty, jak w Arc (kopiuj-link/*, komenda w manifeście)
     kartyNaKoniec: true, // karta otwarta z linku na końcu listy, poza grupą, zamiast pod bieżącą (karty-na-koniec/*)
+    nazwyKart: true,    // „Zmień nazwę karty…” w menu karty, nazwa należy do karty i przetrwa restart (nazwy-kart/*)
   },
   medium: {
     ciemnyMotyw: true,  // ciemny motyw na medium.com (ciemny-motyw.js + medium-dark.js)

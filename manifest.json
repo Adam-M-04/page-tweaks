@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
   "name": "Page Tweaks",
-  "version": "1.9.1",
+  "version": "1.10.0",
   "description": "Poprawki wyglądu i czytelności ulubionych stron.",
-  "permissions": ["storage", "declarativeNetRequest", "activeTab", "scripting", "offscreen", "clipboardWrite", "webNavigation"],
+  "permissions": ["storage", "declarativeNetRequest", "activeTab", "scripting", "offscreen", "clipboardWrite", "contextMenus", "webNavigation"],
   "background": { "service_worker": "wspolne/background.js" },
   "commands": {
     "kopiuj-link": {
@@ -51,6 +51,11 @@
       "matches": ["https://ehms.pk.edu.pl/*"],
       "js": ["wspolne/ciemny-motyw.js", "strony/ehms/ehms-dark.js", "strony/ehms/ehms-wyglad.js"],
       "css": ["strony/ehms/ehms-wyglad.css", "strony/ehms/ehms-dark.css"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["nazwy-kart/nazwa-karty.js"],
       "run_at": "document_start"
     }
   ],

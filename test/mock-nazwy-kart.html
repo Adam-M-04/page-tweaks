@@ -1,0 +1,252 @@
+<!doctype html><meta charset="utf-8"><title>ATRAPA — własne nazwy kart</title>
+<!-- nazwy-kart.js (service worker: menu karty, okienko, nazwy w sesji)
+     i nazwa-karty.js (content script) z atrapą API chrome. Każda karta to
+     ramka z własnym sessionStorage, który przeżywa „nawigacje” i „restart”;
+     wczytanie strony w karcie = nowa ramka z nowym content scriptem. -->
+<style>
+body { margin: 0; padding: 20px; font: 14px system-ui, sans-serif; background: #fff; color: #111; }
+#karty { display: none; }
+</style>
+
+<body>
+<h3>Atrapa — własne nazwy kart</h3>
+<button onclick="testuj()" style="cursor:pointer;padding:6px 12px;margin-bottom:10px">uruchom testy</button>
+<pre id="log" style="white-space:pre-wrap;color:#0369a1"></pre>
+<div id="karty"></div>
+
+<script>
+// --- atrapa chrome -----------------------------------------------------------
+const A = {
+  session: {},
+  sync: {},
+  sluchaczeSync: [],
+  sluchaczTla: null,
+  menu: new Map(),
+  klik: null,
+  usunieta: null,
+  karty: {},                 // id → { ramka, sluchacz, magazynStrony }
+  odpowiedz: null,           // co „wpisze” użytkownik w okienku (null = Anuluj)
+  wstrzykiwanieDziala: true,
+  aktywowane: [],
+  pytania: [],
+  odznaki: [],
+};
+const spij = (ms) => new Promise((r) => setTimeout(r, ms));
+const kopia = (v) => (v === undefined ? undefined : structuredClone(v));
+
+window.chrome = {
+  storage: {
+    session: {
+      get: async (klucz) => (klucz in A.session ? { [klucz]: kopia(A.session[klucz]) } : {}),
+      set: async (o) => { for (const [k, v] of Object.entries(o)) A.session[k] = kopia(v); },
+      remove: async (k) => { delete A.session[k]; },
+    },
+    sync: {
+      get: async (klucz) => (klucz in A.sync ? { [klucz]: kopia(A.sync[klucz]) } : {}),
+      set: async (o) => {
+        const zmiany = {};
+        for (const [k, v] of Object.entries(o)) { zmiany[k] = { newValue: kopia(v) }; A.sync[k] = kopia(v); }
+        A.sluchaczeSync.forEach((f) => f(zmiany, 'sync'));
+      },
+    },
+    onChanged: { addListener: (f) => A.sluchaczeSync.push(f) },
+  },
+  runtime: {
+    onInstalled: { addListener: () => {} },
+    onMessage: { addListener: (f) => (A.sluchaczTla = f) },
+    lastError: undefined,
+  },
+  contextMenus: {
+    create: (opcje, cb) => { A.menu.set(opcje.id, opcje); cb?.(); },
+    remove: async (id) => { if (!A.menu.delete(id)) throw new Error('Cannot find menu item'); },
+    onClicked: { addListener: (f) => (A.klik = f) },
+  },
+  tabs: {
+    update: async (id) => A.aktywowane.push(id),
+    onRemoved: { addListener: (f) => (A.usunieta = f) },
+    onReplaced: { addListener: () => {} },
+    sendMessage: async (id, wiadomosc) => {
+      const f = A.karty[id]?.sluchacz;
+      if (!f) throw new Error('Could not establish connection. Receiving end does not exist.');
+      return new Promise((r) => f(kopia(wiadomosc), {}, r));
+    },
+  },
+  scripting: {
+    executeScript: async ({ target, func, args, files }) => {
+      if (!A.wstrzykiwanieDziala) throw new Error('Cannot access contents of the page');
+      // Funkcja jak w Chrome: w stronie karty, z jej document i prompt.
+      if (func) {
+        const w = A.karty[target.tabId]?.ramka.contentWindow;
+        if (!w) return [{ result: func(...args) }];
+        w.prompt = window.prompt;
+        return [{ result: w.eval(`(${func})`)(...args) }];
+      }
+      for (const plik of files) await uruchomWKarcie(target.tabId, plik);
+      return [{}];
+    },
+  },
+  action: {
+    setBadgeBackgroundColor: async () => {},
+    setBadgeText: async ({ text }) => A.odznaki.push(text),
+  },
+};
+window.prompt = (pytanie, domyslna) => { A.pytania.push(domyslna); return A.odpowiedz; };
+
+// API chrome widziane z content scriptu w karcie `id`.
+function chromeKarty(id) {
+  return {
+    storage: { sync: window.chrome.storage.sync, onChanged: window.chrome.storage.onChanged },
+    runtime: {
+      sendMessage: (wiadomosc) => new Promise((r) => {
+        if (A.sluchaczTla(kopia(wiadomosc), { tab: { id }, frameId: 0 }, r) !== true) r(undefined);
+      }),
+      onMessage: { addListener: (f) => (A.karty[id].sluchacz = f) },
+    },
+  };
+}
+function magazynStrony() {
+  const m = new Map();
+  return { getItem: (k) => m.get(k) ?? null, setItem: (k, v) => m.set(k, String(v)), removeItem: (k) => m.delete(k), m };
+}
+async function uruchomWKarcie(id, plik) {
+  const w = A.karty[id].ramka.contentWindow;
+  const s = w.document.createElement('script');
+  s.src = new URL('../' + plik, location.href);
+  const wczytany = new Promise((r) => (s.onload = r));
+  w.document.head.append(s);
+  await wczytany;
+  await spij(0);
+}
+// Wczytanie strony w karcie: nowa ramka, ten sam sessionStorage karty.
+async function wczytaj(id, tytul, { magazyn, bezSkryptu = false } = {}) {
+  const k = (A.karty[id] ??= { magazynStrony: magazyn || magazynStrony() });
+  k.ramka?.remove();
+  k.sluchacz = null;
+  k.ramka = document.createElement('iframe');
+  k.ramka.srcdoc = `<title>${tytul}</title>`;
+  const zaladowana = new Promise((r) => (k.ramka.onload = r));
+  document.getElementById('karty').append(k.ramka);
+  await zaladowana;
+  Object.defineProperty(k.ramka.contentWindow, 'sessionStorage', { value: k.magazynStrony, configurable: true });
+  k.ramka.contentWindow.chrome = chromeKarty(id);
+  if (!bezSkryptu) await uruchomWKarcie(id, 'nazwy-kart/nazwa-karty.js');
+}
+const tytul = (id) => A.karty[id].ramka.contentDocument.title;
+const ustawTytul = (id, t) => (A.karty[id].ramka.contentDocument.title = t);
+const wpisStrony = (id) => JSON.parse(A.karty[id].magazynStrony.getItem('page-tweaks-nazwa-karty'));
+const kliknij = async (id, odpowiedz, url = 'https://app.example/strona') => {
+  A.odpowiedz = odpowiedz;
+  await A.klik({ menuItemId: 'zmien-nazwe-karty' }, { id, url });
+  await spij(0);
+};
+</script>
+<script src="../wspolne/ustawienia.js"></script>
+<script src="../nazwy-kart/nazwy-kart.js"></script>
+<script>
+const AUTO = location.search.includes('auto');
+const log = document.getElementById('log');
+window.addEventListener('error', (e) => { log.textContent += `\nBŁĄD TESTU: ${e.message} (${e.filename}:${e.lineno})\n`; });
+let n = 0, ok = 0;
+const sprawdz = (nazwa, warunek, szczegol = '') => {
+  n++; if (warunek) ok++;
+  log.textContent += `${warunek ? 'PASS' : 'FAIL'}  ${nazwa}${szczegol ? '  — ' + szczegol : ''}\n`;
+};
+
+function reset() {
+  document.getElementById('karty').replaceChildren();
+  Object.assign(A, { session: {}, sync: {}, karty: {}, wstrzykiwanieDziala: true, aktywowane: [], pytania: [], odznaki: [] });
+  sesjaPrzegladarki = null;
+}
+
+async function testuj() {
+  log.textContent = '';
+  n = 0; ok = 0;
+
+  reset();
+  await ustawMenuNazwy();
+  sprawdz('menu „Zmień nazwę karty…” na karcie', A.menu.get('zmien-nazwe-karty')?.contexts?.join() === 'tab', JSON.stringify([...A.menu.values()]));
+  await ustawMenuNazwy();
+  sprawdz('drugie ustawienie menu bez duplikatu', A.menu.size === 1);
+
+  await wczytaj(1, 'Lista obecności');
+  sprawdz('karta bez nazwy: tytuł strony', tytul(1) === 'Lista obecności');
+
+  await kliknij(1, 'Obecności');
+  sprawdz('karta aktywowana przed okienkiem', A.aktywowane[0] === 1);
+  sprawdz('okienko podpowiada tytuł strony', A.pytania[0] === 'Lista obecności', JSON.stringify(A.pytania));
+  sprawdz('nazwa od razu w tytule', tytul(1) === 'Obecności', tytul(1));
+  sprawdz('nazwa zapisana dla karty i w sessionStorage strony', A.session['nazwaKarty:1'] === 'Obecności' && wpisStrony(1)?.nazwa === 'Obecności', JSON.stringify(A.session));
+
+  ustawTytul(1, '(3) Lista obecności');
+  await spij(0);
+  sprawdz('strona zmienia tytuł: nazwa wraca', tytul(1) === 'Obecności', tytul(1));
+
+  await wczytaj(1, 'Twoje placówki');
+  sprawdz('przejście na inną podstronę w karcie: nazwa zostaje', tytul(1) === 'Obecności', tytul(1));
+
+  await wczytaj(2, 'Podsumowanie frekwencji');
+  sprawdz('druga karta tej samej domeny: swój tytuł', tytul(2) === 'Podsumowanie frekwencji', tytul(2));
+  await kliknij(2, 'Frekwencja');
+  sprawdz('druga karta: własna nazwa, pierwsza bez zmian', tytul(2) === 'Frekwencja' && tytul(1) === 'Obecności', `${tytul(1)} / ${tytul(2)}`);
+
+  await kliknij(1, 'Nowa');
+  sprawdz('okienko podpowiada obecną nazwę', A.pytania.at(-1) === 'Obecności', JSON.stringify(A.pytania));
+  await kliknij(1, null);
+  sprawdz('Anuluj nic nie zmienia', tytul(1) === 'Nowa' && A.session['nazwaKarty:1'] === 'Nowa');
+
+  // Karta otwarta z nazwanej dostaje kopię sessionStorage (ta sama sesja).
+  const skopiowany = magazynStrony();
+  skopiowany.setItem('page-tweaks-nazwa-karty', JSON.stringify(wpisStrony(1)));
+  await wczytaj(3, 'Otwarta z linku', { magazyn: skopiowany });
+  sprawdz('kopia sessionStorage w nowej karcie: nazwy nie dziedziczy', tytul(3) === 'Otwarta z linku' && !wpisStrony(3) && !A.session['nazwaKarty:3'], tytul(3));
+
+  // Restart: storage.session pusty, nowe id kart, sessionStorage przywrócony.
+  const magazyn1 = A.karty[1].magazynStrony, magazyn2 = A.karty[2].magazynStrony;
+  reset();
+  await wczytaj(11, 'Lista obecności', { magazyn: magazyn1 });
+  await wczytaj(12, 'Podsumowanie frekwencji', { magazyn: magazyn2 });
+  sprawdz('po restarcie: obie nazwy wracają', tytul(11) === 'Nowa' && tytul(12) === 'Frekwencja', `${tytul(11)} / ${tytul(12)}`);
+  sprawdz('po restarcie: nazwy przypisane do nowych id', A.session['nazwaKarty:11'] === 'Nowa' && A.session['nazwaKarty:12'] === 'Frekwencja', JSON.stringify(A.session));
+  await wczytaj(11, 'Twoje placówki');
+  sprawdz('po restarcie: nawigacja dalej z nazwą', tytul(11) === 'Nowa');
+
+  await kliknij(11, '   ');
+  sprawdz('pusta nazwa: wraca tytuł strony, wpisy usunięte', tytul(11) === 'Twoje placówki' && !A.session['nazwaKarty:11'] && !wpisStrony(11), tytul(11));
+
+  await chrome.storage.sync.set({ ustawienia: { ogolne: { nazwyKart: false } } });
+  await spij(0);
+  sprawdz('wyłączone w ustawieniach: tytuł strony wraca, menu znika', tytul(12) === 'Podsumowanie frekwencji' && !A.menu.has('zmien-nazwe-karty'), tytul(12));
+  await chrome.storage.sync.set({ ustawienia: { ogolne: { kopiujLink: false } } });
+  await spij(0);
+  sprawdz('włączone z powrotem (brak pola = włączone): nazwa i menu wracają', tytul(12) === 'Frekwencja' && A.menu.has('zmien-nazwe-karty'), tytul(12));
+
+  A.usunieta(12);
+  await spij(0);
+  sprawdz('zamknięta karta: nazwa usunięta z sesji', !('nazwaKarty:12' in A.session));
+
+  reset();
+  await wczytaj(5, 'Otwarta przed wczytaniem rozszerzenia', { bezSkryptu: true });
+  await kliknij(5, 'Stara karta');
+  await spij(0);
+  sprawdz('karta bez content scriptu: wstrzyknięty, nazwa działa', tytul(5) === 'Stara karta', tytul(5));
+  await uruchomWKarcie(5, 'nazwy-kart/nazwa-karty.js');
+  await kliknij(5, 'Druga');
+  sprawdz('ponowne wstrzyknięcie nie dubluje skryptu', tytul(5) === 'Druga' && A.karty[5].ramka.contentWindow.pageTweaksNazwaKarty === true);
+
+  reset();
+  await A.klik({ menuItemId: 'zmien-nazwe-karty' }, { id: 9, url: undefined });
+  sprawdz('karta bez dostępu (chrome://): ! na ikonie, bez okienka', A.odznaki[0] === '!' && A.pytania.length === 0, JSON.stringify(A.odznaki));
+  A.wstrzykiwanieDziala = false;
+  const ostrzez = console.warn; console.warn = () => {};
+  await kliknij(9, 'X');
+  console.warn = ostrzez;
+  sprawdz('nieudane wstrzyknięcie: ! na ikonie, nic nie zapisane', A.odznaki.at(-1) === '!' && !A.session['nazwaKarty:9']);
+
+  await A.klik({ menuItemId: 'inne-menu' }, { id: 9, url: 'https://x.example/' });
+  sprawdz('inna pozycja menu ignorowana', A.pytania.length === 0);
+
+  reset();
+  log.textContent += `\nWYNIK: ${ok}/${n}${ok === n ? ' — wszystko OK' : ' — SĄ BŁĘDY'}\n`;
+}
+if (AUTO) testuj();
+</script>
