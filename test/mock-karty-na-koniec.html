@@ -1,6 +1,9 @@
 <!doctype html><meta charset="utf-8"><title>ATRAPA — karty z linków na końcu listy</title>
 <!-- karty-na-koniec.js z atrapą API chrome: okno z kartami i grupami,
-     które tabs.move/ungroup zmieniają jak Chrome. -->
+     które tabs.move/ungroup zmieniają jak Chrome. Link otwarty w nowej
+     karcie to tabs.onCreated + webNavigation.onCreatedNavigationTarget;
+     karty tworzone przez Chrome (nowa grupa, przywrócona sesja) dostają
+     tylko onCreated. -->
 <style>
 body { margin: 0; padding: 20px; font: 14px system-ui, sans-serif; background: #fff; color: #111; }
 </style>
@@ -12,7 +15,7 @@ body { margin: 0; padding: 20px; font: 14px system-ui, sans-serif; background: #
 
 <script>
 // --- atrapa chrome -----------------------------------------------------------
-// Okno to lista kart { id, groupId }; kolejność w tablicy = index.
+// Okno to lista kart { id, groupId, windowId }; kolejność w tablicy = index.
 const A = {
   ustawienia: {},
   karty: [],
@@ -29,8 +32,7 @@ const znajdz = (id) => {
 window.chrome = {
   storage: { sync: { get: async () => ({ ustawienia: A.ustawienia }), set: async () => {} } },
   tabs: {
-    onCreated: { addListener: (f) => (A.sluchacz = f) },
-    get: async (id) => ({ ...znajdz(id), index: A.karty.indexOf(znajdz(id)) }),
+    get: async (id) => ({ windowId: 1, ...znajdz(id), index: A.karty.indexOf(znajdz(id)) }),
     move: async (id, { index }) => {
       if (A.wolnyMove) await new Promise((r) => setTimeout(r, 10 + Math.random() * 20));
       if (A.zamknietaPrzedMove) A.karty = A.karty.filter((k) => k.id !== id);
@@ -42,6 +44,7 @@ window.chrome = {
     },
     ungroup: async (id) => { znajdz(id).groupId = -1; },
   },
+  webNavigation: { onCreatedNavigationTarget: { addListener: (f) => (A.sluchacz = f) } },
 };
 </script>
 <script src="../wspolne/ustawienia.js"></script>
@@ -65,9 +68,12 @@ function reset() {
 }
 function otworz(id, rodzic, opcje = {}) {
   const r = znajdz(rodzic);
-  const karta = { id, groupId: r.groupId, openerTabId: rodzic, pinned: false, ...opcje };
-  A.karty.splice(A.karty.indexOf(r) + 1, 0, { id, groupId: karta.groupId });
-  return A.sluchacz({ ...karta, index: A.karty.findIndex((k) => k.id === id) });
+  A.karty.splice(A.karty.indexOf(r) + 1, 0, { id, groupId: r.groupId, ...opcje });
+  return A.sluchacz({ tabId: id, sourceTabId: rodzic, url: 'https://link.example/' });
+}
+// Karta, którą Chrome tworzy sam: tylko onCreated, którego nie słuchamy.
+function utworzPrzezChrome(id, gdzie, groupId) {
+  A.karty.splice(gdzie, 0, { id, groupId });
 }
 
 async function testuj() {
@@ -89,11 +95,19 @@ async function testuj() {
   sprawdz('grupa na końcu okna: karta za nią, ale nie w niej', uklad() === '1 2g5 3g5 10', uklad());
 
   reset();
-  await otworz(10, 4, { openerTabId: undefined });
-  sprawdz('bez openerTabId (⌘T, przywrócona): zostaje', uklad() === '1 2g5 3g5 4 10', uklad());
+  utworzPrzezChrome(10, 3, 5);
+  sprawdz('nowa grupa / karta dodana do grupy przez Chrome: nie ruszana', uklad() === '1 2g5 3g5 10g5 4', uklad());
   reset();
-  await otworz(10, 1, { openerTabId: undefined });
-  sprawdz('bez openerTabId w środku listy: nie ruszana', uklad() === '1 10 2g5 3g5 4', uklad());
+  utworzPrzezChrome(10, 1, 5); utworzPrzezChrome(11, 2, 5);
+  sprawdz('przywrócona sesja z grupami: nie ruszana', uklad() === '1 10g5 11g5 2g5 3g5 4', uklad());
+
+  reset();
+  await otworz(10, 2, { groupId: 7 });
+  sprawdz('link wstawiony do innej grupy niż rodzic: zostaje w niej', uklad() === '1 2g5 10g7 3g5 4', uklad());
+
+  reset();
+  await otworz(10, 2, { windowId: 2 });
+  sprawdz('link otwarty w innym oknie: nie ruszany', uklad() === '1 2g5 10g5 3g5 4', uklad());
 
   reset();
   A.ustawienia = { ogolne: { kartyNaKoniec: false } };
