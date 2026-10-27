@@ -1,0 +1,127 @@
+<!doctype html><meta charset="utf-8"><title>ATRAPA — karty z linków na końcu listy</title>
+<!-- karty-na-koniec.js z atrapą API chrome: okno z kartami i grupami,
+     które tabs.move/ungroup zmieniają jak Chrome. -->
+<style>
+body { margin: 0; padding: 20px; font: 14px system-ui, sans-serif; background: #fff; color: #111; }
+</style>
+
+<body>
+<h3>Atrapa — karty z linków na końcu listy</h3>
+<button onclick="testuj()" style="cursor:pointer;padding:6px 12px;margin-bottom:10px">uruchom testy</button>
+<pre id="log" style="white-space:pre-wrap;color:#0369a1"></pre>
+
+<script>
+// --- atrapa chrome -----------------------------------------------------------
+// Okno to lista kart { id, groupId }; kolejność w tablicy = index.
+const A = {
+  ustawienia: {},
+  karty: [],
+  sluchacz: null,
+  wolnyMove: false,           // move czeka chwilę, żeby było widać kolejność
+  zamknietaPrzedMove: false,  // karta znika, zanim ją przeniesiemy
+  grupaPrzyKoncu: false,      // Chrome dokłada kartę do grupy stojącej na końcu
+};
+const znajdz = (id) => {
+  const k = A.karty.find((k) => k.id === id);
+  if (!k) throw new Error(`No tab with id: ${id}.`);
+  return k;
+};
+window.chrome = {
+  storage: { sync: { get: async () => ({ ustawienia: A.ustawienia }), set: async () => {} } },
+  tabs: {
+    onCreated: { addListener: (f) => (A.sluchacz = f) },
+    get: async (id) => ({ ...znajdz(id), index: A.karty.indexOf(znajdz(id)) }),
+    move: async (id, { index }) => {
+      if (A.wolnyMove) await new Promise((r) => setTimeout(r, 10 + Math.random() * 20));
+      if (A.zamknietaPrzedMove) A.karty = A.karty.filter((k) => k.id !== id);
+      const k = znajdz(id);
+      A.karty.splice(A.karty.indexOf(k), 1);
+      A.karty.splice(index === -1 ? A.karty.length : index, 0, k);
+      const przed = A.karty[A.karty.indexOf(k) - 1];
+      if (A.grupaPrzyKoncu && przed && przed.groupId !== -1) k.groupId = przed.groupId;
+    },
+    ungroup: async (id) => { znajdz(id).groupId = -1; },
+  },
+};
+</script>
+<script src="../wspolne/ustawienia.js"></script>
+<script src="../karty-na-koniec/karty-na-koniec.js"></script>
+<script>
+const AUTO = location.search.includes('auto');
+const log = document.getElementById('log');
+window.addEventListener('error', (e) => { log.textContent += `\nBŁĄD TESTU: ${e.message} (${e.filename}:${e.lineno})\n`; });
+let n = 0, ok = 0;
+const sprawdz = (nazwa, warunek, szczegol = '') => {
+  n++; if (warunek) ok++;
+  log.textContent += `${warunek ? 'PASS' : 'FAIL'}  ${nazwa}${szczegol ? '  — ' + szczegol : ''}\n`;
+};
+const uklad = () => A.karty.map((k) => k.groupId === -1 ? k.id : `${k.id}g${k.groupId}`).join(' ');
+
+// Okno: 1, grupa 5 (2, 3), 4. Chrome wstawia nową kartę pod rodzicem
+// i dziedziczy jego grupę — tak jak przy ⌘-kliku.
+function reset() {
+  Object.assign(A, { ustawienia: {}, wolnyMove: false, zamknietaPrzedMove: false, grupaPrzyKoncu: false });
+  A.karty = [{ id: 1, groupId: -1 }, { id: 2, groupId: 5 }, { id: 3, groupId: 5 }, { id: 4, groupId: -1 }];
+}
+function otworz(id, rodzic, opcje = {}) {
+  const r = znajdz(rodzic);
+  const karta = { id, groupId: r.groupId, openerTabId: rodzic, pinned: false, ...opcje };
+  A.karty.splice(A.karty.indexOf(r) + 1, 0, { id, groupId: karta.groupId });
+  return A.sluchacz({ ...karta, index: A.karty.findIndex((k) => k.id === id) });
+}
+
+async function testuj() {
+  log.textContent = '';
+  n = 0; ok = 0;
+
+  reset();
+  await otworz(10, 1);
+  sprawdz('link z karty bez grupy: na koniec', uklad() === '1 2g5 3g5 4 10', uklad());
+
+  reset();
+  await otworz(10, 2);
+  sprawdz('link z karty w grupie: na koniec i poza grupą', uklad() === '1 2g5 3g5 4 10', uklad());
+
+  reset();
+  A.karty = [{ id: 1, groupId: -1 }, { id: 2, groupId: 5 }, { id: 3, groupId: 5 }];
+  A.grupaPrzyKoncu = true;
+  await otworz(10, 1);
+  sprawdz('grupa na końcu okna: karta za nią, ale nie w niej', uklad() === '1 2g5 3g5 10', uklad());
+
+  reset();
+  await otworz(10, 4, { openerTabId: undefined });
+  sprawdz('bez openerTabId (⌘T, przywrócona): zostaje', uklad() === '1 2g5 3g5 4 10', uklad());
+  reset();
+  await otworz(10, 1, { openerTabId: undefined });
+  sprawdz('bez openerTabId w środku listy: nie ruszana', uklad() === '1 10 2g5 3g5 4', uklad());
+
+  reset();
+  A.ustawienia = { ogolne: { kartyNaKoniec: false } };
+  await otworz(10, 2);
+  sprawdz('wyłączone w ustawieniach: Chrome decyduje', uklad() === '1 2g5 10g5 3g5 4', uklad());
+
+  reset();
+  A.ustawienia = { ogolne: { kopiujLink: false } };
+  await otworz(10, 1);
+  sprawdz('brak pola kartyNaKoniec w storage = włączone', uklad() === '1 2g5 3g5 4 10', uklad());
+
+  reset();
+  A.wolnyMove = true;
+  await Promise.all([otworz(10, 2), otworz(11, 2), otworz(12, 2)]);
+  sprawdz('trzy szybkie linki: na końcu w kolejności otwierania', uklad() === '1 2g5 3g5 4 10 11 12', uklad());
+
+  reset();
+  A.zamknietaPrzedMove = true;
+  const ostrzez = console.warn; let ostrzezenia = 0; console.warn = () => ostrzezenia++;
+  await otworz(10, 1);
+  await otworz(11, 1).catch(() => {});
+  console.warn = ostrzez;
+  A.zamknietaPrzedMove = false;
+  await otworz(12, 1);
+  sprawdz('karta zamknięta przed przeniesieniem: bez wyjątku, kolejka działa dalej', ostrzezenia === 2 && A.karty.at(-1).id === 12, `ostrzeżenia=${ostrzezenia}, ${uklad()}`);
+
+  reset();
+  log.textContent += `\nWYNIK: ${ok}/${n}${ok === n ? ' — wszystko OK' : ' — SĄ BŁĘDY'}\n`;
+}
+if (AUTO) testuj();
+</script>

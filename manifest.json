@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Page Tweaks",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "Poprawki wyglądu i czytelności ulubionych stron.",
   "permissions": ["storage", "declarativeNetRequest", "activeTab", "scripting", "offscreen", "clipboardWrite"],
   "background": { "service_worker": "wspolne/background.js" },

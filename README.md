@@ -22,6 +22,8 @@ Gotowe. Ustawienia otwiera klik w ikonę rozszerzenia.
 
 **⌘⇧C** (Ctrl+Shift+C na Linuksie) kopiuje link bieżącej karty, jak w Arc. Skrót zmienisz w `chrome://extensions/shortcuts`, a wyłączysz w ustawieniach.
 
+Karta otwarta z linku (⌘-klik, środkowy przycisk) trafia na koniec listy kart i poza grupę, zamiast pod bieżącą. Też do wyłączenia w ustawieniach.
+
 ## Aktualizacja
 
 Uruchom to samo polecenie z kroku 1, potem w `chrome://extensions` kliknij **⟳** przy Page Tweaks.
