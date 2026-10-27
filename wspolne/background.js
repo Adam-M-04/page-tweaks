@@ -1,6 +1,7 @@
 // Service worker: przełącza zestawy reguł sieciowych, otwiera ustawienia
 // po kliknięciu ikony, obsługuje skrót kopiowania linku (kopiuj-link.js)
-// przenosi karty otwarte z linków na koniec listy (karty-na-koniec.js)
+// przenosi karty otwarte z linków na koniec listy i duplikuje kartę skrótem
+// ⌘D (karty-na-koniec.js)
 // i obsługuje menu zmiany nazwy karty (nazwy-kart.js).
 // Cała reszta dzieje się w content scriptach.
 importScripts('ustawienia.js', '../kopiuj-link/kopiuj-link.js', '../karty-na-koniec/karty-na-koniec.js', '../nazwy-kart/nazwy-kart.js');

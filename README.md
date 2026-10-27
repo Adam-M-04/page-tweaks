@@ -24,6 +24,8 @@ Gotowe. Ustawienia otwiera klik w ikonę rozszerzenia.
 
 Karta otwarta z linku (⌘-klik, środkowy przycisk) trafia na koniec listy kart i poza grupę, zamiast pod bieżącą. Też do wyłączenia w ustawieniach.
 
+**⌘D** duplikuje bieżącą kartę na koniec listy, poza grupę, i zostawia ją w tle (zamiast dodawać zakładkę). Jeśli w `chrome://extensions/shortcuts` przy tej komendzie nie ma ⌘D, przypisz go tam.
+
 Prawy przycisk na karcie → **Zmień nazwę karty…** nadaje jej własną nazwę. Nazwa należy do tej jednej karty: zostaje, gdy przechodzisz w niej po stronach, i wraca po restarcie Chrome. Pusta przywraca tytuł strony. Nie działa na stronach `chrome://` i w Chrome Web Store.
 
 ## Aktualizacja

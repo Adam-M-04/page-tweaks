@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Page Tweaks",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "Poprawki wyglądu i czytelności ulubionych stron.",
   "permissions": ["storage", "declarativeNetRequest", "activeTab", "scripting", "offscreen", "clipboardWrite", "contextMenus", "webNavigation"],
   "background": { "service_worker": "wspolne/background.js" },
@@ -9,6 +9,10 @@
     "kopiuj-link": {
       "suggested_key": { "default": "Ctrl+Shift+C", "mac": "Command+Shift+C" },
       "description": "Kopiuj link bieżącej karty"
+    },
+    "duplikuj-karte": {
+      "suggested_key": { "mac": "Command+D" },
+      "description": "Duplikuj kartę na koniec listy, w tle"
     }
   },
   "action": {

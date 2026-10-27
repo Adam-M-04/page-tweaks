@@ -3,7 +3,7 @@
      które tabs.move/ungroup zmieniają jak Chrome. Link otwarty w nowej
      karcie to tabs.onCreated + webNavigation.onCreatedNavigationTarget;
      karty tworzone przez Chrome (nowa grupa, przywrócona sesja) dostają
-     tylko onCreated. -->
+     tylko onCreated. Skrót ⌘D to commands.onCommand + tabs.duplicate. -->
 <style>
 body { margin: 0; padding: 20px; font: 14px system-ui, sans-serif; background: #fff; color: #111; }
 </style>
@@ -23,6 +23,9 @@ const A = {
   wolnyMove: false,           // move czeka chwilę, żeby było widać kolejność
   zamknietaPrzedMove: false,  // karta znika, zanim ją przeniesiemy
   grupaPrzyKoncu: false,      // Chrome dokłada kartę do grupy stojącej na końcu
+  aktywna: null,
+  komenda: null,
+  duplikatDziala: true,
 };
 const znajdz = (id) => {
   const k = A.karty.find((k) => k.id === id);
@@ -43,7 +46,19 @@ window.chrome = {
       if (A.grupaPrzyKoncu && przed && przed.groupId !== -1) k.groupId = przed.groupId;
     },
     ungroup: async (id) => { znajdz(id).groupId = -1; },
+    // Jak w Chrome: duplikat pod oryginałem, w jego grupie, od razu aktywny.
+    duplicate: async (id) => {
+      if (!A.duplikatDziala) throw new Error('Cannot duplicate');
+      const o = znajdz(id);
+      const kopia = { id: 100 + A.karty.length, groupId: o.groupId };
+      A.karty.splice(A.karty.indexOf(o) + 1, 0, kopia);
+      A.aktywna = kopia.id;
+      return chrome.tabs.get(kopia.id);
+    },
+    update: async (id, { active }) => { znajdz(id); if (active) A.aktywna = id; },
+    query: async () => [await chrome.tabs.get(A.aktywna)],
   },
+  commands: { onCommand: { addListener: (f) => (A.komenda = f) } },
   webNavigation: { onCreatedNavigationTarget: { addListener: (f) => (A.sluchacz = f) } },
 };
 </script>
@@ -63,7 +78,7 @@ const uklad = () => A.karty.map((k) => k.groupId === -1 ? k.id : `${k.id}g${k.gr
 // Okno: 1, grupa 5 (2, 3), 4. Chrome wstawia nową kartę pod rodzicem
 // i dziedziczy jego grupę — tak jak przy ⌘-kliku.
 function reset() {
-  Object.assign(A, { ustawienia: {}, wolnyMove: false, zamknietaPrzedMove: false, grupaPrzyKoncu: false });
+  Object.assign(A, { ustawienia: {}, wolnyMove: false, zamknietaPrzedMove: false, grupaPrzyKoncu: false, aktywna: 2, duplikatDziala: true });
   A.karty = [{ id: 1, groupId: -1 }, { id: 2, groupId: 5 }, { id: 3, groupId: 5 }, { id: 4, groupId: -1 }];
 }
 function otworz(id, rodzic, opcje = {}) {
@@ -133,6 +148,37 @@ async function testuj() {
   A.zamknietaPrzedMove = false;
   await otworz(12, 1);
   sprawdz('karta zamknięta przed przeniesieniem: bez wyjątku, kolejka działa dalej', ostrzezenia === 2 && A.karty.at(-1).id === 12, `ostrzeżenia=${ostrzezenia}, ${uklad()}`);
+
+  reset();
+  await A.komenda('duplikuj-karte', await chrome.tabs.get(2));
+  sprawdz('⌘D na karcie w grupie: duplikat na końcu, poza grupą', uklad() === '1 2g5 3g5 4 104', uklad());
+  sprawdz('⌘D: oryginał zostaje aktywny, duplikat w tle', A.aktywna === 2, `aktywna=${A.aktywna}`);
+
+  reset();
+  A.karty = [{ id: 1, groupId: -1 }, { id: 2, groupId: 5 }, { id: 3, groupId: 5 }];
+  A.grupaPrzyKoncu = true;
+  await A.komenda('duplikuj-karte', await chrome.tabs.get(1));
+  sprawdz('⌘D, grupa na końcu okna: duplikat za nią, nie w niej', uklad() === '1 2g5 3g5 103', uklad());
+
+  reset();
+  await A.komenda('duplikuj-karte', undefined);
+  sprawdz('⌘D bez karty w zdarzeniu: aktywna z tabs.query', uklad() === '1 2g5 3g5 4 104' && A.aktywna === 2, uklad());
+
+  reset();
+  A.ustawienia = { ogolne: { duplikujKarte: false } };
+  await A.komenda('duplikuj-karte', await chrome.tabs.get(2));
+  sprawdz('⌘D wyłączone w ustawieniach: nic', uklad() === '1 2g5 3g5 4', uklad());
+
+  reset();
+  await A.komenda('kopiuj-link', await chrome.tabs.get(2));
+  sprawdz('inna komenda: nic', uklad() === '1 2g5 3g5 4', uklad());
+
+  reset();
+  A.duplikatDziala = false;
+  const ostrzez2 = console.warn; console.warn = () => {};
+  await A.komenda('duplikuj-karte', await chrome.tabs.get(2));
+  console.warn = ostrzez2;
+  sprawdz('nieudane duplikowanie: bez wyjątku', uklad() === '1 2g5 3g5 4', uklad());
 
   reset();
   log.textContent += `\nWYNIK: ${ok}/${n}${ok === n ? ' — wszystko OK' : ' — SĄ BŁĘDY'}\n`;
